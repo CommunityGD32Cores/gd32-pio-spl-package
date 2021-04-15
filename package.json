@@ -1,0 +1,7 @@
+{
+    "description": "Standard Peripheral Library for STM32 and GD32 MCUs",
+    "name": "framework-spl",
+    "system": "all",
+    "url": "http://www.st.com/web/catalog/tools/FM147/CL1794/SC961/SS1743/PF257890",
+    "version": "2.10302.0"
+}
