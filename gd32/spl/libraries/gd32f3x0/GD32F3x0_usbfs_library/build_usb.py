@@ -24,7 +24,7 @@ host_driver_files = [
 ]
 
 device_driver_files = [
-    join("driver", "Source", "drv_usb_device.c"),
+    join("driver", "Source", "drv_usb_dev.c"),
     join("driver", "Source", "drv_usbd_int.c")
 ]
 
