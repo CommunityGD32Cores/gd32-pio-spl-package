@@ -105,11 +105,11 @@ OF SUCH DAMAGE.
 #define KEY_NONUS_NUMBER_SIGN_TILDE            0x32U
 #define KEY_SEMICOLON_COLON                    0x33U
 #define KEY_SINGLE_AND_DOUBLE_QUOTE            0x34U
-#define KEY_GRAVE ACCENT AND TILDE             0x35U
+#define KEY_GRAVE_ACCENT_AND_TILDE             0x35U
 #define KEY_COMMA_AND_LESS                     0x36U
 #define KEY_DOT_GREATER                        0x37U
 #define KEY_SLASH_QUESTION                     0x38U
-#define KEY_CAPS LOCK                          0x39U
+#define KEY_CAPS_LOCK                          0x39U
 #define KEY_F1                                 0x3AU
 #define KEY_F2                                 0x3BU
 #define KEY_F3                                 0x3CU
@@ -123,7 +123,7 @@ OF SUCH DAMAGE.
 #define KEY_F11                                0x44U
 #define KEY_F12                                0x45U
 #define KEY_PRINTSCREEN                        0x46U
-#define KEY_SCROLL LOCK                        0x47U
+#define KEY_SCROLL_LOCK                        0x47U
 #define KEY_PAUSE                              0x48U
 #define KEY_INSERT                             0x49U
 #define KEY_HOME                               0x4AU
