@@ -39,7 +39,9 @@ OF SUCH DAMAGE.
 #include "usbh_hid_core.h"
 
 //#define AZERTY_KEYBOARD
+#if !defined(QWERTY_KEYBOARD) && !defined(AZERTY_KEYBOARD)
 #define QWERTY_KEYBOARD
+#endif
 
 #define KBD_LEFT_CTRL                          0x01U
 #define KBD_LEFT_SHIFT                         0x02U
@@ -291,6 +293,9 @@ typedef struct
 void usr_keybrd_init (void);
 /* process keyboard data */
 void usr_keybrd_process_data (uint8_t pbuf);
+#ifdef PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK
+void usr_keybrd_process_data_full(hid_keybd_info* pkeybdinfo);
+#endif
 /* initialize the keyboard function */
 usbh_status usbh_hid_keybd_init (usb_core_driver *pudev, usbh_host *puhost);
 /* get keyboard information */
