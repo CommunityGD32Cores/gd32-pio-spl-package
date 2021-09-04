@@ -129,6 +129,28 @@ SECTIONS
     . = ALIGN(4);
   } >RAM
 
+  /* uninitialized CCRAM objects (like, buffers) */
+  .ccram_bss :
+  {
+    __ccram_start_bss__ = .; /* define a global symbol at ccram start */
+    KEEP(*(.ccram_bss))
+    KEEP(*(.ccram_bss*))
+    . = ALIGN(4);
+    __ccram_end_bss__ = .; /* define a global symbol at end of *used* CCRAM (BSS) */
+  } >CCRAM
+
+  /* initialized CCRAM objects (like, initialized variables) */
+  _si_ccram_data = LOADADDR(.ccram_data);
+  .ccram_data :
+  {
+    . = ALIGN(4);
+    _ccram_start_data = .;    /* create a global symbol at data start */
+    *(.ccram_bss)             /* .data sections */
+    *(.ccram_bss*)            /* .data* sections */
+
+    . = ALIGN(4);
+    _ccram_end_data = .;      /* define a global symbol at data end */
+  } >CCRAM AT> FLASH
   
 
   /* Remove information from the standard libraries */
