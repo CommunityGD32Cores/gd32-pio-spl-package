@@ -44,7 +44,11 @@ LoopCopyDataInit:
 /* Zero fill the bss segment. */  
 FillZerobss:
   movs  r3, #0
-  str  r3, [r2], #4
+  /* note by MG: the initial str r3, [r2], #4 instruction did not work */
+  /* due to Error: cannot honor width suffix -- `str r3,[r2],#4' */
+  /* thus we split it in two instructions, saving and post-incrementing by 4. */
+  str  r3, [r2]
+  adds r2, r2, #4
     
 LoopFillZerobss:
   ldr  r3, = _ebss
