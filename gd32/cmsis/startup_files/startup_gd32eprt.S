@@ -1,5 +1,5 @@
   .syntax unified
-  .cpu cortex-m4
+  .cpu cortex-m33
   .fpu softvfp
   .thumb
   
@@ -44,7 +44,8 @@ LoopCopyDataInit:
 /* Zero fill the bss segment. */  
 FillZerobss:
   movs  r3, #0
-  str  r3, [r2], #4
+  str  r3, [r2]
+  adds r2, r2, #4
     
 LoopFillZerobss:
   ldr  r3, = _ebss
@@ -117,16 +118,16 @@ g_pfnVectors:
                 .word     DMA0_Channel5_IRQHandler		/* 32:DMA0 Channel5 */
                 .word     DMA0_Channel6_IRQHandler		/* 33:DMA0 Channel6 */
                 .word     ADC0_1_IRQHandler		/* 34:ADC0 and ADC1 */
-                .word     CAN0_TX_IRQHandler		/* 35:CAN0 TX */
-                .word     CAN0_RX0_IRQHandler		/* 36:CAN0 RX0 */
-                .word     CAN0_RX1_IRQHandler		/* 37:CAN0 RX1 */
-                .word     CAN0_EWMC_IRQHandler		/* 38:CAN0 EWMC */
+                .word     USBD_HP_IRQHandler		/* 35:USBD HP */
+                .word     USBD_LP_IRQHandler		/* 36:USBD LP */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
                 .word     EXTI5_9_IRQHandler		/* 39:EXTI5 to EXTI9 */
-                .word     TIMER0_BRK_TIMER8_IRQHandler		/* 40:TIMER0 Break and TIMER8 */
-                .word     TIMER0_UP_TIMER9_IRQHandler		/* 41:TIMER0 Update and TIMER9 */
-                .word     TIMER0_TRG_CMT_TIMER10_IRQHandler		/* 42:TIMER0 Trigger and Commutation and TIMER10 */
+                .word     TIMER0_BRK_IRQHandler		/* 40:TIMER0 Break */
+                .word     TIMER0_UP_IRQHandler		/* 41:TIMER0 Update */
+                .word     TIMER0_TRG_CMT_IRQHandler		/* 42:TIMER0 Trigger and Commutation */
                 .word     TIMER0_Channel_IRQHandler		/* 43:TIMER0 Channel Capture Compare */
-                .word     0		/* 44:Reserved */
+                .word     TIMER1_IRQHandler		/* 44:TIMER1 */
                 .word     TIMER2_IRQHandler		/* 45:TIMER2 */
                 .word     TIMER3_IRQHandler		/* 46:TIMER3 */
                 .word     I2C0_EV_IRQHandler		/* 47:I2C0 Event */
@@ -134,38 +135,58 @@ g_pfnVectors:
                 .word     I2C1_EV_IRQHandler		/* 49:I2C1 Event */
                 .word     I2C1_ER_IRQHandler		/* 50:I2C1 Error */
                 .word     SPI0_IRQHandler		/* 51:SPI0 */
-                .word     SPI1_IRQHandler		/* 52:SPI1 */
+                .word     SPI1_I2S1ADD_IRQHandler		/* 52:SPI1 or I2S1ADD */
                 .word     USART0_IRQHandler		/* 53:USART0 */
                 .word     USART1_IRQHandler		/* 54:USART1 */
                 .word     USART2_IRQHandler		/* 55:USART2 */
                 .word     EXTI10_15_IRQHandler		/* 56:EXTI10 to EXTI15 */
                 .word     RTC_Alarm_IRQHandler		/* 57:RTC Alarm */
-                .word     USBFS_WKUP_IRQHandler		/* 58:USBFS Wakeup */
-                .word     TIMER7_BRK_TIMER11_IRQHandler		/* 59:TIMER7 Break and TIMER11 */
-                .word     TIMER7_UP_TIMER12_IRQHandler		/* 60:TIMER7 Update and TIMER12 */
-                .word     TIMER7_TRG_CMT_TIMER13_IRQHandler		/* 61:TIMER7 Trigger and Commutation and TIMER13 */
+                .word     USBD_WKUP_IRQHandler		/* 58:USBD Wakeup */
+                .word     TIMER7_BRK_IRQHandler		/* 59:TIMER7 Break */
+                .word     TIMER7_UP_IRQHandler		/* 60:TIMER7 Update */
+                .word     TIMER7_TRG_CMT_IRQHandler		/* 61:TIMER7 Trigger and Commutation */
                 .word     TIMER7_Channel_IRQHandler		/* 62:TIMER7 Channel Capture Compare */
                 .word     ADC2_IRQHandler		/* 63:ADC2 */
                 .word     EXMC_IRQHandler		/* 64:EXMC */
-                .word     SDIO_IRQHandler		/* 65:SDIO */
-                .word     0		/* 66:Reserved */
-                .word     SPI2_IRQHandler		/* 67:SPI2 */
+                .word     0		/* Reserved */
+                .word     TIMER4_IRQHandler		/* 66:TIMER4 */
+                .word     SPI2_I2S2ADD_IRQHandler		/* 67:SPI2 or I2S2ADD */
                 .word     UART3_IRQHandler		/* 68:UART3 */
                 .word     UART4_IRQHandler		/* 69:UART4 */
-                .word     TIMER5_IRQHandler		/* 70:TIMER5  */
+                .word     TIMER5_DAC_IRQHandler		/* 70:TIMER5 or DAC */
                 .word     TIMER6_IRQHandler		/* 71:TIMER6 */
                 .word     DMA1_Channel0_IRQHandler		/* 72:DMA1 Channel0 */
                 .word     DMA1_Channel1_IRQHandler		/* 73:DMA1 Channel1 */
                 .word     DMA1_Channel2_IRQHandler		/* 74:DMA1 Channel2 */
-                .word     DMA1_Channel3_IRQHandler		/* 75:DMA1 Channel3 */
-                .word     DMA1_Channel4_IRQHandler		/* 76:DMA1 Channel4 */
-                .word     0		/* 77:Reserved */
-                .word     0		/* 78:Reserved */
-                .word     CAN1_TX_IRQHandler		/* 79:CAN1 TX */
-                .word     CAN1_RX0_IRQHandler		/* 80:CAN1 RX0 */
-                .word     CAN1_RX1_IRQHandler		/* 81:CAN1 RX1 */
-                .word     CAN1_EWMC_IRQHandler		/* 82:CAN1 EWMC */
-                .word     USBFS_IRQHandler		/* 83:USBFS */
+                .word     DMA1_Channel3_4_IRQHandler		/* 75:DMA1 Channel3 and Channel4 */
+                .word     0		/* Reserved */
+                .word     ENET_IRQHandler		/* 77:Ethernet */
+                .word     ENET_WKUP_IRQHandler		/* 78:Ethernet Wakeup through EXTI Line */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     0		/* Reserved */
+                .word     I2C2_EV_IRQHandler		/* 98:I2C2 Event */
+                .word     I2C2_ER_IRQHandler		/* 99:I2C2 Error */
+                .word     USART5_IRQHandler		/* 100:USART5 */
+                .word     I2C2_WKUP_IRQHandler		/* 101:I2C2 Wakeup */
+                .word     USART5_WKUP_IRQHandler		/* 102:USART5 Wakeup */
+                .word     0		/* Reserved */
 
 /*******************************************************************************
 *
@@ -174,7 +195,6 @@ g_pfnVectors:
 * this definition.
 *
 *******************************************************************************/
-
 .weak NMI_Handler
 .thumb_set NMI_Handler,Default_Handler
 
@@ -259,32 +279,29 @@ g_pfnVectors:
 .weak ADC0_1_IRQHandler
 .thumb_set ADC0_1_IRQHandler,Default_Handler
 
-.weak CAN0_TX_IRQHandler
-.thumb_set CAN0_TX_IRQHandler,Default_Handler
+.weak USBD_HP_IRQHandler
+.thumb_set USBD_HP_IRQHandler,Default_Handler
 
-.weak CAN0_RX0_IRQHandler
-.thumb_set CAN0_RX0_IRQHandler,Default_Handler
-
-.weak CAN0_RX1_IRQHandler
-.thumb_set CAN0_RX1_IRQHandler,Default_Handler
-
-.weak CAN0_EWMC_IRQHandler
-.thumb_set CAN0_EWMC_IRQHandler,Default_Handler
+.weak USBD_LP_IRQHandler
+.thumb_set USBD_LP_IRQHandler,Default_Handler
 
 .weak EXTI5_9_IRQHandler
 .thumb_set EXTI5_9_IRQHandler,Default_Handler
 
-.weak TIMER0_BRK_TIMER8_IRQHandler
-.thumb_set TIMER0_BRK_TIMER8_IRQHandler,Default_Handler
+.weak TIMER0_BRK_IRQHandler
+.thumb_set TIMER0_BRK_IRQHandler,Default_Handler
 
-.weak TIMER0_UP_TIMER9_IRQHandler
-.thumb_set TIMER0_UP_TIMER9_IRQHandler,Default_Handler
+.weak TIMER0_UP_IRQHandler
+.thumb_set TIMER0_UP_IRQHandler,Default_Handler
 
-.weak TIMER0_TRG_CMT_TIMER10_IRQHandler
-.thumb_set TIMER0_TRG_CMT_TIMER10_IRQHandler,Default_Handler
+.weak TIMER0_TRG_CMT_IRQHandler
+.thumb_set TIMER0_TRG_CMT_IRQHandler,Default_Handler
 
 .weak TIMER0_Channel_IRQHandler
 .thumb_set TIMER0_Channel_IRQHandler,Default_Handler
+
+.weak TIMER1_IRQHandler
+.thumb_set TIMER1_IRQHandler,Default_Handler
 
 .weak TIMER2_IRQHandler
 .thumb_set TIMER2_IRQHandler,Default_Handler
@@ -307,8 +324,8 @@ g_pfnVectors:
 .weak SPI0_IRQHandler
 .thumb_set SPI0_IRQHandler,Default_Handler
 
-.weak SPI1_IRQHandler
-.thumb_set SPI1_IRQHandler,Default_Handler
+.weak SPI1_I2S1ADD_IRQHandler
+.thumb_set SPI1_I2S1ADD_IRQHandler,Default_Handler
 
 .weak USART0_IRQHandler
 .thumb_set USART0_IRQHandler,Default_Handler
@@ -325,17 +342,17 @@ g_pfnVectors:
 .weak RTC_Alarm_IRQHandler
 .thumb_set RTC_Alarm_IRQHandler,Default_Handler
 
-.weak USBFS_WKUP_IRQHandler
-.thumb_set USBFS_WKUP_IRQHandler,Default_Handler
+.weak USBD_WKUP_IRQHandler
+.thumb_set USBD_WKUP_IRQHandler,Default_Handler
 
-.weak TIMER7_BRK_TIMER11_IRQHandler
-.thumb_set TIMER7_BRK_TIMER11_IRQHandler,Default_Handler
+.weak TIMER7_BRK_IRQHandler
+.thumb_set TIMER7_BRK_IRQHandler,Default_Handler
 
-.weak TIMER7_UP_TIMER12_IRQHandler
-.thumb_set TIMER7_UP_TIMER12_IRQHandler,Default_Handler
+.weak TIMER7_UP_IRQHandler
+.thumb_set TIMER7_UP_IRQHandler,Default_Handler
 
-.weak TIMER7_TRG_CMT_TIMER13_IRQHandler
-.thumb_set TIMER7_TRG_CMT_TIMER13_IRQHandler,Default_Handler
+.weak TIMER7_TRG_CMT_IRQHandler
+.thumb_set TIMER7_TRG_CMT_IRQHandler,Default_Handler
 
 .weak TIMER7_Channel_IRQHandler
 .thumb_set TIMER7_Channel_IRQHandler,Default_Handler
@@ -346,11 +363,11 @@ g_pfnVectors:
 .weak EXMC_IRQHandler
 .thumb_set EXMC_IRQHandler,Default_Handler
 
-.weak SDIO_IRQHandler
-.thumb_set SDIO_IRQHandler,Default_Handler
+.weak TIMER4_IRQHandler
+.thumb_set TIMER4_IRQHandler,Default_Handler
 
-.weak SPI2_IRQHandler
-.thumb_set SPI2_IRQHandler,Default_Handler
+.weak SPI2_I2S2ADD_IRQHandler
+.thumb_set SPI2_I2S2ADD_IRQHandler,Default_Handler
 
 .weak UART3_IRQHandler
 .thumb_set UART3_IRQHandler,Default_Handler
@@ -358,8 +375,8 @@ g_pfnVectors:
 .weak UART4_IRQHandler
 .thumb_set UART4_IRQHandler,Default_Handler
 
-.weak TIMER5_IRQHandler
-.thumb_set TIMER5_IRQHandler,Default_Handler
+.weak TIMER5_DAC_IRQHandler
+.thumb_set TIMER5_DAC_IRQHandler,Default_Handler
 
 .weak TIMER6_IRQHandler
 .thumb_set TIMER6_IRQHandler,Default_Handler
@@ -373,24 +390,27 @@ g_pfnVectors:
 .weak DMA1_Channel2_IRQHandler
 .thumb_set DMA1_Channel2_IRQHandler,Default_Handler
 
-.weak DMA1_Channel3_IRQHandler
-.thumb_set DMA1_Channel3_IRQHandler,Default_Handler
+.weak DMA1_Channel3_4_IRQHandler
+.thumb_set DMA1_Channel3_4_IRQHandler,Default_Handler
 
-.weak DMA1_Channel4_IRQHandler
-.thumb_set DMA1_Channel4_IRQHandler,Default_Handler
+.weak ENET_IRQHandler
+.thumb_set ENET_IRQHandler,Default_Handler
 
-.weak CAN1_TX_IRQHandler
-.thumb_set CAN1_TX_IRQHandler,Default_Handler
+.weak ENET_WKUP_IRQHandler
+.thumb_set ENET_WKUP_IRQHandler,Default_Handler
 
-.weak CAN1_RX0_IRQHandler
-.thumb_set CAN1_RX0_IRQHandler,Default_Handler
+.weak I2C2_EV_IRQHandler
+.thumb_set I2C2_EV_IRQHandler,Default_Handler
 
-.weak CAN1_RX1_IRQHandler
-.thumb_set CAN1_RX1_IRQHandler,Default_Handler
+.weak I2C2_ER_IRQHandler
+.thumb_set I2C2_ER_IRQHandler,Default_Handler
 
-.weak CAN1_EWMC_IRQHandler
-.thumb_set CAN1_EWMC_IRQHandler,Default_Handler
+.weak USART5_IRQHandler
+.thumb_set USART5_IRQHandler,Default_Handler
 
-.weak USBFS_IRQHandler
-.thumb_set USBFS_IRQHandler,Default_Handler
+.weak I2C2_WKUP_IRQHandler
+.thumb_set I2C2_WKUP_IRQHandler,Default_Handler
+
+.weak USART5_WKUP_IRQHandler
+.thumb_set USART5_WKUP_IRQHandler,Default_Handler
 
