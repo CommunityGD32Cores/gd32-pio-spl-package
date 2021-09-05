@@ -93,6 +93,7 @@ OF SUCH DAMAGE.
 #define __MPU_PRESENT             0        /*!< GD32 devices does not provide an MPU */
 #define __NVIC_PRIO_BITS          4        /*!< GD32F20X uses 4 bits for the Priority levels        */
 #define __VENDOR_SYSTICKCONFIG    0        /*!< set to 1 if different systick config is used        */
+#define __Vendor_SysTickConfig    0        /*!< correct spelling... */
 
 /* define interrupt number */
 typedef enum IRQn
