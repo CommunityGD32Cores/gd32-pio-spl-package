@@ -35,10 +35,10 @@ OF SUCH DAMAGE.
 #include "gd32f303c_start.h"
 
 /* private variables */
-static uint32_t GPIO_PORT[LEDn] = {LED1_GPIO_PORT};
-static uint32_t GPIO_PIN[LEDn] = {LED1_PIN};
+static uint32_t GPIO_PORT[LEDn] = {LED1_GPIO_PORT, LED2_GPIO_PORT};
+static uint32_t GPIO_PIN[LEDn] = {LED1_PIN, LED2_PIN};
 
-static rcu_periph_enum GPIO_CLK[LEDn] = {LED1_GPIO_CLK};
+static rcu_periph_enum GPIO_CLK[LEDn] = {LED1_GPIO_CLK, LED2_GPIO_CLK};
 
 static uint32_t KEY_PORT[KEYn] = {USER_KEY_GPIO_PORT};
 static uint32_t KEY_PIN[KEYn] = {USER_KEY_PIN};
