@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 #ifndef GD32F205R_START_H
 #define GD32F205R_START_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
  extern "C" {
 #endif
 
@@ -93,7 +93,7 @@ void gd_eval_key_init(key_typedef_enum key_num, keymode_typedef_enum key_mode);
 /* return the selected key state */
 uint8_t gd_eval_key_state_get(key_typedef_enum key);
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 
