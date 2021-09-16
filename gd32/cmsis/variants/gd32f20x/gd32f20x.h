@@ -194,12 +194,10 @@ typedef enum IRQn
 #include "core_cm3.h"
 #include "system_gd32f20x.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
-#ifndef __cplusplus
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
-#endif
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 
