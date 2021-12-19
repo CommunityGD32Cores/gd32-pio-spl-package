@@ -14,8 +14,8 @@ device_flags_to_sources = {
 }
 
 device_flags_to_special_excludes = {
-    "PIO_USBFS_DEVICE_HID_STANDARD": join("class", "hid", "Source", "custom_hid_core.c"),
-    "PIO_USBFS_DEVICE_HID_CUSTOM": join("class", "hid", "Source", "standard_hid_core.c"),
+    "PIO_USBFS_DEVICE_HID_STANDARD": join("class", "device", "hid", "Source", "custom_hid_core.c"),
+    "PIO_USBFS_DEVICE_HID_CUSTOM": join("class", "device", "hid", "Source", "standard_hid_core.c"),
 }
 
 include_parts = []
@@ -32,8 +32,8 @@ for item in env.Flatten(env.get("CPPDEFINES", [])):
         class_name = device_flags_to_sources[item]
         print("USBFS option %s found, adding class \"%s\"" %
               (str(item), class_name))
-        include_parts.append(join("class", class_name, "Include"))
-        source_parts.append(join("class", class_name, "Source"))
+        include_parts.append(join("class", "device", class_name, "Include"))
+        source_parts.append(join("class", "device", class_name, "Source"))
         if item in device_flags_to_special_excludes.keys():
             special_excludes.append(device_flags_to_special_excludes[item])
 
@@ -68,6 +68,6 @@ print("USBFS source filter excludes: %s" % str(src_filter_default))
 
 env.Replace(SRC_FILTER=src_filter_default)
 
-# needed for examples to work. Otherwise weird hangs / USB resets were experienced
-global_env.Append(CPPDEFINES=["USE_USB_FS"])
-env.Append(CPPDEFINES=["USE_USB_FS"])
+# usbd_lld_core.c can use this macro to use the internal clock
+#global_env.Append(CPPDEFINES=["USE_IRC48M"])
+#env.Append(CPPDEFINES=["USE_IRC48M"])
