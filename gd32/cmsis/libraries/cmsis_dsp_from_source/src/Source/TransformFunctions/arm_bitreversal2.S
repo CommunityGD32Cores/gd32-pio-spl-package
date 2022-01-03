@@ -28,6 +28,8 @@
 ; * limitations under the License.
 ; */
 
+#if !defined(__ARM_ARCH_8M_BASE__) && __ARM_ARCH_8M_BASE__ == 0
+
 #if   defined ( __CC_ARM )     /* Keil */
     #define CODESECT AREA     ||.text||, CODE, READONLY, ALIGN=2
     #define LABEL
@@ -214,3 +216,5 @@ arm_bitreversal_16_0 LABEL       ;/* loop unrolled by 2 */
 #endif
 
 	END
+
+#endif
