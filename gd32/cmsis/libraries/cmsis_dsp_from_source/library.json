@@ -1,0 +1,14 @@
+{
+    "name": "CMSIS-DSP-src",
+    "description": "DSP library collection with over 60 Functions for various data types, built from source.",
+    "keywords": "dsp,gd32",
+    "authors": {
+        "name": "Arm Limited."
+    },
+    "version": "5.7.0",
+    "license": "Apache-2.0",
+    "platforms": [
+        "gd32"
+    ],
+    "frameworks": "*"
+}
