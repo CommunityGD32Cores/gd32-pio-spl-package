@@ -61,6 +61,17 @@ OF SUCH DAMAGE.
 #define SEL_IRC8M       0x00U
 #define SEL_HXTAL       0x01U
 #define SEL_PLL         0x02U
+#define RCU_MODIFY(__delay)     do{                                     \
+                                    volatile uint32_t i;                \
+                                    if(0 != __delay){                   \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                    }                                   \
+                                }while(0)
 
 /* set the system clock frequency and declare the system clock configuration function */
 #ifdef __SYSTEM_CLOCK_IRC8M
@@ -115,14 +126,18 @@ void SystemInit (void)
     /* Set IRC8MEN bit */
     RCU_CTL |= RCU_CTL_IRC8MEN;
 
-    /* Reset CFG0 and CFG1 registers */
-    RCU_CFG0 = 0x00000000U;
-    RCU_CFG1 = 0x00000000U;
+    RCU_MODIFY(0x50);
+
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
 
     /* Reset HXTALEN, CKMEN, PLLEN, PLL1EN and PLL2EN bits */
     RCU_CTL &= ~(RCU_CTL_PLLEN |RCU_CTL_PLL1EN | RCU_CTL_PLL2EN | RCU_CTL_CKMEN | RCU_CTL_HXTALEN);
     /* disable all interrupts */
     RCU_INT = 0x00ff0000U;
+
+    /* Reset CFG0 and CFG1 registers */
+    RCU_CFG0 = 0x00000000U;
+    RCU_CFG1 = 0x00000000U;
 
     /* reset HXTALBPS bit */
     RCU_CTL &= ~(RCU_CTL_HXTALBPS);
@@ -781,10 +796,11 @@ static void system_clock_120m_hxtal(void)
 */
 void SystemCoreClockUpdate (void)
 {
-    uint32_t sws;
-    uint32_t pllsel, pllpresel, predv0sel, pllmf,ck_src;
-    uint32_t predv0, predv1, pll1mf;
-
+    uint32_t sws = 0U;
+    uint32_t pllsel = 0U, pllpresel = 0U, predv0sel = 0U, pllmf,ck_src = 0U;
+    uint32_t predv0 = 0U, predv1 = 0U, pll1mf = 0U,idx = 0U,clk_exp = 0U;
+    /* exponent of AHB clock divider */
+    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
     sws = GET_BITS(RCU_CFG0, 2, 3);
     switch(sws){
     /* IRC8M is selected as CK_SYS */
@@ -850,5 +866,8 @@ void SystemCoreClockUpdate (void)
         SystemCoreClock = IRC8M_VALUE;
         break;
     }
-
+    /* calculate AHB clock frequency */
+    idx = GET_BITS(RCU_CFG0, 4, 7);
+    clk_exp = ahb_exp[idx];
+    SystemCoreClock >>= clk_exp;
 }
