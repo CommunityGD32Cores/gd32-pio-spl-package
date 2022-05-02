@@ -1,12 +1,12 @@
 /*!
-    \file  gd32f303c_start.c
+    \file  gd32f303b_start.c
     \brief firmware functions to manage leds, keys, COM ports
 
-    \version 2021-03-23, V2.0.0, demo for GD32F30x
+    \version 2022-03-18, V2.0.0, demo for GD32F30x
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -32,7 +32,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "gd32f303c_start.h"
+#include "gd32f303b_start.h"
 
 /* private variables */
 static uint32_t GPIO_PORT[LEDn] = {LED1_GPIO_PORT};

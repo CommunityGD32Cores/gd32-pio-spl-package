@@ -35,7 +35,7 @@ OF SUCH DAMAGE.
 #ifndef GD32F303C_START_H
 #define GD32F303C_START_H
 
-#ifdef __cplusplus
+#ifdef cplusplus
  extern "C" {
 #endif
 
@@ -44,8 +44,8 @@ OF SUCH DAMAGE.
 /* exported types */
 typedef enum 
 {
-    LED1 = 0U,
-	LED2 = 1U
+    LED1,
+    LED2
 } led_typedef_enum;
 
 typedef enum 
@@ -95,7 +95,7 @@ void gd_eval_key_init(key_typedef_enum key_num, keymode_typedef_enum key_mode);
 /* return the selected key state */
 uint8_t gd_eval_key_state_get(key_typedef_enum key);
 
-#ifdef __cplusplus
+#ifdef cplusplus
 }
 #endif
 

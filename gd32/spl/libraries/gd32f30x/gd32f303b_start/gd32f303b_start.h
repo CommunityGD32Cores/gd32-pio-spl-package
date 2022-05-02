@@ -1,12 +1,12 @@
 /*!
-    \file    gd32f305r_start.h
-    \brief   definitions for GD32f305R_START's leds, keys and COM ports hardware resources
+    \file  gd32f303b_start.h
+    \brief definitions for GD32F303B_START's leds, keys and COM ports hardware resources
 
-    \version 2021-03-23, V2.0.0, demo for GD32F30x
+    \version 2022-03-18, V2.0.0, demo for GD32F30x
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -32,8 +32,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef GD32F305R_START_H
-#define GD32F305R_START_H
+#ifndef GD32F303B_START_H
+#define GD32F303B_START_H
 
 #ifdef cplusplus
  extern "C" {
@@ -44,7 +44,8 @@ OF SUCH DAMAGE.
 /* exported types */
 typedef enum 
 {
-    LED1
+    LED1,
+    LED2
 } led_typedef_enum;
 
 typedef enum 
@@ -59,11 +60,15 @@ typedef enum
 } keymode_typedef_enum;
 
 /* eval board low layer led */
-#define LEDn                             1U
+#define LEDn                             2U
 
-#define LED1_PIN                         GPIO_PIN_6
-#define LED1_GPIO_PORT                   GPIOC
-#define LED1_GPIO_CLK                    RCU_GPIOC
+#define LED1_PIN                         GPIO_PIN_14
+#define LED1_GPIO_PORT                   GPIOB
+#define LED1_GPIO_CLK                    RCU_GPIOB
+
+#define LED2_PIN                         GPIO_PIN_15
+#define LED2_GPIO_PORT                   GPIOB
+#define LED2_GPIO_CLK                    RCU_GPIOB
 
 #define KEYn                             1U
 
@@ -94,4 +99,4 @@ uint8_t gd_eval_key_state_get(key_typedef_enum key);
 }
 #endif
 
-#endif /* GD32F305R_START_H */
+#endif /* GD32F303B_START_H */
