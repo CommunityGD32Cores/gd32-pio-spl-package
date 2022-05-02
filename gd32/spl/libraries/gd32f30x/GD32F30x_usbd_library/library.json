@@ -1,0 +1,25 @@
+{
+    "name": "GD32F30x_usbd_library",
+    "description": "USB Device library for GD32L23x devices",
+    "keywords": "usb,gd32",
+    "authors": {
+        "name": "GigaDevice"
+    },
+    "version": "1.0.0",
+    "license": "BSD-3",
+    "platforms": [
+        "gd32"
+    ],
+    "frameworks": "*",
+    "build": {
+        "flags": [
+            "-Iusbd/Include",
+            "-Idevice/Include"
+        ],
+        "srcDir": ".",
+        "includeDir": ".",
+        "libArchive": false,
+        "libLDFMode": "chain+",
+        "extraScript": "build_usb.py"
+    }
+}
