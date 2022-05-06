@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_fmc.c
-    \brief FMC driver
+    \file    gd32f10x_fmc.c
+    \brief   FMC driver
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,7 +39,7 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      set the wait state counter value
-    \param[in]  wscnt£ºwait state counter value
+    \param[in]  wscntã€ã‚³wait state counter value
       \arg        WS_WSCNT_0: FMC 0 wait state
       \arg        WS_WSCNT_1: FMC 1 wait state
       \arg        WS_WSCNT_2: FMC 2 wait state
@@ -377,7 +376,7 @@ fmc_state_enum fmc_word_program(uint32_t address, uint32_t data)
 fmc_state_enum fmc_halfword_program(uint32_t address, uint16_t data)
 {
     fmc_state_enum fmc_state = FMC_READY;
-    if(FMC_BANK0_SIZE > FMC_SIZE){
+    if(FMC_BANK0_SIZE < FMC_SIZE){
         if(FMC_BANK0_END_ADDRESS > address){
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT); 
   
