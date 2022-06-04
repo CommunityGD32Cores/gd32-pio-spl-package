@@ -1,15 +1,18 @@
 /*!
     \file  gd32f10x_can.c
     \brief CAN driver
-    
+
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2019-11-27, V2.1.1, firmware for GD32F10x
+    \version 2020-07-14, V2.1.2, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2021-07-21, V2.2.1, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -38,6 +41,9 @@ OF SUCH DAMAGE.
 #include "gd32f10x_can.h"
 
 #define CAN_ERROR_HANDLE(s)     do{}while(1)
+    
+#define RFO1_CLEAR_VAL           ((uint32_t)0x00000000U)             /*!< RFO1 clear value */ 
+#define RFF1_CLEAR_VAL           ((uint32_t)0x00000018U)             /*!< RFF1 clear value */ 
 
 /*!
     \brief      deinitialize CAN 
@@ -838,7 +844,7 @@ uint8_t can_transmit_error_number_get(uint32_t can_periph)
       \arg        CAN_INT_BO: bus-off interrupt enable
       \arg        CAN_INT_ERRN: error number interrupt enable
       \arg        CAN_INT_ERR: error interrupt enable
-      \arg        CAN_INT_WU: wakeup interrupt enable
+      \arg        CAN_INT_WAKEUP: wakeup interrupt enable
       \arg        CAN_INT_SLPW: sleep working interrupt enable
     \param[out] none
     \retval     none
@@ -866,7 +872,7 @@ void can_interrupt_enable(uint32_t can_periph, uint32_t interrupt)
       \arg        CAN_INT_BO: bus-off interrupt enable
       \arg        CAN_INT_ERRN: error number interrupt enable
       \arg        CAN_INT_ERR: error interrupt enable
-      \arg        CAN_INT_WU: wakeup interrupt enable
+      \arg        CAN_INT_WAKEUP: wakeup interrupt enable
       \arg        CAN_INT_SLPW: sleep working interrupt enable
     \param[out] none
     \retval     none
@@ -960,9 +966,11 @@ FlagStatus can_flag_get(uint32_t can_periph, can_flag_enum flag)
 void can_flag_clear(uint32_t can_periph, can_flag_enum flag)
 {
     if (flag == CAN_FLAG_RFO1){
-        CAN_REG_VAL(can_periph, flag) &= ~BIT(CAN_BIT_POS(flag));
+        CAN_REG_VAL(can_periph, flag) = RFO1_CLEAR_VAL;
+    } else if (flag == CAN_FLAG_RFF1){
+        CAN_REG_VAL(can_periph, flag) = RFF1_CLEAR_VAL;
     } else {
-        CAN_REG_VAL(can_periph, flag) |= BIT(CAN_BIT_POS(flag));
+        CAN_REG_VAL(can_periph, flag) = BIT(CAN_BIT_POS(flag));
     }
 }
 
@@ -997,9 +1005,9 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
     uint32_t ret2 = RESET;
     
     /* get the staus of interrupt flag */
-    if (flag == CAN_INT_FLAG_RFF0) {
+    if (flag == CAN_INT_FLAG_RFL0) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO0);
-    } else if (flag == CAN_INT_FLAG_RFF1) {
+    } else if (flag == CAN_INT_FLAG_RFL1) {
         ret1 = can_receive_message_length_get(can_periph, CAN_FIFO1);
     } else if (flag == CAN_INT_FLAG_ERRN) {
         ret1 = can_error_get(can_periph);
@@ -1037,8 +1045,10 @@ FlagStatus can_interrupt_flag_get(uint32_t can_periph, can_interrupt_flag_enum f
 void can_interrupt_flag_clear(uint32_t can_periph, can_interrupt_flag_enum flag)
 {
     if (flag == CAN_INT_FLAG_RFO1){
-        CAN_REG_VALS(can_periph, flag) &= ~BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VALS(can_periph, flag) = RFO1_CLEAR_VAL;
+    } else if (flag == CAN_INT_FLAG_RFF1){
+        CAN_REG_VALS(can_periph, flag) = RFF1_CLEAR_VAL;
     } else {
-        CAN_REG_VALS(can_periph, flag) |= BIT(CAN_BIT_POS0(flag));
+        CAN_REG_VALS(can_periph, flag) = BIT(CAN_BIT_POS0(flag));
     }
 }

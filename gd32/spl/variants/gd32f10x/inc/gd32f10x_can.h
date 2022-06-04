@@ -1,15 +1,17 @@
 /*!
-    \file  gd32f10x_can.h
-    \brief definitions for the CAN
+    \file    gd32f10x_can.h
+    \brief   definitions for the CAN
     
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2019-11-27, V2.1.1, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2021-07-21, V2.2.1, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -309,7 +311,7 @@ OF SUCH DAMAGE.
 /* CAN_FxDATAy */
 #define CAN_FDATA_FD(regval)               BIT(regval)                  /*!< filter data */
 
-/* consts definitions */
+/* constants definitions */
 /* define the CAN bit position and its register index offset */
 #define CAN_REGIDX_BIT(regidx, bitpos)              (((uint32_t)(regidx) << 6) | (uint32_t)(bitpos))
 #define CAN_REG_VAL(canx, offset)                   (REG32((canx) + ((uint32_t)(offset) >> 6)))
@@ -389,7 +391,7 @@ typedef enum
     /* interrupt flags in RFIFO0 register */
     CAN_INT_FLAG_RFO1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 4U, 6U),    /*!< receive FIFO1 overfull interrupt flag */
     CAN_INT_FLAG_RFF1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 3U, 5U),    /*!< receive FIFO1 full interrupt flag */
-    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),    /*!< receive FIFO0 not empty interrupt flag */
+    CAN_INT_FLAG_RFL1  = CAN_REGIDX_BITS(RFIFO1_REG_OFFSET, 2U, 4U),    /*!< receive FIFO1 not empty interrupt flag */
     /* interrupt flags in ERR register */
     CAN_INT_FLAG_ERRN  = CAN_REGIDX_BITS(ERR_REG_OFFSET, 3U, 11U),      /*!< error number interrupt flag */ 
     CAN_INT_FLAG_BOERR = CAN_REGIDX_BITS(ERR_REG_OFFSET, 2U, 10U),      /*!< bus-off error interrupt flag */ 
@@ -397,7 +399,7 @@ typedef enum
     CAN_INT_FLAG_WERR  = CAN_REGIDX_BITS(ERR_REG_OFFSET, 0U, 8U),       /*!< warning error interrupt flag */ 
 }can_interrupt_flag_enum;
 
-/* CAN initiliaze parameters struct */
+/* CAN initiliaze parameters structure */
 typedef struct
 {
     uint8_t working_mode;                                               /*!< CAN working mode */ 
@@ -413,7 +415,7 @@ typedef struct
     uint16_t prescaler;                                                 /*!< baudrate prescaler */
 }can_parameter_struct;
 
-/* CAN transmit message struct */
+/* CAN transmit message structure */
 typedef struct
 {
     uint32_t tx_sfid;                                                   /*!< standard format frame identifier */
@@ -424,7 +426,7 @@ typedef struct
     uint8_t tx_data[8];                                                 /*!< transmit data */
 }can_trasnmit_message_struct;
 
-/* CAN receive message struct */
+/* CAN receive message structure */
 typedef struct
 {
     uint32_t rx_sfid;                                                   /*!< standard format frame identifier */
@@ -436,7 +438,7 @@ typedef struct
     uint8_t rx_fi;                                                      /*!< filtering index */
 } can_receive_message_struct;
 
-/* CAN filter parameters struct */
+/* CAN filter parameters structure */
 typedef struct
 {
     uint16_t filter_list_high;                                          /*!< filter list number high bits*/
@@ -466,10 +468,10 @@ typedef enum
 /* transmit states */
 typedef enum
 {
-    CAN_TRANSMIT_FAILED = 0U,                                            /*!< CAN transmitted failure */
-    CAN_TRANSMIT_OK = 1U,                                                /*!< CAN transmitted success */
-    CAN_TRANSMIT_PENDING = 2U,                                           /*!< CAN transmitted pending */
-    CAN_TRANSMIT_NOMAILBOX = 4U,                                         /*!< no empty mailbox to be used for CAN */
+    CAN_TRANSMIT_FAILED = 0U,                                           /*!< CAN transmitted failure */
+    CAN_TRANSMIT_OK = 1U,                                               /*!< CAN transmitted success */
+    CAN_TRANSMIT_PENDING = 2U,                                          /*!< CAN transmitted pending */
+    CAN_TRANSMIT_NOMAILBOX = 4U,                                        /*!< no empty mailbox to be used for CAN */
 }can_transmit_state_enum;
 
 typedef enum
@@ -581,14 +583,14 @@ typedef enum
 
 /* CAN errors */
 #define ERR_ERRN(regval)                   (BITS(4,6) & ((uint32_t)(regval) << 4))
-#define CAN_ERRN_0                         ERR_ERRN(0U)                  /* no error */
-#define CAN_ERRN_1                         ERR_ERRN(1U)                  /*!< fill error */
-#define CAN_ERRN_2                         ERR_ERRN(2U)                  /*!< format error */
-#define CAN_ERRN_3                         ERR_ERRN(3U)                  /*!< ACK error */
-#define CAN_ERRN_4                         ERR_ERRN(4U)                  /*!< bit recessive error */
-#define CAN_ERRN_5                         ERR_ERRN(5U)                  /*!< bit dominant error */
-#define CAN_ERRN_6                         ERR_ERRN(6U)                  /*!< CRC error */
-#define CAN_ERRN_7                         ERR_ERRN(7U)                  /*!< software error */
+#define CAN_ERRN_0                         ERR_ERRN(0U)                 /*!< no error */
+#define CAN_ERRN_1                         ERR_ERRN(1U)                 /*!< fill error */
+#define CAN_ERRN_2                         ERR_ERRN(2U)                 /*!< format error */
+#define CAN_ERRN_3                         ERR_ERRN(3U)                 /*!< ACK error */
+#define CAN_ERRN_4                         ERR_ERRN(4U)                 /*!< bit recessive error */
+#define CAN_ERRN_5                         ERR_ERRN(5U)                 /*!< bit dominant error */
+#define CAN_ERRN_6                         ERR_ERRN(6U)                 /*!< CRC error */
+#define CAN_ERRN_7                         ERR_ERRN(7U)                 /*!< software error */
 
 #define CAN_STATE_PENDING                  ((uint32_t)0x00000000U)      /*!< CAN pending */
 
@@ -692,15 +694,18 @@ typedef enum
 #define CAN_INT_SLPW                       CAN_INTEN_SLPWIE             /*!< sleep working interrupt enable */
 
 /* function declarations */
+/* initialization functions */
 /* deinitialize CAN */
 void can_deinit(uint32_t can_periph);
-/* initialize CAN struct */
+/* initialize CAN structure */
 void can_struct_para_init(can_struct_type_enum type, void* p_struct);
 /* initialize CAN */
 ErrStatus can_init(uint32_t can_periph, can_parameter_struct* can_parameter_init);
-/* CAN filter init */
+/* CAN filter initialization */
 void can_filter_init(can_filter_parameter_struct* can_filter_parameter_init);
-/* set can1 fliter start bank number */
+
+/* function configuration */
+/* set can1 filter start bank number */
 void can1_filter_start_bank(uint8_t start_bank);
 /* enable functions */
 /* CAN debug freeze enable */
@@ -737,6 +742,7 @@ uint8_t can_receive_error_number_get(uint32_t can_periph);
 /* get CAN transmit error number */
 uint8_t can_transmit_error_number_get(uint32_t can_periph);
 
+/* interrupt & flag functions */
 /* CAN interrupt enable */
 void can_interrupt_enable(uint32_t can_periph, uint32_t interrupt);
 /* CAN interrupt disable */

@@ -1,16 +1,15 @@
 /*!
-    \file  gd32f10x_timer.c
-    \brief TIMER driver
+    \file    gd32f10x_timer.c
+    \brief   TIMER driver
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -1245,8 +1244,7 @@ void timer_channel_input_struct_para_init(timer_ic_parameter_struct* icpara)
       \arg        TIMER_CH_2: TIMER channel 2(TIMERx(x=0..4,7))
       \arg        TIMER_CH_3: TIMER channel 3(TIMERx(x=0..4,7))
     \param[in]  icpara: TIMER channel intput parameter struct
-                  icpolarity: TIMER_IC_POLARITY_RISING, TIMER_IC_POLARITY_FALLING,
-                              TIMER_IC_POLARITY_BOTH_EDGE(only for TIMER1~TIMER8)
+                  icpolarity: TIMER_IC_POLARITY_RISING, TIMER_IC_POLARITY_FALLING
                   icselection: TIMER_IC_SELECTION_DIRECTTI, TIMER_IC_SELECTION_INDIRECTTI,
                                TIMER_IC_SELECTION_ITS
                   icprescaler: TIMER_IC_PSC_DIV1, TIMER_IC_PSC_DIV2, TIMER_IC_PSC_DIV4,
