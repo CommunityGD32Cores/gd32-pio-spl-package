@@ -1,41 +1,34 @@
-/*-----------------------------------------------------------------------*/
-/* Low level disk I/O module skeleton for FatFs     (C)ChaN, 2017        */
-/*                                                                       */
-/*   Portions COPYRIGHT 2017 STMicroelectronics                          */
-/*   Portions Copyright (C) 2017, ChaN, all right reserved               */
-/*-----------------------------------------------------------------------*/
-/* If a working storage control module is available, it should be        */
-/* attached to the FatFs via a glue function rather than modifying it.   */
-/* This is an example of glue functions to attach various existing      */
-/* storage control modules to the FatFs module with a defined API.       */
-/*-----------------------------------------------------------------------*/
+/*!
+    \file    diskio.c
+    \brief   Low level disk interface driver
+
+    \version 2021-05-20, V1.0.0, firmware for GD32 USBFS
+*/
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
+    Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    All rights reserved.
-
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -57,7 +50,7 @@ extern Disk_drvTypeDef  disk;
     \param[out] none
     \retval     DSTATUS: Operation status
 */
-DSTATUS disk_status (
+DSTATUS disk_status(
     BYTE pdrv       /* Physical drive number to identify the drive */
 )
 {
@@ -74,13 +67,13 @@ DSTATUS disk_status (
     \param[out] none
     \retval     DSTATUS: Operation status
 */
-DSTATUS disk_initialize (
+DSTATUS disk_initialize(
     BYTE pdrv       /* Physical drive nmuber to identify the drive */
 )
 {
     DSTATUS stat = RES_OK;
 
-    if (disk.is_initialized[pdrv] == 0) {
+    if(disk.is_initialized[pdrv] == 0) {
         disk.is_initialized[pdrv] = 1;
         stat = disk.drv[pdrv]->disk_initialize(disk.lun[pdrv]);
     }
@@ -97,7 +90,7 @@ DSTATUS disk_initialize (
     \param[out] none
     \retval     DRESULT: Operation result
 */
-DRESULT disk_read (
+DRESULT disk_read(
     BYTE pdrv,      /* Physical drive nmuber to identify the drive */
     BYTE *buff,     /* Data buffer to store read data */
     DWORD sector,   /* Sector address in LBA */
@@ -121,7 +114,7 @@ DRESULT disk_read (
     \retval     DRESULT: Operation result
 */
 #if _USE_WRITE == 1
-DRESULT disk_write (
+DRESULT disk_write(
     BYTE pdrv,          /* Physical drive nmuber to identify the drive */
     const BYTE *buff,   /* Data to be written */
     DWORD sector,       /* Sector address in LBA */
@@ -145,7 +138,7 @@ DRESULT disk_write (
     \retval     DRESULT: Operation result
 */
 #if _USE_IOCTL == 1
-DRESULT disk_ioctl (
+DRESULT disk_ioctl(
     BYTE pdrv,      /* Physical drive nmuber (0..) */
     BYTE cmd,       /* Control code */
     void *buff      /* Buffer to send/receive control data */
@@ -165,7 +158,7 @@ DRESULT disk_ioctl (
     \param[out] none
     \retval     Time in DWORD
 */
-__weak DWORD get_fattime (void)
+__weak DWORD get_fattime(void)
 {
     return 0;
 }

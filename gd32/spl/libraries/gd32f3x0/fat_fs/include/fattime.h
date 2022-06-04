@@ -2,6 +2,6 @@
 
 #include "integer.h"
 
-DWORD get_fattime (void);
+DWORD get_fattime(void);
 
 #endif

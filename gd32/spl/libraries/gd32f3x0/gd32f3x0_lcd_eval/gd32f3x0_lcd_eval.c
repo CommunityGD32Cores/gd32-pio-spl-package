@@ -1,36 +1,37 @@
 /*!
-    \file  gd32f3x0_lcd_eval.c
-    \brief LCD driver functions (LCD_ILI9320)
+    \file    gd32f3x0_lcd_eval.c
+    \brief   LCD driver functions (LCD_ILI9320)
 
     \version 2017-06-06, V1.0.0, firmware for GD32F3x0
     \version 2019-06-01, V2.0.0, firmware for GD32F3x0
     \version 2020-09-30, V2.1.0, firmware for GD32F3x0
+    \version 2022-01-06, V2.2.0, firmware for GD32F3x0
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -40,11 +41,11 @@ OF SUCH DAMAGE.
 
 
 #ifdef H_VIEW
-    #define X_MAX_PIXEL         320
-    #define Y_MAX_PIXEL         240
+#define X_MAX_PIXEL         320
+#define Y_MAX_PIXEL         240
 #else
-    #define X_MAX_PIXEL         240
-    #define Y_MAX_PIXEL         320
+#define X_MAX_PIXEL         240
+#define Y_MAX_PIXEL         320
 #endif
 
 static uint8_t spi_write_byte(uint32_t spi_periph, uint8_t byte);
@@ -68,7 +69,7 @@ static uint8_t spi_write_byte(uint32_t spi_periph, uint8_t byte)
 
     while(RESET == (SPI_STAT(spi_periph)&SPI_FLAG_RBNE));
     return(SPI_DATA(spi_periph));
-} 
+}
 
 /*!
     \brief      initialize SPI0
@@ -87,7 +88,7 @@ static void spi0_init(void)
     rcu_periph_clock_enable(RCU_SPI0);
 
     /* GPIOB config, PB3(LCD_SPI_CLK), PB4(SPI0_MISO), PB5(LCD_SPI_MOSI) */
-    gpio_af_set(GPIOB, GPIO_AF_0,GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
+    gpio_af_set(GPIOB, GPIO_AF_0, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
     gpio_mode_set(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
     gpio_output_options_set(GPIOB, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5);
 
@@ -123,7 +124,7 @@ static void spi0_init(void)
 static void lcd_write_index(uint8_t index)
 {
     LCD_RS_CLR;
-    spi_write_byte(SPI0,index);
+    spi_write_byte(SPI0, index);
 }
 
 /*!
@@ -135,7 +136,7 @@ static void lcd_write_index(uint8_t index)
 static void lcd_write_data(uint8_t data)
 {
     LCD_RS_SET;
-    spi_write_byte(SPI0,data);
+    spi_write_byte(SPI0, data);
 }
 
 /*!
@@ -229,7 +230,7 @@ void lcd_init(void)
     /* vcm control */
     lcd_write_index(0xC5);
     lcd_write_data(0x3e);
-    lcd_write_data(0x28); 
+    lcd_write_data(0x28);
 
     /* vcm control2 */
     lcd_write_index(0xC7);
@@ -239,7 +240,7 @@ void lcd_init(void)
 #ifdef H_VIEW
     lcd_write_data(0xE8);
 #else
-    lcd_write_data(0x48); 
+    lcd_write_data(0x48);
 #endif
     /* write the register address 0x3A*/
     lcd_write_index(0x3A);
@@ -252,17 +253,17 @@ void lcd_init(void)
 
     /* display function control */
     lcd_write_index(0xB6);
-    lcd_write_data(0x08); 
+    lcd_write_data(0x08);
     lcd_write_data(0x82);
-    lcd_write_data(0x27);  
+    lcd_write_data(0x27);
 
     /* 3gamma function disable */
     lcd_write_index(0xF2);
-    lcd_write_data(0x00); 
+    lcd_write_data(0x00);
 
     /* gamma curve selected  */
     lcd_write_index(0x26);
-    lcd_write_data(0x01); 
+    lcd_write_data(0x01);
 
     /* set gamma  */
     lcd_write_index(0xE0);
@@ -302,7 +303,7 @@ void lcd_init(void)
 
     /* exit sleep */
     lcd_write_index(0x11);
-    delay_1ms(120); 
+    delay_1ms(120);
 
     /* display on */
     lcd_write_index(0x29);
@@ -326,13 +327,13 @@ void lcd_set_region(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t
 
     /* write the register address 0x2A*/
     lcd_write_index(0x2A);
-    lcd_write_data_16bit(x_start >> 8,x_start);
-    lcd_write_data_16bit(x_end >> 8,x_end);
+    lcd_write_data_16bit(x_start >> 8, x_start);
+    lcd_write_data_16bit(x_end >> 8, x_end);
 
     /* write the register address 0x2B*/
     lcd_write_index(0x2B);
-    lcd_write_data_16bit(y_start >> 8,y_start);
-    lcd_write_data_16bit(y_end >> 8,y_end);
+    lcd_write_data_16bit(y_start >> 8, y_start);
+    lcd_write_data_16bit(y_end >> 8, y_end);
 
     /* write the register address 0x2C*/
     lcd_write_index(0x2C);
@@ -350,11 +351,11 @@ void lcd_set_xy(uint16_t x, uint16_t y)
 {
     /* write the register address 0x2A*/
     lcd_write_index(0x2A);
-    lcd_write_data_16bit(x >> 8,x);
+    lcd_write_data_16bit(x >> 8, x);
 
     /* write the register address 0x2B*/
     lcd_write_index(0x2B);
-    lcd_write_data_16bit(y >> 8,y);
+    lcd_write_data_16bit(y >> 8, y);
 
     /* write the register address 0x2C*/
     lcd_write_index(0x2C);
@@ -362,51 +363,51 @@ void lcd_set_xy(uint16_t x, uint16_t y)
 
 /*!
     \brief      draw a point on the lcd
-    \param[in]  x: the x position of the point 
-    \param[in]  y: the y position of the point 
+    \param[in]  x: the x position of the point
+    \param[in]  y: the y position of the point
     \param[in]  data: the register data to be written
     \param[out] none
     \retval     none
 */
 void lcd_draw_point(uint16_t x, uint16_t y, uint16_t data)
 {
-    lcd_set_xy(x,y);
+    lcd_set_xy(x, y);
     lcd_write_data(data >> 8);
     lcd_write_data(data);
 }
 
 /*!
     \brief      clear the lcd
-    \param[in]  color: lcd display color 
+    \param[in]  color: lcd display color
     \param[out] none
     \retval     none
 */
 void lcd_clear(uint16_t color)
 {
-    unsigned int i,m;
+    unsigned int i, m;
     /* set lcd display region */
-    lcd_set_region(0,0,X_MAX_PIXEL - 1,Y_MAX_PIXEL - 1);
+    lcd_set_region(0, 0, X_MAX_PIXEL - 1, Y_MAX_PIXEL - 1);
     LCD_RS_SET;
 
     LCD_CS_CLR;
-    for(i = 0;i < Y_MAX_PIXEL;i ++){
-        for(m = 0;m < X_MAX_PIXEL;m ++){
-            spi_write_byte(SPI0,color >> 8);
-            spi_write_byte(SPI0,color);
+    for(i = 0; i < Y_MAX_PIXEL; i ++) {
+        for(m = 0; m < X_MAX_PIXEL; m ++) {
+            spi_write_byte(SPI0, color >> 8);
+            spi_write_byte(SPI0, color);
         }
     }
     LCD_CS_SET;
 }
 
 /*!
-    \brief      convert bgr format to rgb format 
+    \brief      convert bgr format to rgb format
     \param[in]  c: the value of bgr color
     \param[out] none
     \retval     the value of rgb color
 */
 uint16_t lcd_bgr2rgb(uint16_t c)
 {
-    uint16_t r,g,b,rgb;
+    uint16_t r, g, b, rgb;
     b = (c >> 0) & 0x1f;
     g = (c >> 5) & 0x3f;
     r = (c >> 11) & 0x1f;
@@ -416,7 +417,7 @@ uint16_t lcd_bgr2rgb(uint16_t c)
 
 /*!
     \brief      draw a circle on the lcd
-    \param[in]  x: the x position of the start point 
+    \param[in]  x: the x position of the start point
     \param[in]  y: the y position of the start point
     \param[in]  r: the radius of circle
     \param[in]  fc: lcd display color
@@ -425,43 +426,43 @@ uint16_t lcd_bgr2rgb(uint16_t c)
 */
 void lcd_circle(uint16_t x, uint16_t y, uint16_t r, uint16_t fc)
 {
-    unsigned short a,b;
+    unsigned short a, b;
     int c;
     a = 0;
     b = r;
     c = 3 - 2 * r;
     LCD_CS_CLR;
 
-    while(a < b){
+    while(a < b) {
         /* draw points on the lcd */
-        lcd_draw_point(x + a,y + b,fc);
-        lcd_draw_point(x - a,y + b,fc);
-        lcd_draw_point(x + a,y - b,fc);
-        lcd_draw_point(x - a,y - b,fc);
-        lcd_draw_point(x + b,y + a,fc);
-        lcd_draw_point(x - b,y + a,fc);
-        lcd_draw_point(x + b,y - a,fc);
-        lcd_draw_point(x - b,y - a,fc);
+        lcd_draw_point(x + a, y + b, fc);
+        lcd_draw_point(x - a, y + b, fc);
+        lcd_draw_point(x + a, y - b, fc);
+        lcd_draw_point(x - a, y - b, fc);
+        lcd_draw_point(x + b, y + a, fc);
+        lcd_draw_point(x - b, y + a, fc);
+        lcd_draw_point(x + b, y - a, fc);
+        lcd_draw_point(x - b, y - a, fc);
 
-        if(c < 0)
+        if(c < 0) {
             c = c + 4 * a + 6;
-        else{ 
+        } else {
             c = c + 4 * (a - b) + 10;
-            b -= 1; 
-        } 
+            b -= 1;
+        }
         a += 1;
-    } 
-    if(a == b){
+    }
+    if(a == b) {
         /* draw points on the lcd */
-        lcd_draw_point(x + a,y + b,fc);
-        lcd_draw_point(x + a,y + b,fc);
-        lcd_draw_point(x + a,y - b,fc);
-        lcd_draw_point(x - a,y - b,fc);
-        lcd_draw_point(x + b,y + a,fc);
-        lcd_draw_point(x - b,y + a,fc);
-        lcd_draw_point(x + b,y - a,fc);
-        lcd_draw_point(x - b,y - a,fc);
-    } 
+        lcd_draw_point(x + a, y + b, fc);
+        lcd_draw_point(x + a, y + b, fc);
+        lcd_draw_point(x + a, y - b, fc);
+        lcd_draw_point(x - a, y - b, fc);
+        lcd_draw_point(x + b, y + a, fc);
+        lcd_draw_point(x - b, y + a, fc);
+        lcd_draw_point(x + b, y - a, fc);
+        lcd_draw_point(x - b, y - a, fc);
+    }
     LCD_CS_SET;
 }
 
@@ -484,60 +485,60 @@ void lcd_line_draw(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t 
        - amount in pixel space to move during drawing
        - the discriminant i.e. error i.e. decision variable
        - used for looping */
-    int dx,dy,dx2,dy2,x_inc,y_inc,error,index;
+    int dx, dy, dx2, dy2, x_inc, y_inc, error, index;
 
     LCD_CS_CLR;
 
-    lcd_set_xy(x0,y0);
+    lcd_set_xy(x0, y0);
     /* calculate x distance */
     dx = x1 - x0;
     /* calculate y distance */
     dy = y1 - y0;
 
-    if(dx >= 0){
+    if(dx >= 0) {
         x_inc = 1;
-    }else{
+    } else {
         x_inc = -1;
         dx = -dx;
-    } 
+    }
 
-    if(dy >= 0){
+    if(dy >= 0) {
         y_inc = 1;
-    }else{
+    } else {
         y_inc = -1;
-        dy    = -dy; 
-    } 
+        dy    = -dy;
+    }
 
     dx2 = dx << 1;
     dy2 = dy << 1;
 
-    if(dx > dy){
+    if(dx > dy) {
         /* initialize error */
         error = dy2 - dx;
         /* draw the line */
-        for(index = 0;index <= dx;index ++){
-            lcd_draw_point(x0,y0,color);
+        for(index = 0; index <= dx; index ++) {
+            lcd_draw_point(x0, y0, color);
             /* test if error has overflowed */
-            if(0 <= error){
+            if(0 <= error) {
                 error -= dx2;
                 /* move to next line */
                 y0 += y_inc;
-             }
+            }
             /* adjust the error term */
             error += dy2;
             /* move to the next pixel */
             x0 += x_inc;
-         }
-    }else{
+        }
+    } else {
         /* initialize error term */
         error = dx2 - dy;
         /* draw the linedraw the line*/
-        for(index = 0;index <= dy;index ++){
+        for(index = 0; index <= dy; index ++) {
             /* set the pixel */
-            lcd_draw_point(x0,y0,color);
+            lcd_draw_point(x0, y0, color);
 
             /* test if error overflowed */
-            if(0 <= error){
+            if(0 <= error) {
                 error -= dy2;
                 /* move to next line */
                 x0 += x_inc;
@@ -567,10 +568,10 @@ void lcd_rect_draw(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t line
     LCD_CS_CLR;
 
     /* gui draw line*/
-    lcd_line_draw(x,y,x + w,y,line_color);
-    lcd_line_draw(x + w,y,x + w,y + h,line_color);
-    lcd_line_draw(x,y + h,x + w,y + h,line_color);
-    lcd_line_draw(x,y,x,y + h,line_color);
+    lcd_line_draw(x, y, x + w, y, line_color);
+    lcd_line_draw(x + w, y, x + w, y + h, line_color);
+    lcd_line_draw(x, y + h, x + w, y + h, line_color);
+    lcd_line_draw(x, y, x, y + h, line_color);
 
     LCD_CS_SET;
 }
@@ -581,7 +582,7 @@ void lcd_rect_draw(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t line
     \param[in]  y: the y position of the start point
     \param[in]  w: the width of the box
     \param[in]  h: the high of the box
-    \param[in]  mode: display color combination mode 
+    \param[in]  mode: display color combination mode
     \param[out] none
     \retval     none
 */
@@ -590,25 +591,25 @@ void lcd_box2(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t mode)
     LCD_CS_CLR;
 
     /* gui box2 display mode0 */
-    if(0 == mode){
-        lcd_line_draw(x,y,x + w,y,0xEF7D);
-        lcd_line_draw(x + w - 1,y + 1,x + w - 1,y + 1 + h,0x2965);
-        lcd_line_draw(x,y + h,x + w,y + h,0x2965);
-        lcd_line_draw(x,y,x,y + h,0xEF7D);
+    if(0 == mode) {
+        lcd_line_draw(x, y, x + w, y, 0xEF7D);
+        lcd_line_draw(x + w - 1, y + 1, x + w - 1, y + 1 + h, 0x2965);
+        lcd_line_draw(x, y + h, x + w, y + h, 0x2965);
+        lcd_line_draw(x, y, x, y + h, 0xEF7D);
     }
     /* gui box2 display mode1 */
-    if(1 == mode){
-        lcd_line_draw(x,y,x + w,y,0x2965);
-        lcd_line_draw(x + w - 1,y + 1,x + w - 1,y + 1 + h,0xEF7D);
-        lcd_line_draw(x,y + h,x + w,y + h,0xEF7D);
-        lcd_line_draw(x,y,x,y + h,0x2965);
+    if(1 == mode) {
+        lcd_line_draw(x, y, x + w, y, 0x2965);
+        lcd_line_draw(x + w - 1, y + 1, x + w - 1, y + 1 + h, 0xEF7D);
+        lcd_line_draw(x, y + h, x + w, y + h, 0xEF7D);
+        lcd_line_draw(x, y, x, y + h, 0x2965);
     }
     /* gui box2 display mode2 */
-    if(2 == mode){
-        lcd_line_draw(x,y,x + w,y,0xffff);
-        lcd_line_draw(x + w - 1,y + 1,x + w - 1,y + 1 + h,0xffff);
-        lcd_line_draw(x,y + h,x + w,y + h,0xffff);
-        lcd_line_draw(x,y,x,y + h,0xffff);
+    if(2 == mode) {
+        lcd_line_draw(x, y, x + w, y, 0xffff);
+        lcd_line_draw(x + w - 1, y + 1, x + w - 1, y + 1 + h, 0xffff);
+        lcd_line_draw(x, y + h, x + w, y + h, 0xffff);
+        lcd_line_draw(x, y, x, y + h, 0xffff);
     }
     LCD_CS_SET;
 }
@@ -625,12 +626,14 @@ void lcd_box2(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t mode)
 */
 void lcd_rect_color_draw(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t fc)
 {
-    int ix,iy;
+    int ix, iy;
     LCD_CS_CLR;
-    for(ix = x1;ix < x2;ix ++){
-        for(iy = y1;iy < y2;iy ++)
+    for(ix = x1; ix < x2; ix ++) {
+        for(iy = y1; iy < y2; iy ++)
             /* set the pixel */
-            lcd_draw_point(ix,iy,fc);
+        {
+            lcd_draw_point(ix, iy, fc);
+        }
     }
 
     LCD_CS_SET;
@@ -650,14 +653,14 @@ void display_button_down(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
     LCD_CS_CLR;
 
     /* gui draw line with gray color*/
-    lcd_line_draw(x1,y1,x2,y1,GRAY2);
-    lcd_line_draw(x1 + 1,y1 + 1,x2,y1 + 1,GRAY1);
-    lcd_line_draw(x1,y1,x1,y2,GRAY2);
-    lcd_line_draw(x1 + 1,y1 + 1,x1 + 1,y2,GRAY1);
+    lcd_line_draw(x1, y1, x2, y1, GRAY2);
+    lcd_line_draw(x1 + 1, y1 + 1, x2, y1 + 1, GRAY1);
+    lcd_line_draw(x1, y1, x1, y2, GRAY2);
+    lcd_line_draw(x1 + 1, y1 + 1, x1 + 1, y2, GRAY1);
 
     /* gui draw line with white color*/
-    lcd_line_draw(x1,y2,x2,y2,WHITE);
-    lcd_line_draw(x2,y1,x2,y2,WHITE);
+    lcd_line_draw(x1, y2, x2, y2, WHITE);
+    lcd_line_draw(x2, y1, x2, y2, WHITE);
     LCD_CS_SET;
 }
 
@@ -675,14 +678,14 @@ void display_button_up(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
     LCD_CS_CLR;
 
     /* gui draw line with white color*/
-    lcd_line_draw(x1,y1,x2,y1,WHITE);
-    lcd_line_draw(x1,y1,x1,y2,WHITE);
+    lcd_line_draw(x1, y1, x2, y1, WHITE);
+    lcd_line_draw(x1, y1, x1, y2, WHITE);
 
     /* gui draw line with gray color*/
-    lcd_line_draw(x1 + 1,y2 - 1,x2,y2 - 1,GRAY1);
-    lcd_line_draw(x1,y2,x2,y2,GRAY2);
-    lcd_line_draw(x2 - 1,y1 + 1,x2 - 1,y2,GRAY1);
-    lcd_line_draw(x2,y1,x2,y2,GRAY2);
+    lcd_line_draw(x1 + 1, y2 - 1, x2, y2 - 1, GRAY1);
+    lcd_line_draw(x1, y2, x2, y2, GRAY2);
+    lcd_line_draw(x2 - 1, y1 + 1, x2 - 1, y2, GRAY1);
+    lcd_line_draw(x2, y1, x2, y2, GRAY2);
     LCD_CS_SET;
 }
 
@@ -698,59 +701,69 @@ void display_button_up(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 */
 void lcd_draw_font_gbk16(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, char *s)
 {
-    unsigned char i,j;
-    unsigned short k,x0;
+    unsigned char i, j;
+    unsigned short k, x0;
     x0 = x;
 
     LCD_CS_CLR;
-    while(*s){
+    while(*s) {
         /* ASCII character table from 32 to 128 */
-        if(((uint8_t)(*s)) < 128){
+        if(((uint8_t)(*s)) < 128) {
             k = *s;
-            if(13 == k){
+            if(13 == k) {
                 x = x0;
                 y += 16;
-            }else{
-                if(k > 32)
+            } else {
+                if(k > 32) {
                     k -= 32;
-                else 
+                } else {
                     k = 0;
-                for(i = 0;i < 16;i ++)
-                    for(j = 0;j < 8;j ++){
+                }
+                for(i = 0; i < 16; i ++)
+                    for(j = 0; j < 8; j ++) {
                         if(asc16[k * 16 + i] & (0x80 >> j))
                             /* draw a point on the lcd */
-                            lcd_draw_point(x + j,y + i,fc);
-                        else{
+                        {
+                            lcd_draw_point(x + j, y + i, fc);
+                        } else {
                             if(fc != bc)
                                 /* draw a point on the lcd */
-                                lcd_draw_point(x + j,y + i,bc);
+                            {
+                                lcd_draw_point(x + j, y + i, bc);
+                            }
                         }
                     }
                 x += 8;
             }
             s ++;
-        }else{
-            for(k = 0;k < hz16_num;k ++){
-                if((hz16[k].Index[0] == *(s)) && (hz16[k].Index[1] == *(s + 1))){ 
-                    for(i = 0;i < 16;i ++){
-                        for(j = 0; j < 8; j ++){
+        } else {
+            for(k = 0; k < hz16_num; k ++) {
+                if((hz16[k].Index[0] == *(s)) && (hz16[k].Index[1] == *(s + 1))) {
+                    for(i = 0; i < 16; i ++) {
+                        for(j = 0; j < 8; j ++) {
                             if(hz16[k].Msk[i * 2] & (0x80 >> j))
                                 /* draw a point on the lcd */
-                                lcd_draw_point(x + j,y + i,fc);
-                            else{
+                            {
+                                lcd_draw_point(x + j, y + i, fc);
+                            } else {
                                 if(fc != bc)
                                     /* draw a point on the lcd */
-                                    lcd_draw_point(x + j,y + i,bc);
+                                {
+                                    lcd_draw_point(x + j, y + i, bc);
+                                }
                             }
                         }
-                        for(j = 0;j < 8;j ++){
+                        for(j = 0; j < 8; j ++) {
                             if(hz16[k].Msk[i * 2 + 1] & (0x80 >> j))
                                 /* draw a point on the lcd */
-                                lcd_draw_point(x + j + 8,y + i,fc);
-                            else{
+                            {
+                                lcd_draw_point(x + j + 8, y + i, fc);
+                            } else {
                                 if(fc != bc)
                                     /* draw a point on the lcd */
-                                    lcd_draw_point(x + j + 8,y + i,bc);
+                                {
+                                    lcd_draw_point(x + j + 8, y + i, bc);
+                                }
                             }
                         }
                     }
@@ -775,71 +788,84 @@ void lcd_draw_font_gbk16(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, char 
 */
 void lcd_draw_font_gbk24(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, char *s)
 {
-    unsigned char i,j;
+    unsigned char i, j;
     unsigned short k;
 
     LCD_CS_CLR;
-    while(*s){
+    while(*s) {
         /* ASCII character table from 32 to 128 */
-        if(((uint8_t)(*s)) < 0x80){
+        if(((uint8_t)(*s)) < 0x80) {
             k = *s;
-            if(k > 32)
+            if(k > 32) {
                 k -= 32;
-            else
+            } else {
                 k = 0;
+            }
 
-            for(i = 0;i < 16;i ++)
-                for(j = 0;j < 8;j ++){
+            for(i = 0; i < 16; i ++)
+                for(j = 0; j < 8; j ++) {
                     if(asc16[k * 16 + i] & (0x80 >> j))
                         /* draw a point on the lcd */
-                        lcd_draw_point(x + j,y + i,fc);
-                    else{
+                    {
+                        lcd_draw_point(x + j, y + i, fc);
+                    } else {
                         if(fc != bc)
                             /* draw a point on the lcd */
-                            lcd_draw_point(x + j,y + i,bc);
+                        {
+                            lcd_draw_point(x + j, y + i, bc);
+                        }
                     }
                 }
             s ++;
             x += 8;
-        }else{
-            for(k = 0;k < hz24_num;k ++){
-                if((hz24[k].Index[0] == *(s)) && (hz24[k].Index[1] == *(s + 1))){ 
-                    for(i = 0;i < 24;i ++){
-                        for(j = 0;j < 8;j ++){
+        } else {
+            for(k = 0; k < hz24_num; k ++) {
+                if((hz24[k].Index[0] == *(s)) && (hz24[k].Index[1] == *(s + 1))) {
+                    for(i = 0; i < 24; i ++) {
+                        for(j = 0; j < 8; j ++) {
                             if(hz24[k].Msk[i * 3] & (0x80 >> j))
                                 /* draw a point on the lcd */
-                                lcd_draw_point(x + j,y + i,fc);
-                            else{
+                            {
+                                lcd_draw_point(x + j, y + i, fc);
+                            } else {
                                 if(fc != bc)
                                     /* draw a point on the lcd */
-                                    lcd_draw_point(x + j,y + i,bc);
+                                {
+                                    lcd_draw_point(x + j, y + i, bc);
+                                }
                             }
                         }
-                        for(j = 0;j < 8;j ++){
+                        for(j = 0; j < 8; j ++) {
                             if(hz24[k].Msk[i * 3 + 1] & (0x80 >> j))
                                 /* draw a point on the lcd */
-                                lcd_draw_point(x + j + 8,y + i,fc);
-                            else{
-                                if(fc != bc)
-                                /* draw a point on the lcd */
-                                lcd_draw_point(x + j + 8,y + i,bc);
-                            }
-                        }
-                        for(j = 0;j < 8;j ++){
-                            if(hz24[k].Msk[i * 3 + 2] & (0x80 >> j))
-                                /* draw a point on the lcd */
-                                lcd_draw_point(x + j + 16,y + i,fc);
-                            else{
+                            {
+                                lcd_draw_point(x + j + 8, y + i, fc);
+                            } else {
                                 if(fc != bc)
                                     /* draw a point on the lcd */
-                                    lcd_draw_point(x + j + 16,y + i,bc);
+                                {
+                                    lcd_draw_point(x + j + 8, y + i, bc);
+                                }
+                            }
+                        }
+                        for(j = 0; j < 8; j ++) {
+                            if(hz24[k].Msk[i * 3 + 2] & (0x80 >> j))
+                                /* draw a point on the lcd */
+                            {
+                                lcd_draw_point(x + j + 16, y + i, fc);
+                            } else {
+                                if(fc != bc)
+                                    /* draw a point on the lcd */
+                                {
+                                    lcd_draw_point(x + j + 16, y + i, bc);
+                                }
                             }
                         }
                     }
                 }
             }
-        s += 2;
-        x += 24;
+            s += 2;
+            x += 24;
         }
     }
     LCD_CS_SET;
@@ -857,20 +883,23 @@ void lcd_draw_font_gbk24(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, char 
 */
 void lcd_draw_font_num32(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint16_t num)
 {
-    unsigned char i,j,k,c;
+    unsigned char i, j, k, c;
 
     LCD_CS_CLR;
-    for(i = 0;i < 32;i ++){
-        for(j = 0;j < 4;j++){
+    for(i = 0; i < 32; i ++) {
+        for(j = 0; j < 4; j++) {
             c = *(sz32 + num * 32 * 4 + i * 4 + j);
-            for(k = 0;k < 8;k ++){
+            for(k = 0; k < 8; k ++) {
                 if(c & (0x80 >> k))
                     /* draw a point on the lcd */
-                    lcd_draw_point(x + j * 8 + k,y + i,fc);
-                else{
+                {
+                    lcd_draw_point(x + j * 8 + k, y + i, fc);
+                } else {
                     if(fc != bc)
                         /* draw a point on the lcd */
-                        lcd_draw_point(x + j * 8 + k,y + i,bc);
+                    {
+                        lcd_draw_point(x + j * 8 + k, y + i, bc);
+                    }
                 }
             }
         }
