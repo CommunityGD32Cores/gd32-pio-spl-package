@@ -343,11 +343,19 @@ void usbh_hid_keybrd_machine(usb_core_driver *pudev, usbh_host *puhost)
     k_pinfo = usbh_hid_keybd_info_get(pudev, puhost);
 
     if(k_pinfo != NULL) {
+        /* extension from original GD32 code: instead of just calling
+         * a user callback function with the ASCII code of the first pressed key,
+         * give it the entire keyboard state. 
+         */
+#ifdef PIO_USB_HOST_HID_FULL_STATE_INFO_CALLBACK
+        usr_keybrd_process_data_full(k_pinfo);
+#else
         char c = usbh_hid_ascii_code_get(k_pinfo);
 
         if(c != 0U) {
             usr_keybrd_process_data(c);
         }
+#endif
     }
 }
 
