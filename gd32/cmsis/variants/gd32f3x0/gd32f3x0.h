@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 #ifndef GD32F3X0_H
 #define GD32F3X0_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -238,7 +238,7 @@ extern "C" {
 #include "gd32f3x0_libopt.h"
 #endif /* USE_STDPERIPH_DRIVER */
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif
