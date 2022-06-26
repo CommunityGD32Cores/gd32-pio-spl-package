@@ -1,16 +1,15 @@
 /*!
     \file    lcd_font.h
-    \brief   the header file of LCD font
+    \brief   the header file of lcd_font.c file
 
-    \version 2014-12-26, V1.0.0, demo for GD32F10x
-    \version 2017-06-20, V2.0.0, demo for GD32F10x
-    \version 2018-07-31, V2.1.0, demo for GD32F10x
+    \version 2014-12-26, V1.0.0, firmware for GD32F10x
+    \version 2017-06-20, V2.0.0, firmware for GD32F10x
+    \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -41,9 +40,41 @@ OF SUCH DAMAGE.
 
 #include <stdint.h>
 
-extern unsigned char const ascii_8x16[1536];
+typedef struct 
+{
+    const uint16_t *table;
 
-extern const uint16_t ASCII_Table_16x24[];
+    uint16_t width;
+    uint16_t height;
+} font_struct;
+
+typedef struct
+{
+    unsigned char index[3];
+    char mask[32];
+} typefont_GB162;
+
+typedef struct
+{
+    unsigned char index[3];
+    char mask[72];
+} typefont_GB242;
+
+#define hz16_num   100
+#define hz24_num   100
+
+extern font_struct font16x24;
+extern font_struct font12x12;
+extern font_struct font8x16;
+extern font_struct font8x12;
+extern font_struct font8x8;
+
+extern const unsigned char ASCII16[];
+extern const unsigned char sz32[];
+
+extern const typefont_GB162 hz16[];
+extern const typefont_GB242 hz24[];
+
+#define LINE(x) ((x) * (((font_struct *)lcd_font_get())->height))
 
 #endif /* LCD_FONTS_H */
-

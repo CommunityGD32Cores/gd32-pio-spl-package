@@ -4,13 +4,11 @@
 
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
-    \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,12 +35,47 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f10x_lcd_eval.h"
+#include "drv_usb_hw.h"
 #include "lcd_font.h"
+#include <string.h>
 
 #define LCD_ILI9320       0x8989
 #define LCD_ILI9325       0x9325
 
 #define ABS(X)  ((X) > 0 ? (X) : -(X))
+
+static font_struct *cur_fonts;
+
+/* set the cursor of LCD */
+static void lcd_cursor_set(uint16_t x,uint16_t y);
+
+__IO uint16_t cur_text_color = 0x0000U;
+__IO uint16_t cur_back_color = 0xFFFFU;
+
+__IO uint16_t cur_text_direction = CHAR_DIRECTION_HORIZONTAL;
+
+/*!
+    \brief      initializes the LCD of GD EVAL board
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void gd_eval_lcd_init(void)
+{
+    __IO uint32_t lcd_id = 0;
+
+    exmc_lcd_init();
+
+    usb_mdelay(50);
+
+    /* Read the LCD ID */
+    lcd_id = lcd_register_read(R0);
+
+    /* check if the LCD is ILI9320 controller */
+    if (LCD_ILI9320 == lcd_id) {
+        lcd_init();
+    }
+}
 
 /*!
     \brief      lcd peripheral initialize
@@ -110,7 +143,6 @@ void exmc_lcd_init(void)
 
     exmc_norsram_enable(EXMC_BANK0_NORSRAM_REGION0);
 }
-
 
 /*!
     \brief      write data to the selected LCD register
@@ -183,15 +215,17 @@ void lcd_gram_write(uint16_t rgb_code)
 */
 uint16_t lcd_gram_read(void)
 {
-  uint16_t data;
-    
-  /* write GRAM register (R22h) */
-  *(__IO uint16_t *) (BANK0_LCD_C) = 0x0022;
-  /* dummy read (invalid data) */
-  *(__IO uint16_t *) (BANK0_LCD_D); 
+    uint16_t data;
 
-  data = *(__IO uint16_t *) (BANK0_LCD_D); 
-  return data;
+    /* write GRAM register (R22h) */
+    *(__IO uint16_t *) (BANK0_LCD_C) = 0x0022;
+
+    /* dummy read (invalid data) */
+    *(__IO uint16_t *) (BANK0_LCD_D); 
+
+    data = *(__IO uint16_t *) (BANK0_LCD_D); 
+
+    return data;
 }
 
 /*!
@@ -211,7 +245,7 @@ void lcd_init(void)
         lcd_register_write(0x000D,0x080C);
         lcd_register_write(0x000E,0x2B00);
         lcd_register_write(0x001E,0x00B0);
-        lcd_register_write(0x0001,0x2B3F);
+        lcd_register_write(0x0001,0x693F);
         lcd_register_write(0x0002,0x0600);
         lcd_register_write(0x0010,0x0000);
         lcd_register_write(0x0011,0x6070);
@@ -254,13 +288,119 @@ void lcd_init(void)
 }
 
 /*!
+    \brief      set the text color
+    \param[in]  color: LCD color
+      \arg        LCD_COLOR_WHITE
+      \arg        LCD_COLOR_BLACK
+      \arg        LCD_COLOR_GREY
+      \arg        LCD_COLOR_BLUE
+      \arg        LCD_COLOR_BLUE2
+      \arg        LCD_COLOR_RED
+      \arg        LCD_COLOR_MAGENTA
+      \arg        LCD_COLOR_GREEN
+      \arg        LCD_COLOR_CYAN
+      \arg        LCD_COLOR_YELLOW
+    \param[out] none
+    \retval     none
+*/
+void lcd_text_color_set(__IO uint16_t color)
+{
+    cur_text_color = color;
+}
+
+/*!
+    \brief      get the current text color
+    \param[in]  none
+    \param[out] none
+    \retval     LCD color
+      \arg        LCD_COLOR_WHITE
+      \arg        LCD_COLOR_BLACK
+      \arg        LCD_COLOR_GREY
+      \arg        LCD_COLOR_BLUE
+      \arg        LCD_COLOR_BLUE2
+      \arg        LCD_COLOR_RED
+      \arg        LCD_COLOR_MAGENTA
+      \arg        LCD_COLOR_GREEN
+      \arg        LCD_COLOR_CYAN
+      \arg        LCD_COLOR_YELLOW
+*/
+uint16_t lcd_text_color_get(void)
+{
+    return cur_text_color;
+}
+
+/*!
+    \brief      set the background color
+    \param[in]  color: LCD color
+      \arg        LCD_COLOR_WHITE
+      \arg        LCD_COLOR_BLACK
+      \arg        LCD_COLOR_GREY
+      \arg        LCD_COLOR_BLUE
+      \arg        LCD_COLOR_BLUE2
+      \arg        LCD_COLOR_RED
+      \arg        LCD_COLOR_MAGENTA
+      \arg        LCD_COLOR_GREEN
+      \arg        LCD_COLOR_CYAN
+      \arg        LCD_COLOR_YELLOW
+    \param[out] none
+    \retval     none
+*/
+void lcd_background_color_set(__IO uint16_t color)
+{
+    cur_back_color = color;
+}
+
+/*!
+    \brief      get the current background color
+    \param[in]  none
+    \param[out] none
+    \retval     LCD color
+      \arg        LCD_COLOR_WHITE
+      \arg        LCD_COLOR_BLACK
+      \arg        LCD_COLOR_GREY
+      \arg        LCD_COLOR_BLUE
+      \arg        LCD_COLOR_BLUE2
+      \arg        LCD_COLOR_RED
+      \arg        LCD_COLOR_MAGENTA
+      \arg        LCD_COLOR_GREEN
+      \arg        LCD_COLOR_CYAN
+      \arg        LCD_COLOR_YELLOW
+*/
+uint16_t lcd_background_color_get(void)
+{
+    return cur_back_color;
+}
+
+/*!
+    \brief      set the text font
+    \param[in]  font: the text font
+    \param[out] none
+    \retval     none
+*/
+void lcd_font_set(font_struct *fonts)
+{
+    cur_fonts = fonts;
+}
+
+/*!
+    \brief      get the text font
+    \param[in]  none
+    \param[out] none
+    \retval     the text font
+*/
+font_struct *lcd_font_get(void)
+{
+    return cur_fonts;
+}
+
+/*!
     \brief      set the cursor of LCD
     \param[in]  x: the row-coordinate
     \param[in]  y: the column-coordinate
     \param[out] none
     \retval     none
 */
-void lcd_cursor_set(uint16_t x,uint16_t y)
+static void lcd_cursor_set(uint16_t x,uint16_t y)
 {
     lcd_register_write(0x004e,x);
     lcd_register_write(0x004f,y);
@@ -275,7 +415,7 @@ void lcd_cursor_set(uint16_t x,uint16_t y)
 */
 void lcd_clear(uint16_t color)
 {
-    uint32_t index=0;
+    uint32_t index = 0;
     lcd_cursor_set(0,0);
     /* prepare to write GRAM */
     lcd_gram_write_prepare();
@@ -321,25 +461,6 @@ uint16_t lcd_point_get(uint16_t x,uint16_t y)
     data = lcd_gram_read();
 
     return  data;
-}
-
-/*!
-    \brief      set window area
-    \param[in]  start_x: the start position of row-coordinate
-    \param[in]  start_y: the start position of column-coordinate
-    \param[in]  end_x: the end position of row-coordinate
-    \param[in]  end_y: the end position of column-coordinate
-    \param[out] none
-    \retval     none
-*/
-void lcd_windows_set(uint16_t start_x,uint16_t start_y,uint16_t end_x,uint16_t end_y)
-{
-    lcd_cursor_set(start_x, start_y);
-
-    lcd_register_write(0x0050, start_x);
-    lcd_register_write(0x0052, start_y);
-    lcd_register_write(0x0051, end_x);
-    lcd_register_write(0x0053, end_y);
 }
 
 /*!
@@ -407,47 +528,15 @@ void lcd_rectangle_draw(uint16_t start_x,uint16_t start_y,uint16_t end_x,uint16_
     \param[out] none
     \retval     none
 */
-void lcd_rectangle_fill(uint16_t start_x,uint16_t start_y,uint16_t end_x,uint16_t end_y,uint16_t color)
+void lcd_rectangle_fill(uint16_t start_x,uint16_t start_y,uint16_t width,uint16_t height)
 {
     uint16_t x, y;
     x = start_x;
     y = start_y;
 
-    for (x = start_x; x < end_x; x++) {
-        for (y = start_y; y < end_y; y++) {
-            lcd_point_set(x, y, color);
-        }
-    }
-}
-
-/*!
-    \brief      draw a picture on LCD screen according to the specified position
-    \param[in]  start_x: the start position of row-coordinate
-    \param[in]  start_y: the start position of column-coordinate
-    \param[in]  end_x: the end position of row-coordinate
-    \param[in]  end_y: the end position of column-coordinate
-    \param[in]  pic: the picture pointer
-    \param[out] none
-    \retval     none
-*/
-void lcd_picture_draw(uint16_t start_x,uint16_t start_y,uint16_t end_x,uint16_t end_y,uint16_t *pic)
-{
-    uint32_t i, total;
-    uint16_t *picturepointer = pic;
-    uint16_t x,y;
-
-    x = start_x;
-    y = start_y;
-
-    total = (end_x - start_x + 1) * (end_y - start_y + 1);
-    
-    for(i = 0; i < total; i ++){
-        /* set point according to the specified position and color */
-        lcd_point_set(x,y,*picturepointer++);
-        x++;
-        if(x > end_x){
-            y++;
-            x = start_x;
+    for (x = start_x; x < start_x+width; x++) {
+        for (y = start_y; y < start_y+height; y++) {
+            lcd_point_set(x, y, cur_text_color);
         }
     }
 }
@@ -466,61 +555,49 @@ void lcd_picture_draw(uint16_t start_x,uint16_t start_y,uint16_t end_x,uint16_t 
     \param[out] none
     \retval     none
 */
-void lcd_char_display(uint16_t x,uint16_t y,uint8_t c,char_format_struct c_format)
+void lcd_char_display(uint16_t x,uint16_t y,uint8_t c)
 {
     uint16_t i = 0, j = 0;
     uint8_t temp_char = 0;
-    uint16_t temp_char_16 = 0;
-    
-    if(CHAR_FONT_8_16 == c_format.font){ /* 8x16 ASCII */
-        for (i = 0; i < 16; i++) {
-            temp_char = ascii_8x16[((c - 0x20) * 16) + i];
-            if(CHAR_DIRECTION_HORIZONTAL == c_format.direction){
-                for (j = 0; j < 8; j++) {
-                    if (((temp_char >> (7 - j)) & 0x01) == 0x01) {
-                        /* set point of char */
-                        lcd_point_set(x - i, y + j, c_format.char_color);
-                    } else {
-                        /* set point of background */
-                        lcd_point_set(x - i, y + j, c_format.bk_color);
-                    }
-                }
-            }else{
-                for (j = 0; j < 8; j++) {
-                    if (((temp_char >> (7 - j)) & 0x01) == 0x01) {
-                        /* set point of char */
-                        lcd_point_set(x + j, y + i, c_format.char_color);
-                    } else {
-                        /* set point of background */
-                        lcd_point_set(x + j, y + i, c_format.bk_color);
-                    }
+
+    for (i = 0; i < cur_fonts->height; i++) {
+        temp_char = cur_fonts->table[((c - 0x20) * 16) + i];
+        if(CHAR_DIRECTION_HORIZONTAL == cur_text_direction){
+            for (j = 0; j < cur_fonts->width; j++) {
+                if (((temp_char >> (7 - j)) & 0x01) == 0x01) {
+                    /* set point of char */
+                    lcd_point_set(x - i, y + j, cur_text_color);
+                } else {
+                    /* set point of background */
+                    lcd_point_set(x - i, y + j, cur_back_color);
                 }
             }
-        }
-    }else if(CHAR_FONT_16_24 == c_format.font){ /* 16x24 ASCII */
-        for (i = 0; i < 24; i++) {
-            temp_char_16 = ASCII_Table_16x24[((c - 0x20) * 24) + i];
-            if(CHAR_DIRECTION_HORIZONTAL == c_format.direction){
-                for (j = 0; j < 16; j++) {
-                    if (((temp_char_16 >> j) & 0x01) == 0x01) {
-                        /* set point of char */
-                        lcd_point_set(x - i, y + j, c_format.char_color);
-                    } else {
-                        /* set point of background */
-                        lcd_point_set(x - i, y + j, c_format.bk_color);
-                    }
-                }
-            }else{
-                for (j = 0; j < 16; j++) {
-                    if (((temp_char_16 >> j) & 0x01) == 0x01) {
-                        /* set point of char */
-                        lcd_point_set(x + j, y + i, c_format.char_color);
-                    } else {
-                        /* set point of background */
-                        lcd_point_set(x + j, y + i, c_format.bk_color);
-                    }
+        }else{
+            for (j = 0; j < cur_fonts->width; j++) {
+                if (((temp_char >> (7 - j)) & 0x01) == 0x01) {
+                    /* set point of char */
+                    lcd_point_set(x + j, y + i, cur_text_color);
+                } else {
+                    /* set point of background */
+                    lcd_point_set(x + j, y + i, cur_back_color);
                 }
             }
         }
     }
 }
+
+void lcd_vertical_char_display(uint16_t line, uint16_t column, uint8_t ascii)
+{
+    lcd_char_display(line, column, ascii);
+}
+
+void lcd_vertical_string_display(uint16_t stringline, uint16_t offset, uint8_t *ptr)
+{
+    uint16_t i = 0U;
+    int len = strlen((const char *)ptr);
+
+    for (i = 0; i < len; i ++) {
+        lcd_char_display(stringline, (offset + 8 * i), *ptr++);
+    }
+}
+

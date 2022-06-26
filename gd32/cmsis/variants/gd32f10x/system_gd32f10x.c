@@ -42,6 +42,10 @@ OF SUCH DAMAGE.
 #define __HXTAL           (HXTAL_VALUE)            /* high speed crystal oscillator frequency */
 #define __SYS_OSC_CLK     (__IRC8M)                /* main oscillator frequency */
 
+#ifndef VECT_TAB_OFFSET
+#define VECT_TAB_OFFSET  (uint32_t)0x00            /* vector table base offset */
+#endif
+
 /* select a system clock by uncommenting the following line */
 /* use IRC8M */
 //#define __SYSTEM_CLOCK_48M_PLL_IRC8M            (uint32_t)(48000000)
@@ -57,6 +61,18 @@ OF SUCH DAMAGE.
 //#define __SYSTEM_CLOCK_72M_PLL_HXTAL            (uint32_t)(72000000)
 //#define __SYSTEM_CLOCK_96M_PLL_HXTAL            (uint32_t)(96000000)
 #define __SYSTEM_CLOCK_108M_PLL_HXTAL           (uint32_t)(108000000)
+
+#define RCU_MODIFY(__delay)     do{                                     \
+                                    volatile uint32_t i;                \
+                                    if(0 != __delay){                   \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV2; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                        RCU_CFG0 |= RCU_AHB_CKSYS_DIV4; \
+                                        for(i=0; i<__delay; i++){       \
+                                        }                               \
+                                    }                                   \
+                                }while(0)
 
 #define SEL_IRC8M       0x00U
 #define SEL_HXTAL       0x01U
@@ -147,7 +163,13 @@ void SystemInit(void)
     /* reset the RCC clock configuration to the default reset state */
     /* enable IRC8M */
     RCU_CTL |= RCU_CTL_IRC8MEN;
-    
+    while(0U == (RCU_CTL & RCU_CTL_IRC8MSTB)){
+    }
+    RCU_MODIFY(0x50);
+    RCU_CFG0 &= ~RCU_CFG0_SCS;
+    /* reset HXTALEN, CKMEN, PLLEN bits */
+    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN);
+
     /* reset SCS, AHBPSC, APB1PSC, APB2PSC, ADCPSC, CKOUT0SEL bits */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_ADCPSC | RCU_CFG0_ADCPSC_2 | RCU_CFG0_CKOUT0SEL);
@@ -184,6 +206,12 @@ void SystemInit(void)
 
     /* Configure the System clock source, PLL Multiplier, AHB/APBx prescalers and Flash settings */
     system_clock_config();
+    
+#ifdef VECT_TAB_SRAM
+    nvic_vector_table_set(NVIC_VECTTAB_RAM, VECT_TAB_OFFSET);
+#else
+    nvic_vector_table_set(NVIC_VECTTAB_FLASH, VECT_TAB_OFFSET);
+#endif
 }
 
 /*!
@@ -195,10 +223,12 @@ void SystemInit(void)
 void SystemCoreClockUpdate(void)
 {
     uint32_t scss;
-    uint32_t pllsel, predv0sel, pllmf, ck_src;
+    uint32_t pllsel, predv0sel, pllmf, ck_src, idx, clk_exp;
 #ifdef  GD32F10X_CL
     uint32_t predv0, predv1, pll1mf;
 #endif /* GD32F10X_CL */
+    /* exponent of AHB, APB1 and APB2 clock divider */
+    const uint8_t ahb_exp[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 
     scss = GET_BITS(RCU_CFG0, 2, 3);
 
@@ -218,7 +248,6 @@ void SystemCoreClockUpdate(void)
         case SEL_PLL:
             /* PLL clock source selection, HXTAL or IRC8M/2 */
             pllsel = (RCU_CFG0 & RCU_CFG0_PLLSEL);
-
 
             if(RCU_PLLSRC_IRC8M_DIV2 == pllsel){
                 /* PLL clock source is IRC8M/2 */
@@ -280,6 +309,10 @@ void SystemCoreClockUpdate(void)
             SystemCoreClock = IRC8M_VALUE;
             break;
     }
+    /* calculate AHB clock frequency */
+    idx = GET_BITS(RCU_CFG0, 4, 7);
+    clk_exp = ahb_exp[idx];
+    SystemCoreClock = SystemCoreClock >> clk_exp;
 }
 
 #ifdef __SYSTEM_CLOCK_HXTAL

@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +38,7 @@ OF SUCH DAMAGE.
 #ifndef GD32F10X_EVAL_H
 #define GD32F10X_EVAL_H
 
-#ifdef __cplusplus
+#ifdef cplusplus
  extern "C" {
 #endif
 
@@ -147,7 +146,7 @@ uint8_t gd_eval_key_state_get(key_typedef_enum key);
 /* configure COM port */
 void gd_eval_com_init(uint32_t com);
 
-#ifdef __cplusplus
+#ifdef cplusplus
 }
 #endif
 

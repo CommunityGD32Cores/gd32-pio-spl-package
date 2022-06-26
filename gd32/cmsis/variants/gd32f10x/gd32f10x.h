@@ -5,12 +5,11 @@
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
+    \version 2020-09-30, V2.2.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2018, GigaDevice Semiconductor Inc.
-
-    All rights reserved.
+    Copyright (c) 2020, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -276,7 +275,7 @@ typedef enum IRQn
     USART1_IRQn                  = 38,     /*!< USART1 interrupt                                         */
     USART2_IRQn                  = 39,     /*!< USART2 interrupt                                         */
     EXTI10_15_IRQn               = 40,     /*!< EXTI[15:10] interrupts                                   */
-    RTC_ALARM_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
+    RTC_Alarm_IRQn               = 41,     /*!< RTC alarm interrupt                                      */
     USBFS_WKUP_IRQn              = 42,     /*!< USBFS wakeup interrupt                                   */
     TIMER7_BRK_IRQn              = 43,     /*!< TIMER7 break interrupts                                  */
     TIMER7_UP_IRQn               = 44,     /*!< TIMER7 update interrupts                                 */
@@ -313,6 +312,7 @@ typedef enum IRQn
 
 /* enum definitions */
 typedef enum {DISABLE = 0, ENABLE = !DISABLE} EventStatus, ControlStatus;
+//typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 typedef enum {RESET = 0, SET = !RESET} FlagStatus;
 typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrStatus;
 
