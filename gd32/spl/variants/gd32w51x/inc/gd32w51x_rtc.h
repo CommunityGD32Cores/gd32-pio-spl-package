@@ -1,8 +1,8 @@
 /*!
-    \file    gd32w51x_rtc.c
-    \brief   definitions for the RTC
+    \file  gd32w51x_rtc.c
+    \brief definitions for the RTC
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -44,7 +44,7 @@ OF SUCH DAMAGE.
 #define RTC_TIME                           REG32((RTC) + 0x00000000U)                 /*!< RTC time of day register */
 #define RTC_DATE                           REG32((RTC) + 0x00000004U)                 /*!< RTC date register */
 #define RTC_CTL                            REG32((RTC) + 0x00000008U)                 /*!< RTC control register */
-#define RTC_ICS                            REG32((RTC) + 0x0000000CU)                 /*!< RTC initialize control status register */
+#define RTC_ICSR                           REG32((RTC) + 0x0000000CU)                 /*!< RTC status register */
 #define RTC_PSC                            REG32((RTC) + 0x00000010U)                 /*!< RTC time prescaler register */
 #define RTC_WUT                            REG32((RTC) + 0x00000014U)                 /*!< RTC wakeup timer regiser */
 #define RTC_COSC                           REG32((RTC) + 0x00000018U)                 /*!< RTC coarse calibration register */
@@ -60,12 +60,12 @@ OF SUCH DAMAGE.
 #define RTC_TAMP                           REG32((RTC) + 0x00000040U)                 /*!< RTC tamper register */
 #define RTC_ALRM0SS                        REG32((RTC) + 0x00000044U)                 /*!< RTC alarm 0 sub second register */
 #define RTC_ALRM1SS                        REG32((RTC) + 0x00000048U)                 /*!< RTC alarm 1 sub second register */
-#define RTC_PPM_CTL                        REG32((RTC) + 0x00000050U)                 /*!< RTC privilege protection mode control register */
-#define RTC_SPM_CTL                        REG32((RTC) + 0x00000054U)                 /*!< RTC secure protection mode control register */
-#define RTC_STAT                           REG32((RTC) + 0x00000058U)                 /*!< RTC status register */  
-#define RTC_NSMI_STAT                      REG32((RTC) + 0x0000005CU)                 /*!< RTC non-secure masked interrupt status register */
-#define RTC_SMI_STAT                       REG32((RTC) + 0x00000060U)                 /*!< RTC secure masked interrupt status register */
-#define RTC_STATC                          REG32((RTC) + 0x00000064U)                 /*!< RTC status flag clear register */
+#define RTC_PPM_CTL                        REG32((RTC) + 0x00000050U)                 /*!< Privilege protection mode control register */ 
+#define RTC_SPM_CTL                        REG32((RTC) + 0x00000054U)                 /*!< Secure protection mode control register */  
+#define RTC_STAT                           REG32((RTC) + 0x00000058U)                 /*!< Status register */  
+#define RTC_NSMI_STAT                      REG32((RTC) + 0x0000005CU)                 /*!< Non-secure masked interrupt status register */  
+#define RTC_SMI_STAT                       REG32((RTC) + 0x00000060U)                 /*!< Secure masked interrupt status register */  
+#define RTC_STATC                          REG32((RTC) + 0x00000064U)                 /*!< Status flag clear register */  
 #define RTC_BKP0                           REG32((RTC) + 0x00000070U)                 /*!< RTC backup register */
 #define RTC_BKP1                           REG32((RTC) + 0x00000074U)                 /*!< RTC backup register */
 #define RTC_BKP2                           REG32((RTC) + 0x00000078U)                 /*!< RTC backup register */
@@ -127,16 +127,16 @@ OF SUCH DAMAGE.
 #define RTC_CTL_OS                         BITS(21,22)                          /*!< output selection */
 #define RTC_CTL_COEN                       BIT(23)                              /*!< calibration output enable */
 #define RTC_CTL_OUT2EN                     BIT(31)                              /*!< RTC_OUT pin select */
-/* RTC_ICS */
-#define RTC_ICS_ALRM0WF                   BIT(0)                               /*!< alarm0 configuration can be write flag */
-#define RTC_ICS_ALRM1WF                   BIT(1)                               /*!< alarm1 configuration can be write flag */
-#define RTC_ICS_WTWF                      BIT(2)                               /*!< wakeup timer can be write flag */
-#define RTC_ICS_SOPF                      BIT(3)                               /*!< shift function operation pending flag */
-#define RTC_ICS_YCM                       BIT(4)                               /*!< year configuration mark status flag */
-#define RTC_ICS_RSYNF                     BIT(5)                               /*!< register synchronization flag */
-#define RTC_ICS_INITF                     BIT(6)                               /*!< initialization state flag */
-#define RTC_ICS_INITM                     BIT(7)                               /*!< enter initialization mode */
-#define RTC_ICS_SCPF                      BIT(16)                              /*!< smooth calibration pending flag */
+/* RTC_ICSR */
+#define RTC_ICSR_ALRM0WF                   BIT(0)                               /*!< alarm0 configuration can be write flag */
+#define RTC_ICSR_ALRM1WF                   BIT(1)                               /*!< alarm1 configuration can be write flag */
+#define RTC_ICSR_WTWF                      BIT(2)                               /*!< wakeup timer can be write flag */
+#define RTC_ICSR_SOPF                      BIT(3)                               /*!< shift function operation pending flag */
+#define RTC_ICSR_YCM                       BIT(4)                               /*!< year configuration mark status flag */
+#define RTC_ICSR_RSYNF                     BIT(5)                               /*!< register synchronization flag */
+#define RTC_ICSR_INITF                     BIT(6)                               /*!< initialization state flag */
+#define RTC_ICSR_INITM                     BIT(7)                               /*!< enter initialization mode */
+#define RTC_ICSR_SCPF                      BIT(16)                              /*!< smooth calibration pending flag */
 /* RTC_PSC */
 #define RTC_PSC_FACTOR_S                   BITS(0,14)                           /*!< synchronous prescaler factor */
 #define RTC_PSC_FACTOR_A                   BITS(16,22)                          /*!< asynchronous prescaler factor */
@@ -535,49 +535,49 @@ typedef struct
 #define GET_SPM_CTL_BKPRWSECP(regval)      GET_BITS((regval),16,23)                    /*!< get value of RTC_SPM_CTL_BKPRWSECP bit field */
 #define RTC_BKP_PRO_ZONEA_TAIL_NONE        SPM_CTL_BKPRWSECP(0)                        /*!< there is no RTC_BKP registers secure protection zonea */
 #define RTC_BKP_PRO_ZONEA_TAIL_0           SPM_CTL_BKPRWSECP(1)                        /*!< RTC_BKP registers secure protection zonea is RTC_BKP0, which can be read and written only when the APB is in secure mode */ 
-#define RTC_BKP_PRO_ZONEA_TAIL_1           SPM_CTL_BKPRWSECP(2)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP1, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_2           SPM_CTL_BKPRWSECP(3)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP2, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_3           SPM_CTL_BKPRWSECP(4)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP3, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_4           SPM_CTL_BKPRWSECP(5)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP4, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_5           SPM_CTL_BKPRWSECP(6)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP5, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_6           SPM_CTL_BKPRWSECP(7)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP6, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_7           SPM_CTL_BKPRWSECP(8)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP7, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_8           SPM_CTL_BKPRWSECP(9)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP8, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_9           SPM_CTL_BKPRWSECP(10)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP9, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_10          SPM_CTL_BKPRWSECP(11)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP10, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_11          SPM_CTL_BKPRWSECP(12)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP11, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_12          SPM_CTL_BKPRWSECP(13)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP12, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_13          SPM_CTL_BKPRWSECP(14)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP13, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_14          SPM_CTL_BKPRWSECP(15)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP14, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_15          SPM_CTL_BKPRWSECP(16)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP15, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_16          SPM_CTL_BKPRWSECP(17)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP16, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_17          SPM_CTL_BKPRWSECP(18)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP17, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_18          SPM_CTL_BKPRWSECP(19)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP18, which can be read and written only when the APB is in secure mode */
-#define RTC_BKP_PRO_ZONEA_TAIL_19          SPM_CTL_BKPRWSECP(20)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP19, which can be read and written only when the APB is in secure mode */
+#define RTC_BKP_PRO_ZONEA_TAIL_1           SPM_CTL_BKPRWSECP(2)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP1, which can be read and written only when the APB is in secure mode */ 
+#define RTC_BKP_PRO_ZONEA_TAIL_2           SPM_CTL_BKPRWSECP(3)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP2, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_3           SPM_CTL_BKPRWSECP(4)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP3, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_4           SPM_CTL_BKPRWSECP(5)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP4, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_5           SPM_CTL_BKPRWSECP(6)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP5, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_6           SPM_CTL_BKPRWSECP(7)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP6, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_7           SPM_CTL_BKPRWSECP(8)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP7, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_8           SPM_CTL_BKPRWSECP(9)                        /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP8, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_9           SPM_CTL_BKPRWSECP(10)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP9, which can be read and written only when the APB is in secure mode */  
+#define RTC_BKP_PRO_ZONEA_TAIL_10          SPM_CTL_BKPRWSECP(11)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP10, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_11          SPM_CTL_BKPRWSECP(12)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP11, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_12          SPM_CTL_BKPRWSECP(13)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP12, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_13          SPM_CTL_BKPRWSECP(14)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP13, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_14          SPM_CTL_BKPRWSECP(15)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP14, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_15          SPM_CTL_BKPRWSECP(16)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP15, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_16          SPM_CTL_BKPRWSECP(17)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP16, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_17          SPM_CTL_BKPRWSECP(18)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP17, which can be read and written only when the APB is in secure mode */   
+#define RTC_BKP_PRO_ZONEA_TAIL_18          SPM_CTL_BKPRWSECP(19)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP18, which can be read and written only when the APB is in secure mode */  ) 
+#define RTC_BKP_PRO_ZONEA_TAIL_19          SPM_CTL_BKPRWSECP(20)                       /*!< RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKP19, which can be read and written only when the APB is in secure mode */   
 
 #define SPM_CTL_BKPWSECP(regval)           (BITS(24,31) & ((uint32_t)(regval) << 24))  /*!< write value to RTC_SPM_CTL_BKPWSECP bit field */
 #define GET_SPM_CTL_BKPWSECP(regval)       GET_BITS((regval),24,31)                    /*!< get value of RTC_SPM_CTL_BKPWSECP bit field */
 #define RTC_BKP_PRO_ZONEB_TAIL_NONE        SPM_CTL_BKPWSECP(0)                         /*!< there is no RTC_BKP registers secure protection zoneb */ 
-#define RTC_BKP_PRO_ZONEB_TAIL_0           SPM_CTL_BKPWSECP(1)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP0, if there is no RTC_BKP registers secure protection zonea */
-#define RTC_BKP_PRO_ZONEB_TAIL_1           SPM_CTL_BKPWSECP(2)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP1, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_2           SPM_CTL_BKPWSECP(3)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP2, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_3           SPM_CTL_BKPWSECP(4)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP3, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_4           SPM_CTL_BKPWSECP(5)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP4, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_5           SPM_CTL_BKPWSECP(6)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP5, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_6           SPM_CTL_BKPWSECP(7)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP6, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_7           SPM_CTL_BKPWSECP(8)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP7, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_8           SPM_CTL_BKPWSECP(9)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP8, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_9           SPM_CTL_BKPWSECP(10)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP9, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_10          SPM_CTL_BKPWSECP(11)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP10, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_11          SPM_CTL_BKPWSECP(12)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP11, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_12          SPM_CTL_BKPWSECP(13)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP12, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_13          SPM_CTL_BKPWSECP(14)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP13, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_14          SPM_CTL_BKPWSECP(15)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP14, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_15          SPM_CTL_BKPWSECP(16)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP15, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_16          SPM_CTL_BKPWSECP(17)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP16, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_17          SPM_CTL_BKPWSECP(18)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP17, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_18          SPM_CTL_BKPWSECP(19)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP18, if zoneb is valid */
-#define RTC_BKP_PRO_ZONEB_TAIL_19          SPM_CTL_BKPWSECP(20)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP19, if zoneb is valid */
+#define RTC_BKP_PRO_ZONEB_TAIL_0           SPM_CTL_BKPWSECP(1)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP0, if there is no RTC_BKP registers secure protection zonea  */  
+#define RTC_BKP_PRO_ZONEB_TAIL_1           SPM_CTL_BKPWSECP(2)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP1, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_2           SPM_CTL_BKPWSECP(3)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP2, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_3           SPM_CTL_BKPWSECP(4)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP3, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_4           SPM_CTL_BKPWSECP(5)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP4, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_5           SPM_CTL_BKPWSECP(6)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP5, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_6           SPM_CTL_BKPWSECP(7)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP6, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_7           SPM_CTL_BKPWSECP(8)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP7, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_8           SPM_CTL_BKPWSECP(9)                         /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP8, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_9           SPM_CTL_BKPWSECP(10)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP9, if zoneb is valid */  
+#define RTC_BKP_PRO_ZONEB_TAIL_10          SPM_CTL_BKPWSECP(11)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP10, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_11          SPM_CTL_BKPWSECP(12)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP11, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_12          SPM_CTL_BKPWSECP(13)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP12, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_13          SPM_CTL_BKPWSECP(14)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP13, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_14          SPM_CTL_BKPWSECP(15)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP14, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_15          SPM_CTL_BKPWSECP(16)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP15, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_16          SPM_CTL_BKPWSECP(17)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP16, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_17          SPM_CTL_BKPWSECP(18)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP17, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_18          SPM_CTL_BKPWSECP(19)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP18, if zoneb is valid */   
+#define RTC_BKP_PRO_ZONEB_TAIL_19          SPM_CTL_BKPWSECP(20)                        /*!< the last RTC_BKP register of secure protection zoneb is RTC_BKP19, if zoneb is valid */  
 
 /* RTC interrupt source */
 #define RTC_INT_TIMESTAMP                  RTC_CTL_TSIE                                /*!< time-stamp interrupt enable */
@@ -594,7 +594,7 @@ typedef struct
 /* registers reset value */
 #define RTC_REGISTER_RESET                 ((uint32_t)0x00000000U)                     /*!< RTC common register reset value */
 #define RTC_DATE_RESET                     ((uint32_t)0x00002101U)                     /*!< RTC_DATE register reset value */
-#define RTC_ICS_RESET                     ((uint32_t)0x00000000U)                      /*!< RTC_ICS register reset value */
+#define RTC_ICSR_RESET                     ((uint32_t)0x00000000U)                     /*!< RTC_ICSR register reset value */
 #define RTC_PSC_RESET                      ((uint32_t)0x007F00FFU)                     /*!< RTC_PSC register reset value */
 #define RTC_WUT_RESET                      ((uint32_t)0x0000FFFFU)                     /*!< RTC_WUT register reset value */
 #define RTC_SPM_CTL_RESET                  ((uint32_t)0x0000F00FU)                     /*!< RTC_SPM_CTL register reset value */
@@ -608,15 +608,15 @@ typedef struct
 #define CALIB_DECREASE                     ((uint8_t)0x02U)                            /*!< RTC coarse calibration decrease */  
 
 /* RTC flags */
-#define RTC_FLAG_ICSRM                     ((uint32_t)0x80000000U)                     /*!< the flag marker for those defined in RTC_ICS */
-#define RTC_FLAG_ALARM0W                   (RTC_FLAG_ICSRM | RTC_ICS_ALRM0WF)          /*!< alarm0 configuration can be write flag */
-#define RTC_FLAG_ALARM1W                   (RTC_FLAG_ICSRM | RTC_ICS_ALRM1WF)          /*!< alarm1 configuration can be write flag */
-#define RTC_FLAG_WTW                       (RTC_FLAG_ICSRM | RTC_ICS_WTWF)             /*!< wakeup timer can be write flag */
-#define RTC_FLAG_SOP                       (RTC_FLAG_ICSRM | RTC_ICS_SOPF)             /*!< shift function operation pending flag */
-#define RTC_FLAG_YCM                       (RTC_FLAG_ICSRM | RTC_ICS_YCM)              /*!< year configuration mark status flag */
-#define RTC_FLAG_RSYN                      (RTC_FLAG_ICSRM | RTC_ICS_RSYNF)            /*!< register synchronization flag */
-#define RTC_FLAG_INIT                      (RTC_FLAG_ICSRM | RTC_ICS_INITF)            /*!< initialization state flag */
-#define RTC_FLAG_SCP                       (RTC_FLAG_ICSRM | RTC_ICS_SCPF)             /*!< smooth calibration pending flag */
+#define RTC_FLAG_ICSRM                     ((uint32_t)0x80000000U)                     /*!< the flag marker for those defined in RTC_ICSR */
+#define RTC_FLAG_ALARM0W                   (RTC_FLAG_ICSRM | RTC_ICSR_ALRM0WF)         /*!< alarm0 configuration can be write flag */
+#define RTC_FLAG_ALARM1W                   (RTC_FLAG_ICSRM | RTC_ICSR_ALRM1WF)         /*!< alarm1 configuration can be write flag */
+#define RTC_FLAG_WTW                       (RTC_FLAG_ICSRM | RTC_ICSR_WTWF)            /*!< wakeup timer can be write flag */
+#define RTC_FLAG_SOP                       (RTC_FLAG_ICSRM | RTC_ICSR_SOPF)            /*!< shift function operation pending flag */
+#define RTC_FLAG_YCM                       (RTC_FLAG_ICSRM | RTC_ICSR_YCM)             /*!< year configuration mark status flag */
+#define RTC_FLAG_RSYN                      (RTC_FLAG_ICSRM | RTC_ICSR_RSYNF)           /*!< register synchronization flag */
+#define RTC_FLAG_INIT                      (RTC_FLAG_ICSRM | RTC_ICSR_INITF)           /*!< initialization state flag */
+#define RTC_FLAG_SCP                       (RTC_FLAG_ICSRM | RTC_ICSR_SCPF)            /*!< smooth calibration pending flag */
 #define RTC_FLAG_ALARM0                    RTC_STAT_ALRM0F                             /*!< alarm0 occurs flag */
 #define RTC_FLAG_ALARM1                    RTC_STAT_ALRM1F                             /*!< alarm1 occurs flag */
 #define RTC_FLAG_WT                        RTC_STAT_WTF                                /*!< wakeup timer occurs flag */
@@ -740,9 +740,9 @@ void rtc_pri_pro_disable(uint32_t sub_area);
 void rtc_sec_pro_enable(uint32_t sub_area);
 /* disable RTC secure protection mode */
 void rtc_sec_pro_disable(uint32_t sub_area);
-/* set the RTC_BKP secure protection zonea tail value */
+/* set the RTC_BKP secure protection zonea tail value*/
 void rtc_bkp_zonea_sec_pro_set(uint32_t zonea_tail);
-/* set the RTC_BKP secure protection zoneb tail value */
+/* set the RTC_BKP secure protection zoneb tail value*/
 ErrStatus rtc_bkp_zoneb_sec_pro_set(uint32_t zoneb_tail);
 /* check the RTC_BKP secure protection zoneb is valid or not*/
 ErrStatus rtc_bkp_zoneb_sec_pro_check(void);

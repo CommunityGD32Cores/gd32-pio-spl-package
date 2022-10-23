@@ -1,8 +1,8 @@
 /*!
-    \file    gd32w51x_spi.c
-    \brief   SPI driver
+    \file  gd32w51x_spi.c
+    \brief SPI driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -330,7 +330,7 @@ void i2s_psc_config(uint32_t spi_periph, uint32_t i2s_audiosample, uint32_t i2s_
     \param[out] none
     \retval     none
 */
-void i2s_ckin_psc_config(uint32_t input_clock, uint32_t i2s_audiosample, uint32_t i2s_frameformat, uint32_t i2s_mckout)
+void i2s1_ckin_psc_config(uint32_t input_clock, uint32_t i2s_audiosample, uint32_t i2s_frameformat, uint32_t i2s_mckout)
 {
     uint32_t i2sdiv = 2U, i2sof = 0U, clks = 0U, i2sclock = 0U;
 
@@ -449,7 +449,7 @@ void spi_nss_internal_low(uint32_t spi_periph)
 
 /*!
     \brief      enable SPI DMA send or receive 
-    \param[in]  spi_periph: SPIx(x=0,1) or I2Sx_ADD(x=1)
+    \param[in]  spi_periph: SPIx(x=0,1)
     \param[in]  spi_dma: SPI DMA mode
                 only one parameter can be selected which is shown as below:
       \arg        SPI_DMA_TRANSMIT: SPI transmit data use DMA
@@ -468,7 +468,7 @@ void spi_dma_enable(uint32_t spi_periph, uint8_t spi_dma)
 
 /*!
     \brief      disable SPI DMA send or receive 
-    \param[in]  spi_periph: SPIx(x=0,1) or I2Sx_ADD(x=1)
+    \param[in]  spi_periph: SPIx(x=0,1)
     \param[in]  spi_dma: SPI DMA mode
                 only one parameter can be selected which is shown as below:
       \arg        SPI_DMA_TRANSMIT: SPI transmit data use DMA
@@ -555,6 +555,9 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 */
 void spi_crc_polynomial_set(uint32_t spi_periph,uint16_t crc_poly)
 {
+    /* enable SPI CRC */
+    SPI_CTL0(spi_periph) |= (uint32_t)SPI_CTL0_CRCEN;
+
     /* set SPI CRC polynomial */
     SPI_CRCPOLY(spi_periph) = (uint32_t)crc_poly;
 }
@@ -703,7 +706,7 @@ void i2s_full_duplex_mode_config(uint32_t i2s_add_periph, uint32_t i2s_mode, uin
     \param[out] none
     \retval     none
 */
-void qspi_enable(uint32_t spi_periph)
+void spi_quad_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QMOD;
 }
@@ -714,7 +717,7 @@ void qspi_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_disable(uint32_t spi_periph)
+void spi_quad_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QMOD);
 }
@@ -725,7 +728,7 @@ void qspi_disable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_write_enable(uint32_t spi_periph)
+void spi_quad_write_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QRD);
 }
@@ -736,7 +739,7 @@ void qspi_write_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_read_enable(uint32_t spi_periph)
+void spi_quad_read_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QRD;
 }
@@ -747,7 +750,7 @@ void qspi_read_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_io23_output_enable(uint32_t spi_periph)
+void spi_quad_io23_output_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_IO23_DRV;
 }
@@ -758,7 +761,7 @@ void qspi_io23_output_enable(uint32_t spi_periph)
     \param[out] none
     \retval     none
 */
-void qspi_io23_output_disable(uint32_t spi_periph)
+ void spi_quad_io23_output_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_IO23_DRV);
 }

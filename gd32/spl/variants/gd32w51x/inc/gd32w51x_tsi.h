@@ -1,8 +1,8 @@
 /*!
     \file    gd32w51x_tsi.h
-    \brief   definitions for the TSI
+    \brief definitions for the TSI
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -269,7 +269,7 @@ void tsi_channel_pin_enable(uint32_t channel);
 void tsi_channel_pin_disable(uint32_t channel);
 
 /* configure TSI triggering by software */
-void tsi_software_mode_config(void);
+void tsi_sofeware_mode_config(void);
 /* start a charge-transfer sequence when TSI is in software trigger mode */
 void tsi_software_start(void);
 /* stop a charge-transfer sequence when TSI is in software trigger mode */
@@ -294,6 +294,20 @@ void tsi_analog_on(uint32_t group_pin);
 /* switch off analog pin */
 void tsi_analog_off(uint32_t group_pin);
 
+/* enable TSI interrupt */
+void tsi_interrupt_enable(uint32_t source);
+/* disable TSI interrupt */
+void tsi_interrupt_disable(uint32_t source);
+/* clear interrupt flag */
+void tsi_interrupt_flag_clear(uint32_t flag);
+/* get TSI interrupt flag */
+FlagStatus tsi_interrupt_flag_get(uint32_t flag);
+
+/* clear flag */
+void tsi_flag_clear(uint32_t flag);
+/* get flag */
+FlagStatus tsi_flag_get(uint32_t flag);
+
 /* enbale group */
 void tsi_group_enable(uint32_t group);
 /* disbale group */
@@ -306,19 +320,5 @@ uint16_t tsi_group0_cycle_get(void);
 uint16_t tsi_group1_cycle_get(void);
 /* get the cycle number for group2 as soon as a charge-transfer sequence completes */
 uint16_t tsi_group2_cycle_get(void);
-
-/* clear flag */
-void tsi_flag_clear(uint32_t flag);
-/* get flag */
-FlagStatus tsi_flag_get(uint32_t flag);
-
-/* enable TSI interrupt */
-void tsi_interrupt_enable(uint32_t source);
-/* disable TSI interrupt */
-void tsi_interrupt_disable(uint32_t source);
-/* clear interrupt flag */
-void tsi_interrupt_flag_clear(uint32_t flag);
-/* get TSI interrupt flag */
-FlagStatus tsi_interrupt_flag_get(uint32_t flag);
 
 #endif /* GD32W51X_TSI_H */

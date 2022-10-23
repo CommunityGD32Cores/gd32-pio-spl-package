@@ -2,7 +2,7 @@
     \file    gd32w51x_usart.c
     \brief   USART driver
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -632,7 +632,7 @@ void usart_clock_disable(uint32_t usart_periph)
 
 /*!
     \brief      configure USART synchronous mode parameters
-    \param[in]  usart_periph: USARTx(x=0,2)
+    \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  clen: last bit clock pulse
                 only one parameter can be selected which is shown as below:
       \arg        USART_CLEN_NONE: clock pulse of the last data bit (MSB) is not output to the CK pin
@@ -757,7 +757,7 @@ void usart_smartcard_mode_early_nack_disable(uint32_t usart_periph)
 /*!
     \brief      configure smartcard auto-retry number
     \param[in]  usart_periph: USARTx(x=0,2)
-    \param[in]  scrtnum: 0x00-0x07, smartcard auto-retry number
+    \param[in]  scrtnum: 0x00000000-0x00000007, smartcard auto-retry number
     \param[out] none
     \retval     none
 */
@@ -928,7 +928,7 @@ void usart_rs485_driver_disable(uint32_t usart_periph)
 /*!
     \brief      configure driver enable assertion time
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  deatime: 0x00-0x1F
+    \param[in]  deatime: 0x00000000-0x0000001F
     \param[out] none
     \retval     none
 */
@@ -944,7 +944,7 @@ void usart_driver_assertime_config(uint32_t usart_periph, uint32_t deatime)
 /*!
     \brief      configure driver enable de-assertion time
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  dedtime: 0x00-0x1F
+    \param[in]  dedtime: 0x00000000-0x0000001F
     \param[out] none
     \retval     none
 */
@@ -1118,24 +1118,6 @@ uint8_t usart_receive_fifo_counter_number(uint32_t usart_periph)
 }
 
 /*!
-    \brief      enable USART command
-    \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  cmdtype: command type
-                only one parameter can be selected which is shown as below:
-      \arg        USART_CMD_ABDCMD: auto baudrate detection command
-      \arg        USART_CMD_SBKCMD: send break command
-      \arg        USART_CMD_MMCMD: mute mode command
-      \arg        USART_CMD_RXFCMD: receive data flush command
-      \arg        USART_CMD_TXFCMD: transmit data flush request
-    \param[out] none
-    \retval     none
-*/
-void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype)
-{
-    USART_CMD(usart_periph) |= (cmdtype);
-}
-
-/*!
     \brief      get flag in STAT/CHC/RFCS register
     \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  flag: flag type
@@ -1158,7 +1140,7 @@ void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype)
       \arg        USART_FLAG_BSY: busy flag
       \arg        USART_FLAG_AM: address match flag
       \arg        USART_FLAG_SB: send break flag
-      \arg        USART_FLAG_RWU: receiver wakeup from mute mode
+      \arg        USART_FLAG_RWU: receiver wakeup from mute mode.
       \arg        USART_FLAG_WU: wakeup from deep-sleep mode flag
       \arg        USART_FLAG_TEA: transmit enable acknowledge flag
       \arg        USART_FLAG_REA: receive enable acknowledge flag 
@@ -1256,6 +1238,24 @@ void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrup
 void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt)
 {
     USART_REG_VAL(usart_periph, interrupt) &= ~BIT(USART_BIT_POS(interrupt));
+}
+
+/*!
+    \brief      enable USART command
+    \param[in]  usart_periph: USARTx(x=0,1,2)
+    \param[in]  cmdtype: command type
+                only one parameter can be selected which is shown as below:
+      \arg        USART_CMD_ABDCMD: auto baudrate detection command
+      \arg        USART_CMD_SBKCMD: send break command
+      \arg        USART_CMD_MMCMD: mute mode command
+      \arg        USART_CMD_RXFCMD: receive data flush command
+      \arg        USART_CMD_TXFCMD: transmit data flush request
+    \param[out] none
+    \retval     none
+*/
+void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype)
+{
+    USART_CMD(usart_periph) |= (cmdtype);
 }
 
 /*!

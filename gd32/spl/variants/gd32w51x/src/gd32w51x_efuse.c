@@ -2,486 +2,507 @@
     \file    gd32w51x_efuse.c
     \brief   EFUSE driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
 #include "gd32w51x_efuse.h"
 
+/*write mode*/
+#define EFUSE_NON_WRITEABLE             0
+#define EFUSE_BYTE_WRITEABLE            1
+#define EFUSE_WIDTH_WRITEABLE           2
+
+
+/* read mode*/
+#define EFUSE_BUS_READABLE              0
+#define EFUSE_BYTE_READABLE             1
+#define EFUSE_WIDTH_READABLE            2
+
+#define ALIGN_BYTES         sizeof(uint32_t)
+
 /*!
-    \brief      read EFUSE value
-    \param[in]  ef_addr: EFUSE address
-      \arg        0~0xf8
-    \param[in]  size: size of EFUSE
-      \arg        1~0x40
-    \param[out] buf: the buffer for storing read-out EFUSE register value
-    \retval     ErrStatus: ERROR or SUCCESS
+    \brief      get the efuse attribute by type
+    \param[in]  type
+      \arg        EFUSE_TYPE_CTL     : Efuse control
+      \arg        EFUSE_TYPE_TZ_CTL  : Efuse trustzone control
+      \arg        EFUSE_TYPE_FP      : Efuse flash protection
+      \arg        EFUSE_TYPE_US_CTL  : Efuse user control
+      \arg        EFUSE_TYPE_MCU_INIT: Efuse MCU initialization parameters
+      \arg        EFUSE_TYPE_AES_KEY : Efuse AES key
+      \arg        EFUSE_TYPE_ROTPK   : Efuse ROTPK
+      \arg        EFUSE_TYPE_DBG_PWD : Efuse debug password
+      \arg        EFUSE_TYPE_RSS     : Efuse RSS signature
+      \arg        EFUSE_TYPE_MCU_UID : Efuse MCU UID
+      \arg        EFUSE_TYPE_HUK     : Efuse HUK
+      \arg        EFUSE_TYPE_RF      : Efuse RF
+      \arg        EFUSE_TYPE_US_DATA : Efuse user data
+    \param[out]  attr : the pointer of efuse attribute
+    \retval     status
 */
-ErrStatus efuse_read(uint32_t ef_addr, uint32_t size, uint32_t buf[])
+ErrStatus efuse_get_attr(uint8_t type, struct efuse_attr_t *attr)
 {
-    uint32_t i = 0U;
-    uint32_t timeout = 0xFFFFU;
-    uint32_t reg_addr = 0U;
-    uint32_t number = size / 4U;
-    if(number == 0U){
-        number = 1U;
+    ErrStatus status = SUCCESS;
+
+    switch (type) {
+        case EFUSE_TYPE_CTL:
+            attr->reg_addr = EFUSE_REG_CTL;
+            attr->efuse_addr = EFUSE_ADDR_CTL;
+            attr->width = EFUSE_WD_CTL;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_WIDTH_READABLE;
+            attr->locked = (EFUSE_CTL & EFUSE_CTL_EFBOOTLK) ? EFUSE_ATTR_LOCKED : EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_TZ_CTL:
+            attr->reg_addr = EFUSE_REG_TZCTL;
+            attr->efuse_addr = EFUSE_ADDR_TZ_CTL;
+            attr->width = EFUSE_WD_CTL;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_FP:
+            attr->reg_addr = EFUSE_REG_FPCTL;
+            attr->efuse_addr = EFUSE_ADDR_FP;
+            attr->width = EFUSE_WD_CTL;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = (EFUSE_USCTL & EFUSE_USCTL_EFOPLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_US_CTL:
+            attr->reg_addr = EFUSE_REG_US_CTL;
+            attr->efuse_addr = EFUSE_ADDR_US_CTL;
+            attr->width = EFUSE_WD_US_CTL;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_MCU_INIT:
+            attr->reg_addr = EFUSE_REG_MCU_INIT;
+            attr->efuse_addr = EFUSE_ADDR_MCU_INIT;
+            attr->width = EFUSE_WD_MCU_INIT;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = (EFUSE_USCTL & EFUSE_USCTL_MCUINITLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_AES_KEY:
+            attr->reg_addr = EFUSE_REG_AES_KEY;
+            attr->efuse_addr = EFUSE_ADDR_AES_KEY;
+            attr->width = EFUSE_WD_AES_KEY;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = (EFUSE_USCTL & EFUSE_USCTL_AESEN) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_ROTPK:
+            attr->reg_addr = EFUSE_REG_ROTPK;
+            attr->efuse_addr = EFUSE_ADDR_ROTPK;
+            attr->width = EFUSE_WD_ROTPK;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_WIDTH_READABLE;
+            attr->locked = (EFUSE_TZCTL & EFUSE_TZCTL_ROTLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_DBG_PWD:
+            attr->reg_addr = EFUSE_REG_DBG_PWD;
+            attr->efuse_addr = EFUSE_ADDR_DBG_PWD;
+            attr->width = EFUSE_WD_DBG_PWD;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_WIDTH_READABLE;
+            attr->locked = (EFUSE_TZCTL & EFUSE_TZCTL_DPLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_RSS:
+            attr->reg_addr = EFUSE_REG_RSS;
+            attr->efuse_addr = EFUSE_ADDR_RSS;
+            attr->width = EFUSE_WD_RSS;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_WIDTH_READABLE;
+            attr->locked = (EFUSE_TZCTL & EFUSE_TZCTL_RSSLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_MCU_UID:
+            attr->reg_addr = EFUSE_REG_PUID;
+            attr->efuse_addr = EFUSE_ADDR_PUID;
+            attr->width = EFUSE_WD_PUID;
+            attr->write_mode = EFUSE_NON_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->locked = EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_HUK:
+            attr->reg_addr = EFUSE_REG_HUK;
+            attr->efuse_addr = EFUSE_ADDR_HUK;
+            attr->write_mode = EFUSE_NON_WRITEABLE;
+            attr->read_mode = EFUSE_BUS_READABLE;
+            attr->width = EFUSE_WD_HUK;
+            attr->locked = EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_RF:
+            attr->reg_addr = EFUSE_REG_RF;
+            attr->efuse_addr = EFUSE_ADDR_RF;
+            attr->width = EFUSE_WD_RF;
+            attr->write_mode = EFUSE_BYTE_WRITEABLE;
+            attr->read_mode = EFUSE_BYTE_READABLE;
+            attr->locked = (EFUSE_TZCTL & EFUSE_TZCTL_RFLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        case EFUSE_TYPE_US_DATA :
+            attr->reg_addr = EFUSE_REG_US_DATA;
+            attr->efuse_addr = EFUSE_ADDR_US_DATA;
+            attr->width = EFUSE_WD_US_DATA;
+            attr->write_mode = EFUSE_WIDTH_WRITEABLE;
+            attr->read_mode = EFUSE_WIDTH_READABLE;
+            attr->locked = (EFUSE_USCTL & EFUSE_USCTL_UDLK) ? EFUSE_ATTR_LOCKED: EFUSE_ATTR_UNLOCK;
+            break;
+        default:
+            status = ERROR;
+            break;
     }
 
-    /* assert EFUSE address and size parameter */
-    if((RESERVED_ADDR < ef_addr) || (size > EFUSE_MAX_SIZE)){
+    return status;
+}
+
+/*!
+    \brief      write data to bus by register address
+    \param[in]  reg_addr : the register address
+    \param[in]  offset : the offset bytes
+    \param[in]  size : the size of bytes to write
+    \param[in]  buf : the data to write
+    \param[out] none
+    \retval     status
+*/
+
+void efuse_bus_write(uint32_t reg_addr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    uint32_t reg_data;
+    uint8_t i;
+    uint8_t j;
+    uint8_t *pdata;
+    uint8_t *pbuf;
+
+    pbuf = buf;
+    pdata = (uint8_t *) &reg_data;
+
+    if (offset > 0) {
+        reg_addr = reg_addr + ((offset >> 2) << 2);
+        offset = offset & (ALIGN_BYTES - 1);
+
+        j = ALIGN_BYTES - offset;
+        j = (size > j) ? j : size;
+
+        reg_data = REG32(reg_addr);
+
+        for (i = 0; i < j; i++) {
+            pdata[i + offset] = *pbuf++;
+        }
+
+        REG32(reg_addr) = reg_data;
+
+        reg_addr += ALIGN_BYTES;
+        size -= j;
+    }
+
+    j = size >> 2;
+
+    if (j > 0) {
+        for (i = 0; i < j; i++) {
+            reg_data = *((uint32_t *) pbuf);
+            REG32(reg_addr) = reg_data;
+
+            reg_addr += ALIGN_BYTES;
+            pbuf += ALIGN_BYTES;
+            size -= ALIGN_BYTES;
+        }
+    }
+
+    if (size > 0) {
+        reg_data = REG32(reg_addr);
+
+        for (i = 0; i < size; i++) {
+            pdata[i] = *pbuf++;
+        }
+
+        REG32(reg_addr) = reg_data;
+    }
+}
+
+/*!
+    \brief      write bytes data to efuse
+    \param[in]  attr : the pointer of efuse attribute
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to write
+    \param[in]  buf : the data to write
+    \param[out] none
+    \retval     status
+*/
+void efuse_bytes_write(struct efuse_attr_t *attr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    uint8_t i;
+
+
+    for (i = 0; i < size; i++) {
+        EFUSE_CS = EFUSE_CS & (~EFUSE_CS_PGIF);
+        EFUSE_CS = EFUSE_CS | EFUSE_CS_EFRW;
+        EFUSE_ADDR = ((attr->efuse_addr + offset + i) & EFUSE_ADDR_EFADDR) | ((1 << 8) & EFUSE_ADDR_EFSIZE);
+
+        efuse_bus_write(attr->reg_addr, offset + i, 1, buf + i);
+
+        EFUSE_CS = EFUSE_CS | EFUSE_CS_EFSTR;
+
+        while(!(EFUSE_CS & EFUSE_CS_PGIF));
+
+        EFUSE_CS = EFUSE_CS | EFUSE_CS_PGIC;
+    }
+}
+
+
+/*!
+    \brief      write width data to efuse
+    \param[in]  attr : the pointer of efuse attribute
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to write
+    \param[in]  buf : the data to write
+    \param[out] none
+    \retval     status
+*/
+void efuse_width_write(struct efuse_attr_t *attr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    EFUSE_CS = EFUSE_CS & (~EFUSE_CS_PGIF);
+    EFUSE_CS = EFUSE_CS | EFUSE_CS_EFRW;
+    EFUSE_ADDR = ((attr->efuse_addr + offset) & EFUSE_ADDR_EFADDR) | ((size << 8) & EFUSE_ADDR_EFSIZE);
+
+    efuse_bus_write(attr->reg_addr, offset, size, buf);
+
+    EFUSE_CS = EFUSE_CS | EFUSE_CS_EFSTR;
+
+    while(!(EFUSE_CS & EFUSE_CS_PGIF));
+
+    EFUSE_CS = EFUSE_CS | EFUSE_CS_PGIC;
+
+}
+
+/*!
+    \brief      read bus data to buffer by register address
+    \param[in]  reg_addr : the register address
+    \param[in]  offset : the offset bytes
+    \param[in]  size : the size of bytes to write
+    \param[out] buf : the data to write
+    \retval     status
+*/
+
+void efuse_bus_read(uint32_t reg_addr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    uint32_t reg_data;
+    uint8_t i;
+    uint8_t j;
+    uint8_t *pdata;
+    uint8_t *pbuf;
+
+    pbuf = buf;
+    pdata = (uint8_t *) &reg_data;
+
+    if (offset > 0) {
+        reg_addr = reg_addr+ ((offset >> 2) << 2);
+        offset = offset & (ALIGN_BYTES - 1);
+
+        j = ALIGN_BYTES - offset;
+        j = (size > j) ? j : size;
+        reg_data = REG32(reg_addr);
+
+        for (i = 0; i < j; i++) {
+            *pbuf++ = pdata[i + offset];
+        }
+
+        reg_addr += ALIGN_BYTES;
+        size -= j;
+    }
+
+    j = size >> 2;
+
+    if (j > 0) {
+        for (i = 0; i < j; i++) {
+            reg_data = REG32(reg_addr);
+            *((uint32_t *) pbuf) = reg_data;
+
+            reg_addr += ALIGN_BYTES;
+            pbuf += ALIGN_BYTES;
+            size -= ALIGN_BYTES;
+        }
+    }
+
+    if (size > 0) {
+        reg_data = REG32(reg_addr);
+
+        for (i = 0; i < size; i++) {
+            *pbuf++ = pdata[i];
+        }
+    }
+}
+
+
+/*!
+    \brief      macro bytes read efuse data to buffer
+    \param[in]  attr : the pointer of efuse attribute
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to write
+    \param[out] buf : the data to write
+    \retval     status
+*/
+void efuse_macro_bytes_read(struct efuse_attr_t *attr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    uint8_t i;
+
+    for (i = 0; i < size; i++) {
+        EFUSE_CS = EFUSE_CS & (~EFUSE_CS_RDIF);
+        EFUSE_CS = EFUSE_CS & (~EFUSE_CS_EFRW);
+        EFUSE_ADDR = ((attr->efuse_addr + offset + i) & EFUSE_ADDR_EFADDR) | ((1 << 8) & EFUSE_ADDR_EFSIZE);
+        EFUSE_CS = EFUSE_CS | EFUSE_CS_EFSTR;
+
+        while(!(EFUSE_CS & EFUSE_CS_RDIF));
+
+        EFUSE_CS = EFUSE_CS | EFUSE_CS_RDIC;
+
+        efuse_bus_read(attr->reg_addr, offset + i, 1, buf + i);
+    }
+}
+
+/*!
+    \brief      macro width read efuse data to buffer
+    \param[in]  attr : the pointer of efuse attribute
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to write
+    \param[out] buf : the data to write
+    \retval     status
+*/
+void efuse_macro_width_read(struct efuse_attr_t *attr, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    EFUSE_CS = EFUSE_CS & (~EFUSE_CS_RDIF);
+    EFUSE_CS = EFUSE_CS & (~EFUSE_CS_EFRW);
+    EFUSE_ADDR = ((attr->efuse_addr + offset) & EFUSE_ADDR_EFADDR) | ((size << 8) & EFUSE_ADDR_EFSIZE);
+    EFUSE_CS = EFUSE_CS | EFUSE_CS_EFSTR;
+
+    while(!(EFUSE_CS & EFUSE_CS_RDIF));
+
+    EFUSE_CS = EFUSE_CS | EFUSE_CS_RDIC;
+
+    efuse_bus_read(attr->reg_addr, offset, size, buf);
+}
+
+/*!
+    \brief      write data to efuse by efuse type
+    \param[in]  macro
+      \arg        EFUSE_TYPE_CTL     : Efuse control
+      \arg        EFUSE_TYPE_TZ_CTL  : Efuse trustzone control
+      \arg        EFUSE_TYPE_FP      : Efuse flash protection
+      \arg        EFUSE_TYPE_US_CTL  : Efuse user control
+      \arg        EFUSE_TYPE_MCU_INIT: Efuse MCU initialization parameters
+      \arg        EFUSE_TYPE_AES_KEY : Efuse AES key
+      \arg        EFUSE_TYPE_ROTPK   : Efuse ROTPK
+      \arg        EFUSE_TYPE_DBG_PWD : Efuse debug password
+      \arg        EFUSE_TYPE_RSS     : Efuse RSS signature
+      \arg        EFUSE_TYPE_MCU_UID : Efuse MCU UID
+      \arg        EFUSE_TYPE_HUK     : Efuse HUK
+      \arg        EFUSE_TYPE_RF      : Efuse RF
+      \arg        EFUSE_TYPE_US_DATA : Efuse user data
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to writes
+    \param[in]  buf : the data to write
+    \param[out] none
+    \retval     status
+*/
+ErrStatus efuse_write(uint8_t type, uint8_t offset, uint8_t size, uint8_t *buf)
+{
+    struct efuse_attr_t attr;
+
+    if (efuse_get_attr(type, &attr) != SUCCESS)
         return ERROR;
-    }
 
-    /* get the register address corresponding to EFUSE */
-    if(0x4U > ef_addr){
-        reg_addr = (uint32_t)(EFUSE + 0x08U + (ef_addr * 4U));
-    }else{
-        /* when EFUSE address is greater than 4, itr must be an integral multiple of 4 */
-        if((ef_addr % 4U) == 0U){
-            reg_addr = (uint32_t)(EFUSE + 0x14U + ef_addr);
-        }else{
-            return ERROR;
-        }
-    }
+    if (attr.locked == EFUSE_ATTR_LOCKED)
+        return ERROR;
 
-    /* EFUSE read operation */
-    EFUSE_CS &= (~EFUSE_CS_EFRW);
-    if((RF_DATA_ADDR <=  ef_addr) && (ef_addr < USER_DATA_ADDR)){
-        for(i=0 ; i<size; i++){
-            EFUSE_ADDR = (uint32_t)((1 << 8U) | (ef_addr+i));
+    if ((offset + size) > attr.width)
+        return ERROR;
 
-            /* start read EFUSE operation */
-            EFUSE_CS |= EFUSE_CS_EFSTR;
+    if (attr.write_mode == EFUSE_BYTE_WRITEABLE) {
 
-            /* wait for the operation to complete */
-            do{
-                timeout--;
-            }while((RESET == efuse_flag_get(EFUSE_RDIF)) && (0x00U != timeout));
-            if(0x00U == timeout){
-                return ERROR;
-            }
-        }
-    }else{
-        /* write EFUSE address and size */
-        EFUSE_ADDR = (uint32_t)((size << 8U) | ef_addr);
+        efuse_bytes_write(&attr, offset, size, buf);
 
-        /* start read EFUSE operation */
-        EFUSE_CS |= EFUSE_CS_EFSTR; 
+    } else if (attr.write_mode == EFUSE_WIDTH_WRITEABLE) {
 
-        /* wait for the operation to complete */
-        do{
-            timeout--;
-        }while((RESET == efuse_flag_get(EFUSE_RDIF)) && (0x00U != timeout));
-        if(0x00U == timeout){
-            return ERROR;
-        }
-    }
+        efuse_width_write(&attr, offset, size, buf);
 
-    /* read EFUSE */
-    for(i = 0U; i < number; i++){
-        buf[i] = REG32(reg_addr + (4U * i));
+    } else {
+        return ERROR;
     }
 
     return SUCCESS;
 }
 
 /*!
-    \brief      write EFUSE
-    \param[in]  ef_addr: EFUSE address, when ef_addr is greater than 4, the ef_addr must be an integral multiple of 4
-      \arg        0~0xf8
-    \param[in]  size: size of EFUSE(byte)
-      \arg        1~0x40
-    \param[in]  buf: the buffer of data written to EFUSE
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
+    \brief      read efuse data to buffer by efuse type
+    \param[in]  type
+      \arg        EFUSE_TYPE_CTL     : Efuse control
+      \arg        EFUSE_TYPE_TZ_CTL  : Efuse trustzone control
+      \arg        EFUSE_TYPE_FP      : Efuse flash protection
+      \arg        EFUSE_TYPE_US_CTL  : Efuse user control
+      \arg        EFUSE_TYPE_MCU_INIT: Efuse MCU initialization parameters
+      \arg        EFUSE_TYPE_AES_KEY : Efuse AES key
+      \arg        EFUSE_TYPE_ROTPK   : Efuse ROTPK
+      \arg        EFUSE_TYPE_DBG_PWD : Efuse debug password
+      \arg        EFUSE_TYPE_RSS     : Efuse RSS signature
+      \arg        EFUSE_TYPE_MCU_UID : Efuse MCU UID
+      \arg        EFUSE_TYPE_HUK     : Efuse HUK
+      \arg        EFUSE_TYPE_RF      : Efuse RF
+      \arg        EFUSE_TYPE_US_DATA : Efuse user data
+    \param[in]  offset : the offset bytes from efuse macro address
+    \param[in]  size : the size of bytes to read
+    \param[out]  buf : read out data to the buffer
+    \retval     status
 */
-ErrStatus efuse_write(uint32_t ef_addr, uint32_t size, uint32_t buf[])
+
+ErrStatus efuse_read(uint8_t type, uint8_t offset, uint8_t size, uint8_t *buf)
 {
-    uint32_t i = 0U;
-    uint32_t timeout = 0xFFFFU;
-    uint32_t reg_addr = 0U;
-    uint32_t number = size / 4U;
-    if(number == 0U){
-        number = 1U;
-    }
+    struct efuse_attr_t attr;
 
-    /* assert EFUSE address and size parameter */
-    if((RESERVED_ADDR < ef_addr) || (size > EFUSE_MAX_SIZE)){
+    if (efuse_get_attr(type, &attr) != SUCCESS)
         return ERROR;
-    }
 
-    /* PUID and HUK are not modifiable */
-    if((MCU_UID_ADDR < ef_addr) && (ef_addr < RF_DATA_ADDR)){
+    if ((offset + size) > attr.width)
         return ERROR;
+
+    if (attr.locked == EFUSE_ATTR_UNLOCK) {
+        if (attr.read_mode == EFUSE_BYTE_READABLE) {
+            efuse_macro_bytes_read(&attr, offset, size, buf);
+        } else if (attr.read_mode == EFUSE_WIDTH_READABLE) {
+            efuse_macro_width_read(&attr, offset, size, buf);
+        } else {
+            efuse_bus_read(attr.reg_addr, offset, size, buf);
+        }
+    } else {
+        efuse_bus_read(attr.reg_addr, offset, size, buf);
     }
 
-    /* get the register address corresponding to EFUSE */
-    if(0x4U > ef_addr){
-        reg_addr = (uint32_t)(EFUSE + 0x08U + (ef_addr * 4U));
-    }else{
-        /* when EFUSE address is greater than 4, it must be an integral multiple of 4 */
-        if(ef_addr % 4U){
-            return ERROR;
-        }else{
-            reg_addr = (uint32_t)(EFUSE + 0x14U + ef_addr);
-        }
-    }
-
-    /* EFUSE power on */
-    RCU_CFG1 |= RCU_CFG1_BGPU;
-    /* EFUSE write operation */
-    EFUSE_CS |= EFUSE_CS_EFRW;
-
-    /* RF data can only be written in byte */
-    if((RF_DATA_ADDR <= ef_addr) && (USER_DATA_ADDR > ef_addr)){
-        for(i = 0U ; i < size; i++){
-            EFUSE_ADDR = (uint32_t)((1U << 8U) | (ef_addr + i));
-            REG32(reg_addr + ((i / 4U) * 4U)) = buf[ i / 4U];
-            /* start write EFUSE operation */
-            EFUSE_CS |= EFUSE_CS_EFSTR;
-
-            /* wait for the operation to complete */
-            do{
-                timeout--;
-            }while((RESET == efuse_flag_get(EFUSE_PGIF)) && (0x00U != timeout));
-            if(0x00U == timeout){
-                return ERROR;
-            }
-        }
-    }else{
-        /* write EFUSE address and size */
-        EFUSE_ADDR = (uint32_t)((size << 8U) | ef_addr);
-
-        /* write EFUSE */
-        for(i = 0U; i < number; i++){
-            REG32(reg_addr + (4U * i)) = buf[i];
-        }
-
-        /* start write EFUSE operation */
-        EFUSE_CS |= EFUSE_CS_EFSTR;
-
-        /* wait for the operation to complete */
-        do{
-            timeout--;
-        }while((RESET == efuse_flag_get(EFUSE_PGIF)) && (0x00U != timeout));
-        if(0x00U == timeout){
-            return ERROR;
-        }
-    }
-
-    /* clear EFUSE write operation flag */
-    EFUSE_CS &= (~EFUSE_CS_EFRW);
-    /* EFUSE power off */
-    RCU_CFG1 &= (~RCU_CFG1_BGPU);
 
     return SUCCESS;
-}
-
-/*!
-    \brief      boot configuration
-    \param[in]  size: size of data(byte)
-      \arg        the size must be 1
-    \param[in]  bt_value: the value of boot configuration
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_boot_config(uint32_t size, uint8_t bt_value[])
-{
-    if(size != 1U){
-        return ERROR;
-    }
-    return efuse_write(EFUSE_CTL_ADDR, size, (uint32_t *)bt_value);
-}
-
-/*!
-    \brief      trustzone control configuration
-    \param[in]  size: size of data(byte)
-      \arg        the size must be 1
-    \param[in]  tz_ctl: trustzone control value
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_tz_control_config(uint32_t size, uint8_t tz_ctl[])
-{
-    if(size != 1U){
-        return ERROR;
-    }
-    return efuse_write(TZ_CTL_ADDR, size, (uint32_t *)tz_ctl);
-}
-
-#ifdef GD32W515P0
-/*!
-    \brief      flash protection configuration
-    \param[in]  size: size of data(byte)
-      \arg        the size must be 1
-    \param[in]  fp_value: flash protection value
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_fp_config(uint32_t size, uint8_t fp_value[])
-{
-    if(size != 1U){
-        return ERROR;
-    }
-    return efuse_write(FP_ADDR, size, (uint32_t *)fp_value);
-}
-#endif /* GD32W515P0 */
-
-/*!
-    \brief      write mcu initialization parameters
-    \param[in]  size: size of data(word)
-      \arg        the size must be 3
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_mcu_init_data_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 3U){
-        return ERROR;
-    }
-    return efuse_write(MCU_INIT_ADDR, size * 4U, buf);
-}
-
-/*!
-    \brief      write AES key
-    \param[in]  size: size of data(word)
-      \arg        the size must be 4
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_aes_key_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 4U){
-        return ERROR;
-    }
-    return efuse_write(AES_KEY_ADDR, size * 4U, buf);
-}
-
-/*!
-    \brief      write ROTPK key
-    \param[in]  size: size of data(word)
-      \arg        the size must be 8
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_rotpk_key_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 8U){
-        return ERROR;
-    }
-    return efuse_write(ROTPK_ADDR, size * 4U, buf);
-}
-
-/*!
-    \brief      write debug password
-    \param[in]  size: size of data(word)
-      \arg        the size must be 2
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_dp_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 2U){
-        return ERROR;
-    }
-    return efuse_write(DP_ADDR, size * 4U, buf);
-}
-
-/*!
-    \brief      write IAK key
-    \param[in]  size: size of data(word)
-      \arg        the size must be 16
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_iak_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 16U){
-        return ERROR;
-    }
-    return efuse_write(IAK_ADDR, size * 4U, buf);
-}
-
-/*!
-    \brief      write user data
-    \param[in]  size: size of data(word)
-      \arg        the size must be 8
-    \param[in]  buf: the buffer of data written to efuse
-    \param[out] none
-    \retval     ErrStatus: ERROR or SUCCESS
-*/
-ErrStatus efuse_user_data_write(uint32_t size, uint32_t buf[])
-{
-    if(size != 8U){
-        return ERROR;
-    }
-    return efuse_write(USER_DATA_ADDR, size * 4U, buf);
-}
-
-#ifdef GD32W515P0
-/*!
-    \brief      enable trustzone by software
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void efuse_software_trustzone_enable(void)
-{
-    EFUSE_PRE_TZEN |= EFUSE_PRE_TZEN_STZEN;
-}
-
-/*!
-    \brief      disable trustzone by software
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void efuse_software_trustzone_disable(void)
-{
-    EFUSE_PRE_TZEN &= (~EFUSE_PRE_TZEN_STZEN);
-}
-#endif /* GD32W515P0 */
-
-/*!
-    \brief      get boot address information
-    \param[in]  tz: specifies the current trustzone state
-    \param[out] none
-    \retval     current boot address
-*/
-uint32_t efuse_boot_address_get(efuse_tz_enum tz)
-{
-    if(EFUSE_TZ == tz){
-        return EFUSE_TZ_BOOT_ADDR;
-    }else{
-        return EFUSE_NTZ_BOOT_ADDR;
-    }
-}
-
-/*!
-    \brief      get EFUSE flag is set or not
-    \param[in]  efuse_flag: specifies to get a flag
-                only one parameter can be selected which is shown as below:
-      \arg        EFUSE_PGIF: programming operation completion flag
-      \arg        EFUSE_RDIF: read operation completion flag
-      \arg        EFUSE_OBERIF: overstep boundary error flag
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus efuse_flag_get(efuse_flag_enum efuse_flag)
-{
-    if(EFUSE_CS & (uint32_t)efuse_flag){
-        return SET;
-    }else{
-        return RESET;
-    }
-}
-
-/*!
-    \brief      clear EFUSE pending flag
-    \param[in]  flag: specifies to clear a flag
-                only one parameter can be selected which is shown as below:
-      \arg        EFUSE_PGIC: clear programming operation completion flag
-      \arg        EFUSE_RDIC: clear read operation completion flag
-      \arg        EFUSE_OBERIC: clear overstep boundary error flag
-    \param[out] none
-    \retval     none
-*/
-void efuse_flag_clear(efuse_clear_flag_enum efuse_cflag)
-{
-    EFUSE_CS |= (uint32_t)efuse_cflag;
-}
-
-/*!
-    \brief      enable EFUSE interrupt
-    \param[in]  source: specifies an interrupt to enbale
-                one or more parameters can be selected which are shown as below:
-      \arg        EFUSE_INTEN_PG: programming operation completion interrupt
-      \arg        EFUSE_INTEN_RD: read operation completion interrupt
-      \arg        EFUSE_INTEN_OBER: overstep boundary error interrupt
-    \param[out] none
-    \retval     none
-*/
-void efuse_interrupt_enable(efuse_int_enum source)
-{
-    EFUSE_CS = (uint32_t)source;
-}
-
-/*!
-    \brief      disable EFUSE interrupt
-    \param[in]  source: specifies an interrupt to disbale
-                one or more parameters can be selected which are shown as below:
-      \arg        EFUSE_INTEN_PG: programming operation completion interrupt
-      \arg        EFUSE_INTEN_RD: read operation completion interrupt
-      \arg        EFUSE_INTEN_OBER: overstep boundary error interrupt
-    \param[out] none
-    \retval     none
-*/
-void efuse_interrupt_disable(efuse_int_enum source)
-{
-    EFUSE_CS &= (~(uint32_t)source);
-}
-
-/*!
-    \brief      get EFUSE interrupt flag is set or not
-    \param[in]  efuse_flag: specifies to get a flag
-                only one parameter can be selected which is shown as below:
-      \arg        EFUSE_INT_PGIF: programming operation completion interrupt flag
-      \arg        EFUSE_INT_RDIF: read operation completion interrupt flag
-      \arg        EFUSE_INT_OBERIF: overstep boundary error interrupt flag
-    \param[out] none
-    \retval     FlagStatus: SET or RESET
-*/
-FlagStatus efuse_interrupt_flag_get(efuse_int_flag_enum int_flag)
-{
-    if(EFUSE_CS & (uint32_t)int_flag){
-        return SET;
-    }else{
-        return RESET;
-    }
-}
-
-/*!
-    \brief      clear EFUSE pending interrupt flag
-    \param[in]  efuse_flag: specifies to clear a flag
-                only one parameter can be selected which is shown as below:
-      \arg        EFUSE_INT_PGIC: clear programming operation completion interrupt flag
-      \arg        EFUSE_INT_RDIC: clear operation completion interrupt flag
-      \arg        EFUSE_INT_OBERIC: clear overstep boundary error interrupt flag
-    \param[out] none
-    \retval     none
-*/
-void efuse_interrupt_flag_clear(efuse_clear_int_flag_enum int_cflag)
-{
-    EFUSE_CS |= ((uint32_t)int_cflag);
 }

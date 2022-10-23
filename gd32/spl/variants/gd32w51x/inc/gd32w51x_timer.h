@@ -2,7 +2,7 @@
     \file    gd32w51x_timer.h
     \brief   definitions for the TIMER
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -68,7 +68,6 @@ OF SUCH DAMAGE.
 #define TIMER_CCHP(timerx)               REG32((timerx) + 0x44U)           /*!< TIMER complementary channel protection register */
 #define TIMER_DMACFG(timerx)             REG32((timerx) + 0x48U)           /*!< TIMER DMA configuration register */
 #define TIMER_DMATB(timerx)              REG32((timerx) + 0x4CU)           /*!< TIMER DMA transfer buffer register */
-#define TIMER_IRMP(timerx)               REG32((timerx) + 0x50U)           /*!< TIMER channel input remap register */
 #define TIMER_CFG(timerx)                REG32((timerx) + 0xFCU)           /*!< TIMER configuration register */
 
 /* bits definitions */
@@ -245,9 +244,6 @@ OF SUCH DAMAGE.
 
 /* TIMER_DMATB */
 #define TIMER_DMATB_DMATB                BITS(0,15)          /*!< DMA transfer buffer address */
-
-/* TIMER_IRMP */
-#define TIMER4_IRMP_CI3_RMP              BITS(6,7)           /*!< TIMER4 channel 3 input remap */
 
 /* TIMER_CFG */
 #define TIMER_CFG_OUTSEL                 BIT(0)              /*!< the output value selection */
@@ -580,13 +576,6 @@ typedef struct
 #define TIMER_HALLINTERFACE_ENABLE          ((uint32_t)0x00000000U)                 /*!< TIMER hall sensor mode enable */
 #define TIMER_HALLINTERFACE_DISABLE         ((uint32_t)0x00000001U)                 /*!< TIMER hall sensor mode disable */
 
-/* timer4 channel 3 input remap */
-#define TIMER4_IRMP(regval)                 (BITS(6, 7) & ((uint32_t)(regval) << 6U))          
-#define TIMER4_CI3_RMP_GPIO                 TIMER4_IRMP(0)                          /*!< timer4 channel 3 input remap to GPIO pin */
-#define TIMER4_CI3_RMP_IRC32K               TIMER4_IRMP(1)                          /*!< timer4 channel 3 input remap to IRC32K */
-#define TIMER4_CI3_RMP_LXTAL                TIMER4_IRMP(2)                          /*!< timer4 channel 3 input remap to  LXTAL */
-#define TIMER4_CI3_RMP_RTC_WAKEUP_INT       TIMER4_IRMP(3)                          /*!< timer4 channel 3 input remap to RTC wakeup interrupt */
-
 /* TIMERx(x=0,1,2,13,14,15,16) write cc register selection */
 #define TIMER_CHVSEL_ENABLE                 ((uint16_t)0x0002U)                     /*!< write CHxVAL register selection enable  */
 #define TIMER_CHVSEL_DISABLE                ((uint16_t)0x0000U)                     /*!< write CHxVAL register selection disable */
@@ -735,8 +724,6 @@ void timer_external_clock_mode0_config(uint32_t timer_periph, uint32_t extpresca
 void timer_external_clock_mode1_config(uint32_t timer_periph, uint32_t extprescaler, uint32_t extpolarity, uint32_t extfilter);
 /* disable TIMER the external clock mode 1 */
 void timer_external_clock_mode1_disable(uint32_t timer_periph);
-/* configure TIMER channel remap function */
-void timer_channel_remap_config(uint32_t timer_periph,uint32_t remap);
 
 /* TIMER configure */
 /* configure TIMER write CHxVAL register selection */

@@ -2,7 +2,7 @@
     \file    gd32w51x_gpio.h
     \brief   definitions for the GPIO
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -416,9 +416,9 @@ void gpio_bit_toggle(uint32_t gpio_periph, uint32_t pin);
 /* toggle GPIO port status */
 void gpio_port_toggle(uint32_t gpio_periph);
 
-/* configure GPIO pin bit secure configuration bit status to set */
+/* set GPIO pin secure configuration bit */
 void gpio_bit_set_sec_cfg(uint32_t gpio_periph, uint32_t pin);
-/* configure GPIO pin bit secure configuration status bit to reset */
+/* reset GPIO pin secure configuration bit */
 void gpio_bit_reset_sec_cfg(uint32_t gpio_periph, uint32_t pin);
 /* get GPIO pin secure configuration bit status */
 FlagStatus gpio_sec_cfg_bit_get(uint32_t gpio_periph, uint32_t pin);

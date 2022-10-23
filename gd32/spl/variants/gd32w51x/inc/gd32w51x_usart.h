@@ -1,8 +1,8 @@
 /*!
-    \file    gd32w51x_usart.h
-    \brief   definitions for the USART
+    \file  gd32w51x_usart.h
+    \brief definitions for the USART
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -244,7 +244,7 @@ typedef enum{
     /* flags in RFCS register */
     USART_FLAG_RFFINT = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 15U),      /*!< receive FIFO full interrupt flag */
     USART_FLAG_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 11U),         /*!< receive FIFO full flag */
-    USART_FLAG_RFE = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 10U)          /*!< receive FIFO empty flag */
+    USART_FLAG_RFE = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 10U),         /*!< receive FIFO empty flag */
 }usart_flag_enum;
 
 /* USART interrupt flags */
@@ -269,7 +269,7 @@ typedef enum
     USART_INT_FLAG_ERR_ORERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 3U),  /*!< error interrupt and overrun error */
     USART_INT_FLAG_ERR_FERR = USART_REGIDX_BIT2(USART_CTL2_REG_OFFSET, 0U, USART_STAT_REG_OFFSET, 1U),   /*!< error interrupt and frame error flag */
     /* interrupt flags in RFCS register */
-    USART_INT_FLAG_RFF = USART_REGIDX_BIT2(USART_RFCS_REG_OFFSET, 9U, USART_RFCS_REG_OFFSET, 15U)        /*!< receive FIFO full interrupt and flag */
+    USART_INT_FLAG_RFF = USART_REGIDX_BIT2(USART_RFCS_REG_OFFSET, 9U, USART_RFCS_REG_OFFSET, 15U),       /*!< receive FIFO full interrupt and flag */
 }usart_interrupt_flag_enum;
 
 /* USART interrupt enable or disable */
@@ -291,23 +291,23 @@ typedef enum
     USART_INT_CTS = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 10U),        /*!< CTS interrupt */
     USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),         /*!< error interrupt */
     /* interrupt in RFCS register */
-    USART_INT_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 9U)          /*!< receive FIFO full interrupt */
+    USART_INT_RFF = USART_REGIDX_BIT(USART_RFCS_REG_OFFSET, 9U),         /*!< receive FIFO full interrupt */
 }usart_interrupt_enum;
 
 /* USART invert configure */
 typedef enum {
     /* data bit level inversion */
-    USART_DINV_ENABLE = 0,                                           /*!< data bit level inversion */
+    USART_DINV_ENABLE,                                               /*!< data bit level inversion */
     USART_DINV_DISABLE,                                              /*!< data bit level not inversion */
     /* TX pin level inversion */
-    USART_TXPIN_ENABLE,                                              /*!< TX pin level inversion */
+    USART_TXPIN_ENABLE,                                              /*!< TX pin level inversion */               
     USART_TXPIN_DISABLE,                                             /*!< TX pin level not inversion */
     /* RX pin level inversion */
     USART_RXPIN_ENABLE,                                              /*!< RX pin level inversion */
     USART_RXPIN_DISABLE,                                             /*!< RX pin level not inversion */
     /* swap TX/RX pins */
-    USART_SWAP_ENABLE,                                               /*!< swap TX/RX pins */
-    USART_SWAP_DISABLE                                               /*!< not swap TX/RX pins */
+    USART_SWAP_ENABLE,                                               /*!< swap TX/RX pins */                
+    USART_SWAP_DISABLE,                                              /*!< not swap TX/RX pins */
 }usart_invert_enum;
 
 /* USART receiver configure */
@@ -586,9 +586,6 @@ void usart_receive_fifo_disable(uint32_t usart_periph);
 /* read receive FIFO counter number */
 uint8_t usart_receive_fifo_counter_number(uint32_t usart_periph);
 
-/* enable USART command */
-void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype);
-
 /* flag & interrupt functions */
 /* get flag in STAT/RFCS register */
 FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag);
@@ -598,6 +595,8 @@ void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag);
 void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrupt);
 /* disable USART interrupt */
 void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt);
+/* enable USART command */
+void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype);
 /* get USART interrupt and flag status */
 FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, usart_interrupt_flag_enum int_flag);
 /* clear USART interrupt flag */

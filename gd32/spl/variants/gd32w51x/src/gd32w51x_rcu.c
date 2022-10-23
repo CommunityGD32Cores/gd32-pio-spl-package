@@ -2,7 +2,7 @@
     \file    gd32w51x_rcu.c
     \brief   RCU driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -59,14 +59,13 @@ void rcu_deinit(void)
     /* enable IRC16M */
     RCU_CTL |= RCU_CTL_IRC16MEN;
     rcu_osci_stab_wait(RCU_IRC16M);
-    RCU_CFG0 &= ~RCU_CFG0_SCS;
-    /* reset CTL register */
-    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN | RCU_CTL_PLLI2SEN | RCU_CTL_PLLDIGEN |
-                 RCU_CTL_HXTALPU | RCU_CTL_HXTALENI2S | RCU_CTL_PLLDIGPU | RCU_CTL_HXTALENPLL | RCU_CTL_RFCKMEN);
     /* reset CFG0 register */
     RCU_CFG0 &= ~(RCU_CFG0_SCS | RCU_CFG0_AHBPSC | RCU_CFG0_APB1PSC | RCU_CFG0_APB2PSC |
                   RCU_CFG0_RTCDIV | RCU_CFG0_CKOUT0SEL  | RCU_CFG0_CKOUT0DIV |
                   RCU_CFG0_CKOUT1DIV | RCU_CFG0_CKOUT1SEL);
+    /* reset CTL register */
+    RCU_CTL &= ~(RCU_CTL_HXTALEN | RCU_CTL_CKMEN | RCU_CTL_PLLEN | RCU_CTL_PLLI2SEN | RCU_CTL_PLLDIGEN |
+                 RCU_CTL_HXTALPU | RCU_CTL_HXTALENI2S | RCU_CTL_PLLDIGPU | RCU_CTL_HXTALENPLL | RCU_CTL_RFCKMEN);
     /* reset CFG1 register */
     RCU_CFG1 = 0x00000000U;
     /* reset ADDCTL register */
@@ -89,17 +88,17 @@ void rcu_deinit(void)
       \arg        RCU_CRC: CRC clock
       \arg        RCU_WIFI: WIFI clock
       \arg        RCU_WIFIRUN: WIFIRUN clock
-      \arg        RCU_SRAMx (x=0,1,2,3):SRAM clock
+      \arg        RCU_SRAMx: (x=0,1,2,3):SRAM clock
       \arg        RCU_DMAx (x=0,1): DMA clock
       \arg        RCU_USBFS: USBFS clock
-      \arg        RCU_DCI (not available for GD32W515TX series): DCI clock
+      \arg        RCU_DCI: DCI clock
       \arg        RCU_PKCAU: PKCAU clock
       \arg        RCU_CAU: CAU clock
       \arg        RCU_HAU: HAU clock
       \arg        RCU_TRNG: TRNG clock
       \arg        RCU_SQPI: SQPI clock
       \arg        RCU_QSPI: QSPI clock
-      \arg        RCU_TIMERx (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): TIMER clock
+      \arg        RCU_TIMERx (x=0,1,2,3,4,5,15,16): TIMER clock
       \arg        RCU_WWDGT: WWDGT clock
       \arg        RCU_SPIx (x=0,1): SPI clock
       \arg        RCU_USARTx (x=0,1,2): USART clock
@@ -109,7 +108,7 @@ void rcu_deinit(void)
       \arg        RCU_ADC : ADC clock
       \arg        RCU_SDIO: SDIO clock
       \arg        RCU_SYSCFG: SYSCFG clock
-      \arg        RCU_HPDF (not available for GD32W515TX series): HPDF clock
+      \arg        RCU_HPDF: HPDF clock
       \arg        RCU_RF: RF clock
     \param[out] none
     \retval     none
@@ -132,14 +131,14 @@ void rcu_periph_clock_enable(rcu_periph_enum periph)
       \arg        RCU_SRAMx: (x=0,1,2,3):SRAM clock
       \arg        RCU_DMAx (x=0,1): DMA clock
       \arg        RCU_USBFS: USBFS clock
-      \arg        RCU_DCI (not available for GD32W515TX series): DCI clock
+      \arg        RCU_DCI: DCI clock
       \arg        RCU_PKCAU: PKCAU clock
       \arg        RCU_CAU: CAU clock
       \arg        RCU_HAU: HAU clock
       \arg        RCU_TRNG: TRNG clock
       \arg        RCU_SQPI: SQPI clock
       \arg        RCU_QSPI: QSPI clock
-      \arg        RCU_TIMERx (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): TIMER clock
+      \arg        RCU_TIMERx (x=0,1,2,3,4,5,15,16): TIMER clock
       \arg        RCU_WWDGT: WWDGT clock
       \arg        RCU_SPIx (x=0,1): SPI clock
       \arg        RCU_USARTx (x=0,1,2): USART clock
@@ -149,7 +148,7 @@ void rcu_periph_clock_enable(rcu_periph_enum periph)
       \arg        RCU_ADC: ADC clock
       \arg        RCU_SDIO: SDIO clock
       \arg        RCU_SYSCFG: SYSCFG clock
-      \arg        RCU_HPDF (not available for GD32W515TX series): HPDF clock
+      \arg        RCU_HPDF: HPDF clock
       \arg        RCU_RF: RF clock
     \param[out] none
     \retval     none
@@ -169,18 +168,18 @@ void rcu_periph_clock_disable(rcu_periph_enum periph)
       \arg        RCU_CRC_SLP: CRC clock
       \arg        RCU_WIFI_SLP: WIFI clock
       \arg        RCU_WIFIRUN_SLP: WIFIRUN clock
-      \arg        RCU_FMC_SLP: FMC clock
+      \arg        RCU_FMC_SLP: WIFI clock
       \arg        RCU_SRAMx_SLP:(x=0,1,2,3): SRAM clock
       \arg        RCU_DMAx_SLP (x=0,1): DMA clock
       \arg        RCU_USBFS_SLP: USBFS clock
-      \arg        RCU_DCI_SLP (not available for GD32W515TX series): DCI clock
+      \arg        RCU_DCI_SLP: DCI clock
       \arg        RCU_PKCAU_SLP: PKCAU clock
       \arg        RCU_CAU_SLP: CAU clock
       \arg        RCU_HAU_SLP: HAU clock
       \arg        RCU_TRNG_SLP: TRNG clock
       \arg        RCU_SQPI_SLP: SQPI clock
       \arg        RCU_QSPI_SLP: QSPI clock
-      \arg        RCU_TIMERx_SLP (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): TIMER clock
+      \arg        RCU_TIMERx_SLP (x=0,1,2,3,4,5,15,16): TIMER clock
       \arg        RCU_WWDGT_SLP: WWDGT clock
       \arg        RCU_SPIx_SLP (x=0,1): SPI clock
       \arg        RCU_USARTx_SLP (x=0,1,2): USART clock
@@ -190,7 +189,7 @@ void rcu_periph_clock_disable(rcu_periph_enum periph)
       \arg        RCU_ADC_SLP: ADC clock
       \arg        RCU_SDIO_SLP: SDIO clock
       \arg        RCU_SYSCFG_SLP: SYSCFG clock
-      \arg        RCU_HPDF_SLP:(not available for GD32W515TX series): HPDF clock
+      \arg        RCU_HPDF_SLP: HPDF clock
       \arg        RCU_RF_SLP: RF clock
     \param[out] none
     \retval     none
@@ -214,14 +213,14 @@ void rcu_periph_clock_sleep_enable(rcu_periph_sleep_enum periph)
       \arg        RCU_SRAMx_SLP:(x=0,1,2,3): SRAM clock
       \arg        RCU_DMAx_SLP (x=0,1): DMA clock
       \arg        RCU_USBFS_SLP: USBFS clock
-      \arg        RCU_DCI_SLP (not available for GD32W515TX series): DCI clock
+      \arg        RCU_DCI_SLP: DCI clock
       \arg        RCU_PKCAU_SLP: PKCAU clock
       \arg        RCU_CAU_SLP: CAU clock
       \arg        RCU_HAU_SLP: HAU clock
       \arg        RCU_TRNG_SLP: TRNG clock
       \arg        RCU_SQPI_SLP: SQPI clock
       \arg        RCU_QSPI_SLP: QSPI clock
-      \arg        RCU_TIMERx_SLP (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): TIMER clock
+      \arg        RCU_TIMERx_SLP (x=0,1,2,3,4,5,15,16): TIMER clock
       \arg        RCU_WWDGT_SLP: WWDGT clock
       \arg        RCU_SPIx_SLP (x=0,1): SPI clock
       \arg        RCU_USARTx_SLP (x=0,1,2): USART clock
@@ -231,7 +230,7 @@ void rcu_periph_clock_sleep_enable(rcu_periph_sleep_enum periph)
       \arg        RCU_ADC_SLP: ADC clock
       \arg        RCU_SDIO_SLP: SDIO clock
       \arg        RCU_SYSCFG_SLP: SYSCFG clock
-      \arg        RCU_HPDF_SLP:(not available for GD32W515TX series):HPDF clock
+      \arg        RCU_HPDF_SLP: HPDF clock
       \arg        RCU_RF_SLP: RF clock
     \param[out] none
     \retval     none
@@ -252,14 +251,14 @@ void rcu_periph_clock_sleep_disable(rcu_periph_sleep_enum periph)
       \arg        RCU_WIFIRST: reset WIFI
       \arg        RCU_DMAxRST (x=0,1): reset DMA
       \arg        RCU_USBFSRST: reset USBFS
-      \arg        RCU_DCIRST (not available for GD32W515TX series): reset DCI
+      \arg        RCU_DCIRST: reset DCI
       \arg        RCU_PKCAURST: reset PKCAU
       \arg        RCU_CAURST: reset CAU
       \arg        RCU_HAURST: reset HAU
       \arg        RCU_TRNGRST: reset TRNG
       \arg        RCU_SQPIRST: reset SQPI
       \arg        RCU_QSPIRST: reset QSPI
-      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): reset TIMER
+      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,15,16): reset TIMER
       \arg        RCU_WWDGTRST: reset WWDGT
       \arg        RCU_SPIxRST (x=0,1): reset SPI
       \arg        RCU_USARTxRST (x=0,1,2): reset USART
@@ -268,7 +267,7 @@ void rcu_periph_clock_sleep_disable(rcu_periph_sleep_enum periph)
       \arg        RCU_ADCRST : reset ADC
       \arg        RCU_SDIORST: reset SDIO
       \arg        RCU_SYSCFGRST: reset SYSCFG
-      \arg        RCU_HPDFRST (not available for GD32W515TX series): reset HPDF
+      \arg        RCU_HPDFRST: reset HPDF
       \arg        RCU_RFRST: reset RF
     \param[out] none
     \retval     none
@@ -289,14 +288,14 @@ void rcu_periph_reset_enable(rcu_periph_reset_enum periph_reset)
       \arg        RCU_WIFIRST: reset WIFI
       \arg        RCU_DMAxRST (x=0,1): reset DMA
       \arg        RCU_USBFSRST: reset USBFS
-      \arg        RCU_DCIRST (not available for GD32W515TX series): reset DCI
+      \arg        RCU_DCIRST: reset DCI
       \arg        RCU_PKCAURST: reset PKCAU
       \arg        RCU_CAURST: reset CAU
       \arg        RCU_HAURST: reset HAU
       \arg        RCU_TRNGRST: reset TRNG
       \arg        RCU_SQPIRST: reset SQPI
       \arg        RCU_QSPIRST: reset QSPI
-      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,15,16,TIMER3 are not available for GD32W515TX series): reset TIMER
+      \arg        RCU_TIMERxRST (x=0,1,2,3,4,5,15,16): reset TIMER
       \arg        RCU_WWDGTRST: reset WWDGT
       \arg        RCU_SPIxRST (x=0,1): reset SPI
       \arg        RCU_USARTxRST (x=0,1,2): reset USART
@@ -305,7 +304,7 @@ void rcu_periph_reset_enable(rcu_periph_reset_enum periph_reset)
       \arg        RCU_ADCRST : reset ADC
       \arg        RCU_SDIORST: reset SDIO
       \arg        RCU_SYSCFGRST: reset SYSCFG
-      \arg        RCU_HPDFRST (not available for GD32W515TX series): reset HPDF
+      \arg        RCU_HPDFRST: reset HPDF
       \arg        RCU_RFRST: reset RF
     \param[out] none
     \retval     none
@@ -349,17 +348,6 @@ void rcu_hxtal_plli2s_enable(void)
 }
 
 /*!
-    \brief      disable HXTAL for PLLI2S
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void rcu_hxtal_plli2s_disable(void)
-{
-    RCU_CTL &= ~RCU_CTL_HXTALENI2S;
-}
-
-/*!
     \brief      enable HXTAL for system CK_PLLP
     \param[in]  none
     \param[out] none
@@ -371,17 +359,6 @@ void rcu_hxtal_pllp_enable(void)
 }
 
 /*!
-    \brief      disable HXTAL for system CK_PLLP
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void rcu_hxtal_pllp_disable(void)
-{
-    RCU_CTL &= ~RCU_CTL_HXTALENPLL;
-}
-
-/*!
     \brief      enable CK_PLLDIG
     \param[in]  none
     \param[out] none
@@ -390,17 +367,6 @@ void rcu_hxtal_pllp_disable(void)
 void rcu_plldig_enable(void)
 {
     RCU_CTL |= RCU_CTL_PLLDIGEN;
-}
-
-/*!
-    \brief      disable CK_PLLDIG
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void rcu_plldig_disable(void)
-{
-    RCU_CTL &= ~RCU_CTL_PLLDIGEN;
 }
 
 /*!
@@ -492,7 +458,7 @@ void rcu_rfpll_powerdown(void)
 }
 
 /*!
-    \brief      power on LDO analog 
+    \brief      power on the RF PLL 
     \param[in]  none
     \param[out] none
     \retval     none
@@ -503,7 +469,7 @@ void rcu_ldoana_poweron(void)
 }
 
 /*!
-    \brief      power down LDO analog
+    \brief      power down the RF PLL 
     \param[in]  none
     \param[out] none
     \retval     none
@@ -536,17 +502,6 @@ void rcu_ldoclk_powerdown(void)
 }
 
 /*!
-    \brief      power on the BandGap 
-    \param[in]  none
-    \param[out] none
-    \retval     none
-*/
-void rcu_bandgap_poweron(void)
-{
-    RCU_CFG1 |= RCU_CFG1_BGPU;
-}
-
-/*!
     \brief      power down the BandGap 
     \param[in]  none
     \param[out] none
@@ -555,6 +510,17 @@ void rcu_bandgap_poweron(void)
 void rcu_bandgap_powerdown(void)
 {
     RCU_CFG1 &= ~RCU_CFG1_BGPU;
+}
+
+/*!
+    \brief      power on the BandGap 
+    \param[in]  none
+    \param[out] none
+    \retval     none
+*/
+void rcu_bandgap_poweron(void)
+{
+    RCU_CFG1 |= RCU_CFG1_BGPU;
 }
 
 /*!
@@ -681,9 +647,9 @@ void rcu_ckout0_config(uint32_t ckout0_src, uint32_t ckout0_div)
     \param[in]  ckout1_src: CK_OUT1 clock source selection
                 only one parameter can be selected which is shown as below:
       \arg        RCU_CKOUT1SRC_CKSYS: system clock selected
-      \arg        RCU_CKOUT1SRC_PLLI2S: PLLI2S selected
+      \arg        RCU_CKOUT1SRC_PLLI2S: PLLI2SR selected
       \arg        RCU_CKOUT1SRC_HXTAL: HXTAL selected
-      \arg        RCU_CKOUT1SRC_PLLDIG: PLLDIG selected           
+      \arg        RCU_CKOUT1SRC_PLLP: PLLP selected           
     \param[in]  ckout1_div: CK_OUT1 divider 
       \arg        RCU_CKOUT1_DIVx(x=1,2,3,4,5): CK_OUT1 is divided by x
     \param[out] none
@@ -891,7 +857,6 @@ void rcu_pllfi2s_clock_div_config(uint32_t pllfi2s_div)
     RCU_ADDCTL = (reg | pllfi2s_div);
 }
 
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 /*!
     \brief      configure the hpdf clock source selection
     \param[in]  hpdf_clock_source: hpdf clock source selection
@@ -931,7 +896,6 @@ void rcu_hpdf_audio_clock_config(uint32_t hpdfaudio_clock_source)
     reg &= ~RCU_ADDCTL_HPDFAUDIOSEL;
     RCU_ADDCTL = (reg | hpdfaudio_clock_source);
 }
-#endif /* GD32W515PI and GD32W515P0 */
 
 /*!
     \brief      configure the SDIO clock source selection
@@ -958,7 +922,7 @@ void rcu_sdio_clock_config(uint32_t sdio_clock_source)
     \brief      configure the frequency division of the sdio source clock 
     \param[in]  sdio_div: SDIO clock frequency division
                 only one parameter can be selected which is shown as below:
-      \arg        RCU_SDIODIV_DIVx: SDIODIV input source clock divided by x, x = 1,...,32
+      \arg        RCU_SDIODIV_DIVx: USBFSDIV clock select x, x = 1....32
     \param[out] none
     \retval     none
 */
@@ -994,7 +958,7 @@ void rcu_usbfs_clock_config(uint32_t usbfs_clock_source)
     \brief      configure the frequency division of the usbfs source clock 
     \param[in]  usbfs_div: USBFS clock frequency division
                 only one parameter can be selected which is shown as below:
-      \arg        RCU_USBFS_DIVx: USBFSDIV input source clock divided by x, x = 1....32
+      \arg        RCU_USBFS_DIVx: USBFSDIV clock select x, x = 1....32
     \param[out] none
     \retval     none
 */
@@ -1069,6 +1033,7 @@ void rcu_usart2_clock_config(uint32_t usart2_clock_source)
     RCU_CFG1 = (reg | usart2_clock_source);
 }
 
+/* configure IRC16M clock divider factor for system clock */
 /*!
     \brief      configure IRC16M clock divider factor for system clock
     \param[in]  irc16m_div: IRC16M clock divider factor for system clock
@@ -1122,6 +1087,7 @@ void rcu_timer_clock_prescaler_config(uint32_t timer_clock_prescaler)
       \arg        RCU_FLAG_PLLDIGSTB: PLLDIG stabilization flag
       \arg        RCU_FLAG_LXTALSTB: LXTAL stabilization flag
       \arg        RCU_FLAG_IRC32KSTB: IRC32K stabilization flag
+      \arg        RCU_FLAG_IRC48MSTB: IRC48M stabilization flag
       \arg        RCU_FLAG_OBLRST: option byte loader reset flags
       \arg        RCU_FLAG_EPRST: external PIN reset flag
       \arg        RCU_FLAG_PORRST: power reset flag
@@ -1244,7 +1210,7 @@ void rcu_interrupt_disable(rcu_int_enum interrupt)
       \arg        RCU_LXTALDRI_LOWER_DRIVE: lower driving capability
       \arg        RCU_LXTALDRI_HIGH_DRIVE: high driving capability
       \arg        RCU_LXTALDRI_HIGHER_DRIVE: higher driving capability
-      \arg        RCU_LXTALDRI_HIGHEST_DRIVE: highest driving capability
+      \arg        RCU_LXTALDRI_HIGHEST_DRIVE: higher driving capability
     \param[out] none
     \retval     none
 */
@@ -1623,7 +1589,7 @@ void rcu_spread_spectrum_disable(void)
 
 /*!
     \brief      enable the security attribution
-    \param[in]  security: clock security attribution, refer to rcu_sec_enum
+    \param[in]  security: clock stabilization interrupt, refer to rcu_int_enum
                 Only one parameter can be selected which is shown as below:
       \arg        RCU_SEC_IRC16MSEC: IRC16M clock configuration and status bits security
       \arg        RCU_SEC_HXTALSEC: HXTAL clock configuration and status bits security
@@ -1645,7 +1611,7 @@ void rcu_security_enable(rcu_sec_enum security)
 }
 /*!
     \brief      disable the security attribution
-    \param[in]  security: clock security attribution, refer to rcu_sec_enum
+    \param[in]  security: clock stabilization interrupt, refer to rcu_int_enum
                 Only one parameter can be selected which is shown as below:
       \arg        RCU_SEC_IRC16MSEC: IRC16M clock configuration and status bits security
       \arg        RCU_SEC_HXTALSEC: HXTAL clock configuration and status bits security
@@ -1688,13 +1654,13 @@ void rcu_privilege_disable(void)
 }
 
 /*!
-    \brief      get the peripherals clock secure flag
+    \brief      get the clock stabilization interrupt and ckm flags
     \param[in]  sec_flag: secure flag, refer to rcu_sec_flag_enum
                 only one parameter can be selected which is shown as below:
-      \arg        RCU_SEC_FLAG_IRC16MSEC: IRC16M secure flag 
-      \arg        RCU_SEC_FLAG_HXTALSEC: HXTAL secure flag 
+      \arg        RCU_SEC_FLAG_IRC16MSEC:  IRC16M secure flag 
+      \arg        RCU_SEC_FLAG_HXTALSEC:  HXTAL secure flag in slave mode
       \arg        RCU_SEC_FLAG_IRC32KSEC: LXTAL secure flag
-      \arg        RCU_SEC_FLAG_LXTALSEC: LXTAL clock secure flag
+      \arg        RCU_SEC_FLAG_LXTALSEC: header of 10-bit address is sent in master mode
       \arg        RCU_SEC_FLAG_SYSCLKSEC: SYSCLK secure flag
       \arg        RCU_SEC_FLAG_PRESCSEC: PRESC secure flag
       \arg        RCU_SEC_FLAG_PLLSEC: PLL secure flag 
@@ -1706,7 +1672,7 @@ void rcu_privilege_disable(void)
       \arg        RCU_SEC_FLAG_AHB1_WIFI: WIFI security flag
       \arg        RCU_SEC_FLAG_AHB1_SRAMx: (x=0,1,2,3): SRAMx security flag
       \arg        RCU_SEC_FLAG_AHB1_DMAx:(x=0,1): DMAx security flag
-      \arg        RCU_SEC_FLAG_AHB2_DCI (not available for GD32W515TX series): DCI security flag
+      \arg        RCU_SEC_FLAG_AHB2_DCI: DCI security flag
       \arg        RCU_SEC_FLAG_AHB2_PKCAU: PKCAU security flag
       \arg        RCU_SEC_FLAG_AHB2_CAU: CAU security flag
       \arg        RCU_SEC_FLAG_AHB2_HAU: HAU security flag
@@ -1746,9 +1712,6 @@ FlagStatus rcu_security_flag_get(rcu_sec_flag_enum sec_flag)
       \arg        CK_AHB: AHB clock frequency
       \arg        CK_APB1: APB1 clock frequency
       \arg        CK_APB2: APB2 clock frequency
-      \arg        CK_USART0: USART0 clock frequency
-      \arg        CK_USART2: USART2 clock frequency
-      \arg        CK_I2C0: I2C0 clock frequency
     \param[out] none
     \retval     clock frequency of system, AHB, APB1, APB2
 */

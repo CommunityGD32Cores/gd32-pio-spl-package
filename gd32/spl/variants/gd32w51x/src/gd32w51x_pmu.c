@@ -2,7 +2,7 @@
     \file    gd32w51x_pmu.c
     \brief   PMU driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -197,14 +197,11 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint32_t lowdrive,uint8_t deepsleepmodecm
 
 /*!
     \brief      PMU work at standby mode
-    \param[in]  standbymodecmd:
-                only one parameter can be selected which is shown as below:
-      \arg        WFI_CMD: use WFI command
-      \arg        WFE_CMD: use WFE command
+    \param[in]  none
     \param[out] none
     \retval     none
 */
-void pmu_to_standbymode(uint8_t standbymodecmd)
+void pmu_to_standbymode(void)
 {
     /* set sleepdeep bit of Cortex-M33 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
@@ -215,13 +212,8 @@ void pmu_to_standbymode(uint8_t standbymodecmd)
     /* reset wakeup flag */
     PMU_CTL0 |= PMU_CTL0_WURST;
     
-    /* select WFI or WFE command to enter standby mode */
-    if(WFI_CMD == standbymodecmd){
-        __WFI();
-    }else{
-        __WFE();
-        __WFE();
-    }
+    /* enter standby mode */
+    __WFI();
 }
 
 /*!

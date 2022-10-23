@@ -2,33 +2,33 @@
     \file    gd32w51x_syscfg.c
     \brief   SYSCFG driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -172,8 +172,8 @@ void sram1_access_security_config(uint32_t access_mode)
     \brief      configure FPU security
     \param[in]  access_mode: secure access or secure and non-secure access
                 only one parameter can be selected which is shown as below:
-                  FPU_SECURE_ACCESS: SYSCFG_FPUINTEN register can be written by secure access only
-                  FPU_SECURE_NONSECURE_ACCESS: SYSCFG_FPUINTEN register can be written by secure and non-secure access
+                  FPU_SECURE_ACCESS: SYSCFG_FPUINTMSK register can be written by secure access only
+                  FPU_SECURE_NONSECURE_ACCESS: SYSCFG_FPUINTMSK register can be written by secure and non-secure access
     \param[out] none
     \retval     none
 */
@@ -256,14 +256,14 @@ void syscfg_lock_config(uint32_t syscfg_lock)
 }
 
 /*!
-    \brief      write data to GSSA
-    \param[in]  data: the data to be written in to GSSA
+    \brief      write data to RSS
+    \param[in]  data: the data to be written in to RSS
     \param[out] none
     \retval     none
 */
 void rsscmd_write_data(uint32_t data)
 {
-    SYSCFG_GSSACMD = data;
+    SYSCFG_RSSCMD = data;
 }
 
 /*!
@@ -274,7 +274,7 @@ void rsscmd_write_data(uint32_t data)
 */
 ErrStatus sram1_erase(void)
 {
-    if (SET == (SYSCFG_SCS & SYSCFG_SCS_SRAM1BSY)){
+    if (SYSCFG_SCS & SYSCFG_SCS_SRAM1BSY) {
         return ERROR;
     }else{
         SYSCFG_SCS |= SYSCFG_SCS_SRAM1ERS;
@@ -323,7 +323,7 @@ void sram1_write_protect_0_31(uint32_t page)
     \brief      SRAM1 write protect range from page32 to page63
     \param[in]  page: specify the page of SRAM1 to protect
                 only one parameter can be selected which is shown as below:
-    \arg          SRAM1_PAGEx_WRITE_PROTECT: enable write protection of SRAM1 page x (x=32,33,...63)
+    \arg          SRAM1_PAGEx: enable write protection of SRAM1 page x (x=32,33,...63)
     \param[out] none
     \retval     none
 */
@@ -365,34 +365,34 @@ FlagStatus sram1_bsy_flag_get(void)
     \brief      enable floating point unit interrupt
     \param[in]  interrupt: interrupt type
                 only one parameter can be selected which is shown as below:
-    \arg          INVALID_OPERATION_INT: invalid operation Interrupt 
-    \arg          DEVIDE_BY_ZERO_INT: divide-by-zero interrupt  
-    \arg          UNDERFLOW_INT: underflow interrupt 
-    \arg          OVERFLOW_INT: overflow interrupt 
-    \arg          INPUT_ABNORMAL_INT: input abnormal interrupt  
-    \arg          INEXACT_INT: inexact interrupt (interrupt disable at reset) 
+    \arg          INVALID_OPERATION_INT: invalid operation Interrupt
+    \arg          DEVIDE_BY_ZERO_INT: divide-by-zero interrupt
+    \arg          UNDERFLOW_INT: underflow interrupt
+    \arg          OVERFLOW_INT: overflow interrupt
+    \arg          INPUT_ABNORMAL_INT: input abnormal interrupt
+    \arg          INEXACT_INT: inexact interrupt (interrupt disable at reset)
     \param[out] none
     \retval     none
 */
 void fpu_interrupt_enable(uint32_t interrupt)
 {
-    SYSCFG_FPUINTEN |= interrupt;
+    SYSCFG_FPUINTMSK |= interrupt;
 }
 
 /*!
     \brief      disable floating point unit interrupt
     \param[in]  interrupt: interrupt type
                 only one parameter can be selected which is shown as below:
-    \arg          INVALID_OPERATION_INT: invalid operation Interrupt 
-    \arg          DEVIDE_BY_ZERO_INT: divide-by-zero interrupt  
-    \arg          UNDERFLOW_INT: underflow interrupt 
-    \arg          OVERFLOW_INT: overflow interrupt 
-    \arg          INPUT_ABNORMAL_INT: input abnormal interrupt  
-    \arg          INEXACT_INT: inexact interrupt (interrupt disable at reset) 
+    \arg          INVALID_OPERATION_INT: invalid operation Interrupt
+    \arg          DEVIDE_BY_ZERO_INT: divide-by-zero interrupt
+    \arg          UNDERFLOW_INT: underflow interrupt
+    \arg          OVERFLOW_INT: overflow interrupt
+    \arg          INPUT_ABNORMAL_INT: input abnormal interrupt
+    \arg          INEXACT_INT: inexact interrupt (interrupt disable at reset)
     \param[out] none
     \retval     none
 */
 void fpu_interrupt_disable(uint32_t interrupt)
 {
-    SYSCFG_FPUINTEN &= ~(interrupt);
+    SYSCFG_FPUINTMSK &= ~(interrupt);
 }

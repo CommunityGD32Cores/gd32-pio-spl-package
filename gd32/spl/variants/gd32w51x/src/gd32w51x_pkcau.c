@@ -1,34 +1,34 @@
 /*!
     \file    gd32w51x_pkcau.c
     \brief   PKCAU driver
-    
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 static void pkcau_memcpy_value(uint32_t offset, uint32_t value);
 /* copy operand with EOS or ROS to PKCAU RAM */
 static void pkcau_memcpy_operand(uint32_t offset, const uint8_t operand[], uint32_t size);
-
+static void pkcau_memcpy_operand_reverse(uint32_t offset, const uint8_t operand[], uint32_t size);
 /*!
     \brief      reset PKCAU
     \param[in]  none
@@ -121,7 +121,8 @@ void pkcau_arithmetic_struct_para_init(pkcau_arithmetic_parameter_struct* init_p
     /* initialize the member of arithmetic parameter structure with the default value */
     init_para->oprd_a   = 0U;
     init_para->oprd_b   = 0U;
-    init_para->oprd_len = 0U;
+    init_para->oprd_len_a = 0U;
+    init_para->oprd_len_b = 0U;
 }
 
 /*!
@@ -293,10 +294,10 @@ void pkcau_mode_set(uint32_t mode)
 void pkcau_mont_param_operation(pkcau_mont_parameter_struct *mont_para)
 {
     uint32_t n_bit_len = (mont_para->modulus_len) * 8U;
-    
+
     /* write the modulus length in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000404U, n_bit_len);
-    
+
     /* write the modulus value n to PKCAU RAM */
     pkcau_memcpy_operand(0x00000D5CU, mont_para->modulus_n, mont_para->modulus_len);
     /* configure the operation mode */
@@ -312,7 +313,7 @@ void pkcau_mont_param_operation(pkcau_mont_parameter_struct *mont_para)
                   oprd_b: operand B
                   modulus_n: modulus value n
                   modulus_len: modulus length in byte
-    \param[in]  mode: modular operation mode
+    \param[in]  mode: arithmetic operation mode
                 only one parameter can be selected which is shown as below:
       \arg        PKCAU_MODE_MOD_ADD: modular addition
       \arg        PKCAU_MODE_MOD_SUB: modular subtraction
@@ -326,7 +327,7 @@ void pkcau_mod_operation(pkcau_mod_parameter_struct *mod_para, uint32_t mode)
 
     /* write the modulus length in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000404U, bit_len);
-    
+
     /* write the operand A, operand B and modulus value n to PKCAU RAM */
     pkcau_memcpy_operand(0x000008B4U, mod_para->oprd_a, mod_para->modulus_len);
     pkcau_memcpy_operand(0x00000A44U, mod_para->oprd_b, mod_para->modulus_len);
@@ -346,7 +347,7 @@ void pkcau_mod_operation(pkcau_mod_parameter_struct *mod_para, uint32_t mode)
                   modulus_n: modulus value n
                   modulus_len: modulus length in byte
                   mont_para: montgomery parameter R2 mod n
-    \param[in]  mode: modular exponentation operation mode
+    \param[in]  mode: arithmetic operation mode
                 only one parameter can be selected which is shown as below:
       \arg        PKCAU_MODE_MOD_EXP: montgomery parameter computation then modular exponentiation
       \arg        PKCAU_MODE_MOD_EXP_FAST: modular exponentiation only
@@ -357,11 +358,11 @@ void pkcau_mod_exp_operation(pkcau_mod_exp_parameter_struct *mod_exp_para, uint3
 {
     uint32_t e_bit_len = mod_exp_para->e_len * 8U;
     uint32_t n_bit_len = mod_exp_para->modulus_len * 8U;
-    
+
     /* write the exponent length and modulus length in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000400U, e_bit_len);
     pkcau_memcpy_value(0x00000404U, n_bit_len);
-    
+
     /* write the operand A, exponent e and modulus value n to PKCAU RAM */
     pkcau_memcpy_operand(0x00000A44U, mod_exp_para->oprd_a, mod_exp_para->modulus_len);
     pkcau_memcpy_operand(0x00000BD0U, mod_exp_para->exp_e, mod_exp_para->e_len);
@@ -388,10 +389,10 @@ void pkcau_mod_exp_operation(pkcau_mod_exp_parameter_struct *mod_exp_para, uint3
 void pkcau_mod_inver_operation(pkcau_mod_inver_parameter_struct *mod_inver_para)
 {
     uint32_t bit_len = mod_inver_para->modulus_len * 8U;
-    
+
     /* write the modulus length in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000404U, bit_len);
-    
+
     /* write the operand A and modulus value n to PKCAU RAM */
     pkcau_memcpy_operand(0x000008B4U, mod_inver_para->oprd_a, mod_inver_para->modulus_len);
     pkcau_memcpy_operand(0x00000A44U, mod_inver_para->modulus_n, mod_inver_para->modulus_len);
@@ -415,11 +416,11 @@ void pkcau_mod_reduc_operation(pkcau_mod_reduc_parameter_struct *mod_reduc_para)
 {
     uint32_t n_bit_len = mod_reduc_para->modulus_len * 8U;
     uint32_t a_bit_len = mod_reduc_para->oprd_a_len * 8U;
-    
+
     /* write the modulus length and length of operand A in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000400U, a_bit_len);
     pkcau_memcpy_value(0x00000404U, n_bit_len);
-    
+
     /* write the operand A and modulus value n to PKCAU RAM */
     pkcau_memcpy_operand(0x000008B4U, mod_reduc_para->oprd_a, mod_reduc_para->oprd_a_len);
     pkcau_memcpy_operand(0x00000A44U, mod_reduc_para->modulus_n, mod_reduc_para->modulus_len);
@@ -430,7 +431,7 @@ void pkcau_mod_reduc_operation(pkcau_mod_reduc_parameter_struct *mod_reduc_para)
 }
 
 /*!
-    \brief      execute arithmetic operation
+    \brief      execute arithmetic addition operation
     \param[in]  arithmetic_para: PKCAU arithmetic parameter struct
                   oprd_a: operand A
                   oprd_b: operand B
@@ -446,14 +447,15 @@ void pkcau_mod_reduc_operation(pkcau_mod_reduc_parameter_struct *mod_reduc_para)
 */
 void pkcau_arithmetic_operation(pkcau_arithmetic_parameter_struct *arithmetic_para, uint32_t mode)
 {
-    uint32_t bit_len = arithmetic_para->oprd_len * 8U;
-    
+    uint32_t bit_len = 8 * ((arithmetic_para->oprd_len_a > arithmetic_para->oprd_len_b) ? \
+                             arithmetic_para->oprd_len_a : arithmetic_para->oprd_len_b);
+
     /* write the length of operand in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000404U, bit_len);
-    
+
     /* write the operand A and operand B to PKCAU RAM */
-    pkcau_memcpy_operand(0x000008B4U, arithmetic_para->oprd_a, arithmetic_para->oprd_len);
-    pkcau_memcpy_operand(0x00000A44U, arithmetic_para->oprd_b, arithmetic_para->oprd_len);
+    pkcau_memcpy_operand(0x000008B4U, arithmetic_para->oprd_a, arithmetic_para->oprd_len_a);
+    pkcau_memcpy_operand(0x00000A44U, arithmetic_para->oprd_b, arithmetic_para->oprd_len_b);
     /* configure the operation mode */
     pkcau_mode_set(mode);
     /* start computation */
@@ -473,17 +475,17 @@ void pkcau_arithmetic_operation(pkcau_arithmetic_parameter_struct *arithmetic_pa
     \param[out] none
     \retval     none
 */
-void pkcau_crt_exp_operation(pkcau_crt_parameter_struct* crt_para)
+void pkcau_crt_exp_operation(const pkcau_crt_parameter_struct* crt_para)
 {
     uint32_t max_len_in_bit = crt_para->oprd_len * 8U;
-    
+
     /* write the modulus length in bit to PKCAU RAM */
-    pkcau_memcpy_value(0x00000404U, max_len_in_bit); 
-    
+    pkcau_memcpy_value(0x00000404U, max_len_in_bit);
+
     /* write the operand dp, dq, qinv, p and q to PKCAU RAM */
-    pkcau_memcpy_operand(0x0000065CU, crt_para->oprd_dp, crt_para->oprd_len/2U); 
+    pkcau_memcpy_operand(0x0000065CU, crt_para->oprd_dp, crt_para->oprd_len/2U);
     pkcau_memcpy_operand(0x00000BD0U, crt_para->oprd_dq, crt_para->oprd_len/2U);
-    pkcau_memcpy_operand(0x000007ECU, crt_para->oprd_qinv, crt_para->oprd_len/2U); 
+    pkcau_memcpy_operand(0x000007ECU, crt_para->oprd_qinv, crt_para->oprd_len/2U);
     pkcau_memcpy_operand(0x0000097CU, crt_para->oprd_p, crt_para->oprd_len/2U);
     pkcau_memcpy_operand(0x00000D5CU, crt_para->oprd_q, crt_para->oprd_len/2U);
     /* write the operand A to PKCAU RAM */
@@ -516,20 +518,19 @@ void pkcau_crt_exp_operation(pkcau_crt_parameter_struct* crt_para)
 */
 void pkcau_point_check_operation(pkcau_point_parameter_struct* point_para, const pkcau_ec_group_parameter_struct* curve_group_para)
 {
-    uint32_t max_len_in_bit = curve_group_para->modulus_p_len * 8U;
-    
+    uint32_t max_len_in_bit = get_bit_size(curve_group_para->modulus_p_len, *(curve_group_para->modulus_p));
     /* write the modulus length in bit to PKCAU RAM */
     pkcau_memcpy_value(0x00000404U, max_len_in_bit);
     /* write the sign of curve coefficient a to PKCAU RAM */
     pkcau_memcpy_value(0x00000408U, curve_group_para->a_sign);
-    
+
     /* write the curve coefficient a, curve coefficient b and curve modulus p to PKCAU RAM */
-    pkcau_memcpy_operand(0x0000040CU, curve_group_para->coff_a, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x000007FCU, curve_group_para->coff_b, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x00000460U, curve_group_para->modulus_p, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x0000040CU, curve_group_para->coff_a, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x000007FCU, curve_group_para->coff_b, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x00000460U, curve_group_para->modulus_p, curve_group_para->modulus_p_len);
     /* write the point coordinate x and point coordinate y to PKCAU RAM */
-    pkcau_memcpy_operand(0x0000055CU, point_para->point_x, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x000005B0U, point_para->point_y, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x0000055CU, (uint8_t *)point_para->point_x, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x000005B0U, (uint8_t *)point_para->point_y, curve_group_para->modulus_p_len);
     /* configure the operation mode */
     pkcau_mode_set(PKCAU_MODE_POINT_CHECK);
     /* start computation */
@@ -563,22 +564,23 @@ void pkcau_point_check_operation(pkcau_point_parameter_struct* point_para, const
 */
 void pkcau_point_mul_operation(pkcau_point_parameter_struct *point_para, const pkcau_ec_group_parameter_struct* curve_group_para, uint32_t mode)
 {
-    uint32_t k_len = curve_group_para->k_len * 8U;
-    uint32_t max_len_in_bit = curve_group_para->modulus_p_len * 8U;
-    
+    uint32_t k_len, max_len_in_bit;
+
+    k_len = get_bit_size(curve_group_para->k_len, *curve_group_para->multi_k);
+    max_len_in_bit = get_bit_size(curve_group_para->modulus_p_len ,*curve_group_para->modulus_p);
     /* write the length of scalar multiplier k, curve modulus p length in bit and curve coefficient a sign to PKCAU RAM */
     pkcau_memcpy_value(0x00000400U, k_len);
     pkcau_memcpy_value(0x00000404U, max_len_in_bit);
     pkcau_memcpy_value(0x00000408U, curve_group_para->a_sign);
-    
+
     /* write the curve coefficient a, curve modulus p, scalar multiplier k, point coordinate x and point coordinate y to PKCAU RAM */
-    pkcau_memcpy_operand(0x0000040CU, curve_group_para->coff_a, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x00000460U, curve_group_para->modulus_p, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x00000508U, curve_group_para->multi_k, curve_group_para->k_len);
-    pkcau_memcpy_operand(0x0000055CU, point_para->point_x, curve_group_para->modulus_p_len);
-    pkcau_memcpy_operand(0x000005B0U, point_para->point_y, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x0000040CU, curve_group_para->coff_a, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x00000460U, curve_group_para->modulus_p, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x00000508U, (uint8_t *)curve_group_para->multi_k, curve_group_para->k_len);
+    pkcau_memcpy_operand_reverse(0x0000055CU, (uint8_t *)point_para->point_x, curve_group_para->modulus_p_len);
+    pkcau_memcpy_operand_reverse(0x000005B0U, (uint8_t *)point_para->point_y, curve_group_para->modulus_p_len);
     if(mode == PKCAU_MODE_ECC_MUL_FAST){
-        pkcau_memcpy_operand(0x000004B4U, curve_group_para->mont_para, curve_group_para->modulus_p_len);
+        pkcau_memcpy_operand_reverse(0x000004B4U, curve_group_para->mont_para, curve_group_para->modulus_p_len);
     }
     /* configure the operation mode */
     pkcau_mode_set(mode);
@@ -612,12 +614,12 @@ void pkcau_point_mul_operation(pkcau_point_parameter_struct *point_para, const p
 void pkcau_ecdsa_sign_operation(const uint8_t* p_key_d, const uint8_t* k, pkcau_hash_parameter_struct *hash_para, const pkcau_ec_group_parameter_struct* curve_group_para)
 {
     uint32_t max_len_in_bit = curve_group_para->modulus_p_len * 8U;
-    
+
     /* write the curve prime order n length, curve modulus p length in bit and curve coefficient a sign to PKCAU RAM */
     pkcau_memcpy_value(0x00000400U, curve_group_para->order_n_len * 8U);
     pkcau_memcpy_value(0x00000404U, max_len_in_bit);
     pkcau_memcpy_value(0x00000408U, curve_group_para->a_sign);
-    
+
     /* write the curve coefficient a to PKCAU RAM */
     pkcau_memcpy_operand(0x0000040CU, curve_group_para->coff_a, curve_group_para->modulus_p_len);
     /* write the curve modulus p to PKCAU RAM */
@@ -670,7 +672,7 @@ void pkcau_ecdsa_sign_operation(const uint8_t* p_key_d, const uint8_t* k, pkcau_
 void pkcau_ecdsa_verification_operation(pkcau_point_parameter_struct *point_para, \
                               pkcau_hash_parameter_struct *hash_para, \
                               pkcau_signature_parameter_struct *signature_para, \
-                              const pkcau_ec_group_parameter_struct* curve_group_para)
+                              pkcau_ec_group_parameter_struct* curve_group_para)
 {
     uint32_t max_len_in_bit = curve_group_para->modulus_p_len * 8U;
 
@@ -678,7 +680,7 @@ void pkcau_ecdsa_verification_operation(pkcau_point_parameter_struct *point_para
     pkcau_memcpy_value(0x00000404U, curve_group_para->order_n_len * 8U);
     pkcau_memcpy_value(0x000004B4U, max_len_in_bit);
     pkcau_memcpy_value(0x0000045CU, curve_group_para->a_sign);
-    
+
     /* write the curve coefficient a to PKCAU RAM */
     pkcau_memcpy_operand(0x00000460U, curve_group_para->coff_a, curve_group_para->modulus_p_len);
     /* write the curve modulus p to PKCAU RAM */
@@ -708,19 +710,51 @@ void pkcau_ecdsa_verification_operation(pkcau_point_parameter_struct *point_para
 /*!
     \brief      read result from PKCAU RAM
     \param[in]  offset: RAM address offset to PKCAU base address
-    \param[out] buf: big endian result buffer, the left most byte from the PKCAU should be in the first element of buffer
+    \param[out] buf: little endian result buffer, the right most byte from the PKCAU should be in the first element of buffer
     \param[in]  size: number of byte to read
     \retval     none
 */
 void pkcau_memread(uint32_t offset, uint8_t buf[], uint32_t size)
 {
     uint32_t  data = 0U, i = 0U, j = 0U;
-    
+
     /* read data from PKCAU RAM */
     while(size >= 4U){
         data = *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i));
         i = i + 4U;
-        
+
+        /* data in PKCAU RAM is big endian */
+        buf[i-4U] = (uint8_t)(data & 0xffU);
+        buf[i-3U] = (uint8_t)((data >> 8U) & 0xffU);
+        buf[i-2U] = (uint8_t)((data >> 16U) & 0xffU);
+        buf[i-1U] = (uint8_t)((data >> 24U) & 0xffU);
+        size -= 4U;
+    }
+    /* read data from PKCAU RAM which is not a multiple of four */
+    if(size > 0U){
+        data = *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i));
+        for(j = 0U; j < size; j++){
+            buf[i + j] = (uint8_t)((data >> (j * 8U)) & 0xffU);
+        }
+    }
+}
+
+/*!
+    \brief      read result from PKCAU RAM
+    \param[in]  offset: RAM address offset to PKCAU base address
+    \param[out] buf: big endian result buffer, the left most byte from the PKCAU should be in the first element of buffer
+    \param[in]  size: number of byte to read
+    \retval     none
+*/
+void pkcau_memread_reverse(uint32_t offset, uint8_t buf[], uint32_t size)
+{
+    uint32_t  data = 0U, i = 0U, j = 0U;
+
+    /* read data from PKCAU RAM */
+    while(size >= 4U){
+        data = *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i));
+        i = i + 4U;
+
         /* data in PKCAU RAM is big endian */
         buf[size-1U] = (uint8_t)(data & 0xffU);
         buf[size-2U] = (uint8_t)((data >> 8U) & 0xffU);
@@ -732,7 +766,7 @@ void pkcau_memread(uint32_t offset, uint8_t buf[], uint32_t size)
     if(size > 0U){
         data = *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i));
         for(j = 0U; j < size; j++){
-            buf[j] = (uint8_t)((data >> ((size-1U-j) * 8U)) & 0xffU);
+            buf[j] = (uint8_t)((data >> ((size - 1U - j) * 8U)) & 0xffU);
         }
     }
 }
@@ -903,13 +937,47 @@ static void pkcau_memcpy_value(uint32_t offset, uint32_t value)
 }
 
 /*!
+    \brief      Get optimal number of bits inside an array of uint8_t.
+    \param[in]  byte: Number of uint8_t inside the array
+    \param[in]  msb: Most significant uint8_t of the array
+    \param[out] none
+    \retval     result of the number of bits
+*/
+uint32_t get_bit_size(uint32_t byte, uint8_t msb)
+{
+  uint32_t position;
+
+  position = 32UL - __CLZ(msb);
+
+  return (((byte - 1UL) * 8UL) + position);
+}
+
+/*!
+    \brief      set value for pkcau related array in RAM and write an extra appended value 0
+    \param[in]  offset: offset address based on PKCAU_BASE
+    \param[in]  val: valve to be set
+    \param[in]  word_sz: number of word to be set
+    \param[out] none
+    \retval     none
+*/
+void pkcau_memset(uint32_t offset, const uint32_t val, uint32_t word_sz)
+{
+    uint32_t* addr = (uint32_t*)(PKCAU_BASE + offset);
+
+    for(int i = 0; i < word_sz; i++)
+        *addr++ = val;
+
+    *addr = 0x0;
+}
+
+/*!
     \brief      copy operand with EOS or ROS to PKCAU RAM
     \param[in]  offset: RAM address offset to PKCAU base address
     \param[in]  operand: the big endian operand vector, the left most byte of the value should be in the first element of the vector
     \param[in]  size: operand vector length in byte
     \retval     none
 */
-static void pkcau_memcpy_operand(uint32_t offset, const uint8_t operand[], uint32_t size)
+static void pkcau_memcpy_operand_reverse(uint32_t offset, const uint8_t operand[], uint32_t size)
 {
     uint32_t data = 0U, i = 0U, j = 0U;
 
@@ -929,7 +997,32 @@ static void pkcau_memcpy_operand(uint32_t offset, const uint8_t operand[], uint3
         *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i)) = data;
         i = i + 4U;
     }
-    
+
     /* an additional word 0x00000000 is expected by the PKCAU */
     *(uint32_t*)((uint32_t)(PKCAU_BASE + offset + i)) = 0x00000000U;
+}
+
+/*!
+  \brief  Copy uint8_t array to uint32_t array to fit PKCAU number representation.
+  \param  offset RAM offset to write
+  \param  operand Pointer to source
+  \param  size Number of uint8_t to copy (must be multiple of 4)
+  \retval dst
+*/
+static void pkcau_memcpy_operand(uint32_t offset, const uint8_t operand[], uint32_t size)
+{
+    uint32_t num = size / 4;
+    uint32_t resi = size % 4;
+    uint32_t* para = (uint32_t *)operand;
+
+    uint32_t* addr = (uint32_t*)(PKCAU_BASE + offset);
+
+    for (int i = 0; i < num; i++)
+        *addr++ = *para++;
+
+    if(resi != 0)
+        *addr++ = (*para) & ((1 << (resi * 8)) - 1);
+
+    /* an additional word 0x00000000 is expected by the PKCAU */
+    *addr = 0x0;
 }

@@ -1,8 +1,8 @@
 /*!
-    \file    gd32w51x_misc.h
-    \brief   definitions for the MISC
+    \file  gd32w51x_misc.h
+    \brief definitions for the MISC
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*

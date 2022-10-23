@@ -1,8 +1,8 @@
 /*!
-    \file    gd32w51x_tsi.c
-    \brief   TSI driver
+    \file  gd32w51x_tsi.c
+    \brief TSI driver
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -201,7 +201,7 @@ void tsi_channel_pin_disable(uint32_t channel)
     \param[out] none
     \retval     none 
 */
-void tsi_software_mode_config(void)
+void tsi_sofeware_mode_config(void)
 {
     if(RESET == (TSI_CTL0 & TSI_CTL0_TSIS)){
         TSI_CTL0 &= ~TSI_CTL0_TRGMOD;
@@ -479,6 +479,103 @@ void tsi_analog_off(uint32_t group_pin)
 }
 
 /*!
+    \brief      enable TSI interrupt 
+    \param[in]  source: select interrupt which will be enabled
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt enable
+      \arg        TSI_INT_MNERR:  max cycle number error interrupt enable
+    \param[out] none
+    \retval     none 
+*/
+void tsi_interrupt_enable(uint32_t source)
+{
+    TSI_INTEN |= source;
+}
+
+/*!
+    \brief      disable TSI interrupt 
+    \param[in]  source: select interrupt which will be disabled
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt disable
+      \arg        TSI_INT_MNERR: max cycle number error interrupt disable
+    \param[out] none
+    \retval     none 
+*/
+void tsi_interrupt_disable(uint32_t source)
+{
+    TSI_INTEN &= ~source;
+}
+
+/*!
+    \brief      clear TSI interrupt flag
+    \param[in]  flag: select flag which will be cleared
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_FLAG_CTCF: clear charge-transfer complete flag
+      \arg        TSI_INT_FLAG_MNERR: clear max cycle number error
+    \param[out] none
+    \retval     none
+*/
+void tsi_interrupt_flag_clear(uint32_t flag)
+{
+    TSI_INTC |= flag;
+}
+
+/*!
+    \brief      get TSI interrupt flag  
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_INT_FLAG_CTCF: charge-transfer complete flag
+      \arg        TSI_INT_FLAG_MNERR: max Cycle Number Error
+    \param[out] none
+    \retval     FlagStatus:SET or RESET
+*/
+FlagStatus tsi_interrupt_flag_get(uint32_t flag)
+{
+    uint32_t interrupt_enable = 0U,interrupt_flag = 0U;
+    interrupt_flag = (TSI_INTF & flag);
+    interrupt_enable = (TSI_INTEN & flag);
+    if(interrupt_flag && interrupt_enable){
+        return SET;
+    }else{
+        return RESET;
+    }
+}
+
+/*!
+    \brief      clear flag
+    \param[in]  flag: select flag which will be cleared
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_FLAG_CTCF: clear charge-transfer complete flag
+      \arg        TSI_FLAG_MNERR: clear max cycle number error
+    \param[out] none
+    \retval     none
+*/
+void tsi_flag_clear(uint32_t flag)
+{
+    TSI_INTC |= flag;
+}
+
+/*!
+    \brief      get flag
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        TSI_FLAG_CTCF: charge-transfer complete flag
+      \arg        TSI_FLAG_MNERR: max Cycle Number Error
+    \param[out] none
+    \retval     FlagStatus:SET or RESET
+*/
+FlagStatus tsi_flag_get(uint32_t flag)
+{
+    FlagStatus flag_status;
+    if(TSI_INTF & flag){
+        flag_status = SET;
+    }else{
+        flag_status = RESET;
+    }
+    return flag_status;
+}
+
+/*!
     \brief      enbale group 
     \param[in]  group: select group to be enabled 
                 one or more parameters can be selected which are shown as below:
@@ -554,101 +651,4 @@ uint16_t tsi_group1_cycle_get(void)
 uint16_t tsi_group2_cycle_get(void)
 {
     return (uint16_t)TSI_G2CYCN;
-}
-
-/*!
-    \brief      clear flag
-    \param[in]  flag: select flag which will be cleared
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_FLAG_CTCF: clear charge-transfer complete flag
-      \arg        TSI_FLAG_MNERR: clear max cycle number error
-    \param[out] none
-    \retval     none
-*/
-void tsi_flag_clear(uint32_t flag)
-{
-    TSI_INTC |= flag;
-}
-
-/*!
-    \brief      get flag
-    \param[in]  flag:
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_FLAG_CTCF: charge-transfer complete flag
-      \arg        TSI_FLAG_MNERR: max Cycle Number Error
-    \param[out] none
-    \retval     FlagStatus:SET or RESET
-*/
-FlagStatus tsi_flag_get(uint32_t flag)
-{
-    FlagStatus flag_status;
-    if(TSI_INTF & flag){
-        flag_status = SET;
-    }else{
-        flag_status = RESET;
-    }
-    return flag_status;
-}
-
-/*!
-    \brief      enable TSI interrupt 
-    \param[in]  source: select interrupt which will be enabled
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt enable
-      \arg        TSI_INT_MNERR:  max cycle number error interrupt enable
-    \param[out] none
-    \retval     none 
-*/
-void tsi_interrupt_enable(uint32_t source)
-{
-    TSI_INTEN |= source;
-}
-
-/*!
-    \brief      disable TSI interrupt 
-    \param[in]  source: select interrupt which will be disabled
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_CCTCF: charge-transfer complete flag interrupt disable
-      \arg        TSI_INT_MNERR: max cycle number error interrupt disable
-    \param[out] none
-    \retval     none 
-*/
-void tsi_interrupt_disable(uint32_t source)
-{
-    TSI_INTEN &= ~source;
-}
-
-/*!
-    \brief      clear TSI interrupt flag
-    \param[in]  flag: select flag which will be cleared
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_FLAG_CTCF: clear charge-transfer complete flag
-      \arg        TSI_INT_FLAG_MNERR: clear max cycle number error
-    \param[out] none
-    \retval     none
-*/
-void tsi_interrupt_flag_clear(uint32_t flag)
-{
-    TSI_INTC |= flag;
-}
-
-/*!
-    \brief      get TSI interrupt flag  
-    \param[in]  flag:
-                only one parameter can be selected which is shown as below:
-      \arg        TSI_INT_FLAG_CTCF: charge-transfer complete flag
-      \arg        TSI_INT_FLAG_MNERR: max Cycle Number Error
-    \param[out] none
-    \retval     FlagStatus:SET or RESET
-*/
-FlagStatus tsi_interrupt_flag_get(uint32_t flag)
-{
-    uint32_t interrupt_enable = 0U,interrupt_flag = 0U;
-    interrupt_flag = (TSI_INTF & flag);
-    interrupt_enable = (TSI_INTEN & flag);
-    if(interrupt_flag && interrupt_enable){
-        return SET;
-    }else{
-        return RESET;
-    }
 }

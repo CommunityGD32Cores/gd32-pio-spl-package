@@ -2,7 +2,7 @@
     \file    gd32w51x_pmu.h
     \brief   definitions for the PMU
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -239,7 +239,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd);
 /* PMU work at deep-sleep mode */
 void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd);
 /* PMU work at standby mode */
-void pmu_to_standbymode(uint8_t standbymodecmd);
+void pmu_to_standbymode(void);
 
 /* wakeup pin related functions */
 /* enable PMU wakeup pin */

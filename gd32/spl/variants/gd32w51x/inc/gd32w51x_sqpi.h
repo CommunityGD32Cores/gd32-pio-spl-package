@@ -2,7 +2,7 @@
     \file  gd32w51x_sqpi.h
     \brief definitions for the SQPI
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*

@@ -2,7 +2,7 @@
     \file    gd32w51x_fwdgt.c
     \brief   FWDGT driver
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -38,7 +38,7 @@ OF SUCH DAMAGE.
 #define RLD_RLD(regval)             (BITS(0,11) & ((uint32_t)(regval) << 0U))  /*!< write value to FWDGT_RLD_RLD bit field */
 
 /*!
-    \brief      enable write access to FWDGT_PSC and FWDGT_RLD
+    \brief      enable write access to FWDGT_PSC, FWDGT_RLD
     \param[in]  none
     \param[out] none
     \retval     none
@@ -49,7 +49,7 @@ void fwdgt_write_enable(void)
 }
 
 /*!
-    \brief      disable write access to FWDGT_PSC and FWDGT_RLD
+    \brief      disable write access to FWDGT_PSC, FWDGT_RLD
     \param[in]  none
     \param[out] none
     \retval     none

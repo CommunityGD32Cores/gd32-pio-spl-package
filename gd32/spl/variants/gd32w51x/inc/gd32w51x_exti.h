@@ -2,7 +2,7 @@
     \file    gd32w51x_exti.h
     \brief   definitions for the EXTI
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -44,7 +44,7 @@ OF SUCH DAMAGE.
 #define EXTI_INTEN                   REG32(EXTI + 0x00000000U) /*!< interrupt enable register */
 #define EXTI_EVEN                    REG32(EXTI + 0x00000004U) /*!< event enable register */
 #define EXTI_RTEN                    REG32(EXTI + 0x00000008U) /*!< rising edge trigger enable register */
-#define EXTI_FTEN                    REG32(EXTI + 0x0000000CU) /*!< falling edge trigger enable register */
+#define EXTI_FTEN                    REG32(EXTI + 0x0000000CU) /*!< falling trigger enable register */
 #define EXTI_SWIEV                   REG32(EXTI + 0x00000010U) /*!< software interrupt event register */
 #define EXTI_PD                      REG32(EXTI + 0x00000014U) /*!< pending register */
 #define EXTI_SECCFG                  REG32(EXTI + 0x00000018U) /*!< security configuration register */
@@ -351,12 +351,12 @@ typedef enum
     EXTI_TRIG_RISING = 0,                                      /*!< EXTI rising edge trigger */
     EXTI_TRIG_FALLING,                                         /*!< EXTI falling edge trigger */
     EXTI_TRIG_BOTH,                                            /*!< EXTI rising and falling edge trigger */
-    EXTI_TRIG_NONE                                             /*!< EXTI without rising edge or falling edge trigger */
+    EXTI_TRIG_NONE                                             /*!< without rising edge or falling edge trigger */
 }exti_trig_type_enum;
 
 /* function declarations */
 /* interrupt and event configuration functions */
-/* deinitialize the EXTI, reset the value of all EXTI registers into initial values */
+/* deinitialize the EXTI */
 void exti_deinit(void);
 /* initialize the EXTI, enable the configuration of EXTI initialize */
 void exti_init(exti_line_enum linex, exti_mode_enum mode, exti_trig_type_enum trig_type);
@@ -386,13 +386,13 @@ void exti_lock_enable(void);
 void exti_software_interrupt_enable(exti_line_enum linex);
 /* disable EXTI software interrupt event */
 void exti_software_interrupt_disable(exti_line_enum linex);
-/* get EXTI line x pending flag */
+/* get EXTI lines pending flag */
 FlagStatus exti_flag_get(exti_line_enum linex);
-/* clear EXTI line x pending flag */
+/* clear EXTI lines pending flag */
 void exti_flag_clear(exti_line_enum linex);
-/* get EXTI line x flag when the interrupt flag is set */
+/* get EXTI lines flag when the interrupt flag is set */
 FlagStatus exti_interrupt_flag_get(exti_line_enum linex);
-/* clear EXTI line x pending flag */
+/* clear EXTI lines pending flag */
 void exti_interrupt_flag_clear(exti_line_enum linex);
 
 #endif /* GD32W51X_EXTI_H */

@@ -2,7 +2,7 @@
     \file    gd32w51x_rcu.h
     \brief   definitions for the RCU
     
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -156,9 +156,7 @@ OF SUCH DAMAGE.
 #define RCU_AHB1RST_USBFSRST            BIT(29)                   /*!< USBFS reset */
 
 /* RCU_AHB2RST */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2RST_DCIRST              BIT(0)                    /*!< DCI reset */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2RST_PKCAURST            BIT(3)                    /*!< PKCAU reset */
 #define RCU_AHB2RST_CAURST              BIT(4)                    /*!< CAU reset */
 #define RCU_AHB2RST_HAURST              BIT(5)                    /*!< HAU reset */
@@ -172,9 +170,7 @@ OF SUCH DAMAGE.
 /* RCU_APB1RST */
 #define RCU_APB1RST_TIMER1RST           BIT(0)                    /*!< TIMER1 reset */
 #define RCU_APB1RST_TIMER2RST           BIT(1)                    /*!< TIMER2 reset */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1RST_TIMER3RST           BIT(2)                    /*!< TIMER3 reset */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1RST_TIMER4RST           BIT(3)                    /*!< TIMER4 reset */
 #define RCU_APB1RST_TIMER5RST           BIT(4)                    /*!< TIMER5 reset */
 #define RCU_APB1RST_WWDGTRST            BIT(11)                   /*!< WWDGT reset */
@@ -194,9 +190,7 @@ OF SUCH DAMAGE.
 #define RCU_APB2RST_SYSCFGRST           BIT(14)                   /*!< SYSCFG reset */
 #define RCU_APB2RST_TIMER15RST          BIT(17)                   /*!< TIMER15 reset */
 #define RCU_APB2RST_TIMER16RST          BIT(18)                   /*!< TIMER16 reset */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2RST_HPDFRST             BIT(30)                   /*!< HPDF reset */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2RST_RFRST               BIT(31)                   /*!< RF reset */
 
 /* RCU_AHB1EN */
@@ -217,9 +211,7 @@ OF SUCH DAMAGE.
 #define RCU_AHB1EN_USBFSEN              BIT(29)                   /*!< USBFS clock enable */
 
 /* RCU_AHB2EN */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2EN_DCIEN                BIT(0)                    /*!< DCI clock enable */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2EN_PKCAUEN              BIT(3)                    /*!< PKCAU clock enable */
 #define RCU_AHB2EN_CAUEN                BIT(4)                    /*!< CAU clock enable */
 #define RCU_AHB2EN_HAUEN                BIT(5)                    /*!< HAU clock enable */
@@ -232,9 +224,7 @@ OF SUCH DAMAGE.
 /* RCU_APB1EN */
 #define RCU_APB1EN_TIMER1EN             BIT(0)                    /*!< TIMER1 clock enable */
 #define RCU_APB1EN_TIMER2EN             BIT(1)                    /*!< TIMER2 clock enable */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1EN_TIMER3EN             BIT(2)                    /*!< TIMER3 clock enable */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1EN_TIMER4EN             BIT(3)                    /*!< TIMER4 clock enable */
 #define RCU_APB1EN_TIMER5EN             BIT(4)                    /*!< TIMER5 clock enable */
 #define RCU_APB1EN_WWDGTEN              BIT(11)                   /*!< WWDGT clock enable */
@@ -254,9 +244,7 @@ OF SUCH DAMAGE.
 #define RCU_APB2EN_SYSCFGEN             BIT(14)                   /*!< SYSCFG clock enable */
 #define RCU_APB2EN_TIMER15EN            BIT(17)                   /*!< TIMER15 clock enable */
 #define RCU_APB2EN_TIMER16EN            BIT(18)                   /*!< TIMER16 clock enable */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2EN_HPDFEN               BIT(30)                   /*!< HPDF clock enable */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2EN_RFEN                 BIT(31)                   /*!< RF clock enable */
 
 /* RCU_AHB1SPEN */
@@ -278,9 +266,7 @@ OF SUCH DAMAGE.
 #define RCU_AHB1SPEN_USBFSSPEN          BIT(29)                   /*!< USBFS clock enable when sleep mode */
 
 /* RCU_AHB2SPEN */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2SPEN_DCISPEN            BIT(0)                    /*!< DCI clock enable when sleep mode */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2SPEN_PKCAUSPEN          BIT(3)                    /*!< PKCAU clock enable when sleep mode */
 #define RCU_AHB2SPEN_CAUSPEN            BIT(4)                    /*!< CAU clock enable when sleep mode */
 #define RCU_AHB2SPEN_HAUSPEN            BIT(5)                    /*!< HAU clock enable when sleep mode */
@@ -293,9 +279,7 @@ OF SUCH DAMAGE.
 /* RCU_APB1SPEN */
 #define RCU_APB1SPEN_TIMER1SPEN         BIT(0)                    /*!< TIMER1 clock enable when sleep mode */
 #define RCU_APB1SPEN_TIMER2SPEN         BIT(1)                    /*!< TIMER2 clock enable when sleep mode */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1SPEN_TIMER3SPEN         BIT(2)                    /*!< TIMER3 clock enable when sleep mode */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1SPEN_TIMER4SPEN         BIT(3)                    /*!< TIMER4 clock enable when sleep mode */
 #define RCU_APB1SPEN_TIMER5SPEN         BIT(4)                    /*!< TIMER5 clock enable when sleep mode */
 #define RCU_APB1SPEN_WWDGTSPEN          BIT(11)                   /*!< WWDGT clock enable when sleep mode */
@@ -315,9 +299,7 @@ OF SUCH DAMAGE.
 #define RCU_APB2SPEN_SYSCFGSPEN         BIT(14)                   /*!< SYSCFG clock enable when sleep mode */
 #define RCU_APB2SPEN_TIMER15SPEN        BIT(17)                   /*!< TIMER15 clock enable when sleep mode */
 #define RCU_APB2SPEN_TIMER16SPEN        BIT(18)                   /*!< TIMER16 clock enable when sleep mode */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2SPEN_HPDFSPEN           BIT(30)                   /*!< HPDF clock enable when sleep mode */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2SPEN_RFSPEN             BIT(31)                   /*!< RF clock enable when sleep mode */
 
 /* RCU_BDCTL */
@@ -377,13 +359,9 @@ OF SUCH DAMAGE.
 /* RCU_ADDCTL */
 #define RCU_ADDCTL_USBFSSEL             BIT(0)                    /*!< USBFS clock selection */
 #define RCU_ADDCTL_USBFSDIV             BITS(1,5)                 /*!< USBFS clock divider factor */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_ADDCTL_HPDFSEL              BIT(11)                   /*!< HPDF clock source selection */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_ADDCTL_I2SSEL               BITS(12,13)               /*!< I2S clock source selection */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_ADDCTL_HPDFAUDIOSEL         BITS(14,15)               /*!< HPDF AUDIO clock source selection */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_ADDCTL_SDIOSEL_0            BIT(16)                   /*!< SDIO clock selection */
 #define RCU_ADDCTL_SDIODIV              BITS(17,21)               /*!< SDIO clock divider factor */
 #define RCU_ADDCTL_SDIOSEL_1            BIT(22)                   /*!< SDIO clock selection */
@@ -431,9 +409,7 @@ OF SUCH DAMAGE.
 #define RCU_AHB1SECP_STAT_USBFSSECF       BIT(29)                 /*!< USBFS security flag */
 
 /* RCU_AHB2SECP_STAT */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2SECP_STAT_DCISECF         BIT(0)                  /*!< DCI security flag */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2SECP_STAT_PKCAUSECF       BIT(3)                  /*!< PKCAU security flag */
 #define RCU_AHB2SECP_STAT_CAUSECF         BIT(4)                  /*!< CAU security flag */
 #define RCU_AHB2SECP_STAT_HAUSECF         BIT(5)                  /*!< HAU security flag */
@@ -446,9 +422,7 @@ OF SUCH DAMAGE.
 /* RCU_APB1SECP_STAT */
 #define RCU_APB1SECP_STAT_TIMER1SECF      BIT(0)                  /*!< TIMER1 security flag */
 #define RCU_APB1SECP_STAT_TIMER2SECF      BIT(1)                  /*!< TIMER2 security flag */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1SECP_STAT_TIMER3SECF      BIT(2)                  /*!< TIMER3 security flag */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1SECP_STAT_TIMER4SECF      BIT(3)                  /*!< TIMER4 security flag */
 #define RCU_APB1SECP_STAT_TIMER5SECF      BIT(4)                  /*!< TIMER5 security flag */
 #define RCU_APB1SECP_STAT_WWDGTSECF       BIT(11)                 /*!< WWDGT security flag */
@@ -468,9 +442,7 @@ OF SUCH DAMAGE.
 #define RCU_APB2SECP_STAT_SYSCFGSECF      BIT(14)                 /*!< SYSCFG security flag */
 #define RCU_APB2SECP_STAT_TIMER15SECF     BIT(17)                 /*!< TIMER15 security flag */
 #define RCU_APB2SECP_STAT_TIMER16SECF     BIT(18)                 /*!< TIMER16 security flag */
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2SECP_STAT_HPDFSECF        BIT(30)                 /*!< HPDF security flag */
-#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2SECP_STAT_RFSECF          BIT(31)                 /*!< RF security flag */
 
 /* RCU_VKEY */
@@ -547,9 +519,7 @@ typedef enum
     RCU_DMA1RST      = RCU_REGIDX_BIT(AHB1RST_REG_OFFSET, 22U),             /*!< DMA1 clock reset */ 
     RCU_USBFSRST     = RCU_REGIDX_BIT(AHB1RST_REG_OFFSET, 29U),             /*!< USBFS clock reset */
     /* AHB2 peripherals */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCIRST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 0U),              /*!< DCI clock reset */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAURST     = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 3U),              /*!< PKCAU clock reset */
     RCU_CAURST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 4U),              /*!< CAU clock reset */
     RCU_HAURST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 5U),              /*!< HAU clock reset */
@@ -560,9 +530,7 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 0U),              /*!< TIMER1 clock reset */
     RCU_TIMER2RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 1U),              /*!< TIMER2 clock reset */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 2U),              /*!< TIMER3 clock reset */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 3U),              /*!< TIMER4 clock reset */
     RCU_TIMER5RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 4U),              /*!< TIMER5 clock reset */
     RCU_WWDGTRST     = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 11U),             /*!< WWDGT clock reset */
@@ -581,9 +549,7 @@ typedef enum
     RCU_SYSCFGRST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 14U),             /*!< SYSCFG clock reset */
     RCU_TIMER15RST   = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 17U),             /*!< TIMER15 clock reset */
     RCU_TIMER16RST   = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 18U),             /*!< TIMER16 clock reset */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDFRST      = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 30U),             /*!< HPDF clock reset */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RFRST        = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 31U)              /*!< RF clock reset */
 }rcu_periph_reset_enum;
 
@@ -607,9 +573,7 @@ typedef enum
     RCU_DMA1      = RCU_REGIDX_BIT(AHB1EN_REG_OFFSET, 22U),                 /*!< DMA1 clock */
     RCU_USBFS     = RCU_REGIDX_BIT(AHB1EN_REG_OFFSET, 29U),                 /*!< USBFS clock */
     /* AHB2 peripherals */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCI       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 0U),                  /*!< DCI clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAU     = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 3U),                  /*!< PKCAU clock */
     RCU_CAU       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 4U),                  /*!< CAU clock */
     RCU_HAU       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 5U),                  /*!< HAU clock */
@@ -620,9 +584,7 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 0U),                  /*!< TIMER1 clock */
     RCU_TIMER2    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 1U),                  /*!< TIMER2 clock */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 2U),                  /*!< TIMER3 clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 3U),                  /*!< TIMER4 clock */
     RCU_TIMER5    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 4U),                  /*!< TIMER5 clock */
     RCU_WWDGT     = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 11U),                 /*!< WWDGT clock */
@@ -642,9 +604,7 @@ typedef enum
     RCU_SYSCFG    = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 14U),                 /*!< SYSCFG clock */
     RCU_TIMER15   = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 17U),                 /*!< TIMER15 clock */
     RCU_TIMER16   = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 18U),                 /*!< TIMER16 clock */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDF      = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 30U),                 /*!< HPDF clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RF        = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 31U)                  /*!< RF clock */
 }rcu_periph_enum;
 
@@ -669,9 +629,7 @@ typedef enum
     RCU_DMA1_SLP      = RCU_REGIDX_BIT(AHB1SPEN_REG_OFFSET, 22U),           /*!< DMA1 clock when sleep mode */
     RCU_USBFS_SLP     = RCU_REGIDX_BIT(AHB1SPEN_REG_OFFSET, 29U),           /*!< USBFS clock when sleep mode */
     /* AHB2 peripherals */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCI_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 0U),            /*!< DCI clock when sleep mode */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAU_SLP     = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 3U),            /*!< PKCAU clock when sleep mode*/
     RCU_CAU_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 4U),            /*!< CAU clock when sleep mode */
     RCU_HAU_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 5U),            /*!< HAU clock when sleep mode */
@@ -682,9 +640,7 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 0U),            /*!< TIMER1 clock when sleep mode */
     RCU_TIMER2_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 1U),            /*!< TIMER2 clock when sleep mode */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 2U),            /*!< TIMER3 clock when sleep mode */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 3U),            /*!< TIMER4 clock when sleep mode*/
     RCU_TIMER5_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 4U),            /*!< TIMER5 clock when sleep mode */ 
     RCU_WWDGT_SLP     = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 11U),           /*!< WWDGT clock when sleep mode */
@@ -703,9 +659,7 @@ typedef enum
     RCU_SYSCFG_SLP    = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 14U),           /*!< SYSCFG clock when sleep mode */
     RCU_TIMER15_SLP   = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 17U),           /*!< TIMER15 clock when sleep mode*/
     RCU_TIMER16_SLP   = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 18U),           /*!< TIMER16 clock when sleep mode */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDF_SLP      = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 30U),           /*!< HPDF clock when sleep mode */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RF_SLP        = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 31U)            /*!< RF clock when sleep mode */
 }rcu_periph_sleep_enum;
 
@@ -715,7 +669,7 @@ typedef enum
     /* clock stabilization flags */
     RCU_FLAG_IRC16MSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 1U),            /*!< IRC16M stabilization flags */
     RCU_FLAG_HXTALSTB      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 17U),           /*!< HXTAL stabilization flags */
-    RCU_FLAG_PLLDIGSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 23U),           /*!< PLLDIG stabilization flags */
+    RCU_FLAG_PLLDIGSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 23U),           /*!< PLL stabilization flags */
     RCU_FLAG_PLLSTB        = RCU_REGIDX_BIT(CTL_REG_OFFSET, 25U),           /*!< PLL stabilization flags */
     RCU_FLAG_PLLI2SSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 27U),           /*!< PLLI2S stabilization flags */
     RCU_FLAG_LXTALSTB      = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 1U),          /*!< LXTAL stabilization flags */
@@ -837,9 +791,7 @@ typedef enum
     RCU_SEC_FLAG_DMA1      = RCU_REGIDX_BIT(AHB1SECPSTAT_REG_OFFSET, 22U),                 /*!< DMA1 clock */
     RCU_SEC_FLAG_USBFS     = RCU_REGIDX_BIT(AHB1SECPSTAT_REG_OFFSET, 29U),                 /*!< USBFS clock */
     /* AHB2 peripherals */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_DCI       = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 0U),                  /*!< DCI clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_PKCAU       = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 3U),                /*!< PKCAU clock */
     RCU_SEC_FLAG_CAU      = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 4U),                   /*!< CAU clock */
     RCU_SEC_FLAG_HAU      = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 5U),                   /*!< HAU clock */
@@ -850,9 +802,7 @@ typedef enum
     /* APB1 peripherals */
     RCU_SEC_FLAG_TIMER1    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 0U),                  /*!< TIMER1 clock */
     RCU_SEC_FLAG_TIMER2    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 1U),                  /*!< TIMER2 clock */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_TIMER3    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 2U),                  /*!< TIMER3 clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_TIMER4    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 3U),                  /*!< TIMER4 clock */
     RCU_SEC_FLAG_TIMER5    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 4U),                  /*!< TIMER5 clock */
     RCU_SEC_FLAG_WWDGT     = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 11U),                 /*!< WWDGT clock */
@@ -871,9 +821,7 @@ typedef enum
     RCU_SEC_FLAG_SYSCFG    = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 14U),                 /*!< SYSCFG clock */
     RCU_SEC_FLAG_TIMER15   = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 17U),                 /*!< TIMER15 clock */
     RCU_SEC_FLAG_TIMER16   = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 18U),                 /*!< TIMER16 clock */
-    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_HPDF      = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 30U),                 /*!< HPDF clock */
-    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_RF        = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 31U)                  /*!< RF clock */
 }rcu_sec_flag_enum;
 
@@ -1043,11 +991,9 @@ typedef enum
 #define RCU_USBFS_DIV31                 ADDCTL_USBFSDIV(30)                         /*!< USBFSDIV input source clock divided by 31 */
 #define RCU_USBFS_DIV32                 ADDCTL_USBFSDIV(31)                         /*!< USBFSDIV input source clock divided by 32 */
 
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* HPDF Clock source selection */
 #define RCU_HPDFSRC_PCLK2               ((uint32_t)0x00000000U)                       /*!< PCLK2 clock selected as HPDF source clock */
 #define RCU_HPDFSRC_CKSYS               RCU_ADDCTL_HPDFSEL                            /*!< system Clock selected as HPDF source clock */
-#endif /* GD32W515PI and GD32W515P0 */
 
 /* I2S Clock source selection */
 #define ADDCTL_I2SSEL(regval)           (BITS(12,13) & ((uint32_t)(regval) << 12U))
@@ -1055,14 +1001,12 @@ typedef enum
 #define RCU_I2SSRC_I2S_CKIN             ADDCTL_I2SSEL(1)                              /*!< external I2S_CKIN pin selected as I2S source clock */
 #define RCU_I2SSRC_I2S_PLLDIV           ADDCTL_I2SSEL(2)                              /*!< PLL division selected as I2S source clock */
 
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* HPDFAUDIO Clock source selection */
 #define ADDCTL_HPDFAUDIOSEL(regval)     (BITS(14,15) & ((uint32_t)(regval) << 14U))
 #define RCU_HPDFAUDIOSRC_PLLI2S          ADDCTL_HPDFAUDIOSEL(0)                       /*!< PLLI2S output clock selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_I2S_CKIN        ADDCTL_HPDFAUDIOSEL(1)                       /*!< external I2S_CKIN pin selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_PLL             ADDCTL_HPDFAUDIOSEL(2)                       /*!< PLL selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_IRC16M          ADDCTL_HPDFAUDIOSEL(3)                       /*!< IRC16M selected as I2S source clock */
-#endif /* GD32W515PI and GD32W515P0 */
 
 /* SDIO Clock source selection */
 #define RCU_SDIOSRC_MASK                 0X00410000U    
@@ -1938,16 +1882,10 @@ void rcu_bkp_reset_enable(void);
 void rcu_bkp_reset_disable(void);
 /* enable HXTAL for PLLI2S */
 void rcu_hxtal_plli2s_enable(void);
-/* disable HXTAL for PLLI2S */
-void rcu_hxtal_plli2s_disable(void);
 /* enable HXTAL for system CK_PLLP */
 void rcu_hxtal_pllp_enable(void);
-/* disable HXTAL for system CK_PLLP */
-void rcu_hxtal_pllp_disable(void);
 /* enable CK_PLLDIG */
 void rcu_plldig_enable(void);
-/* disable CK_PLLDIG */
-void rcu_plldig_disable(void);
 /* power on the HXTAL */
 void rcu_hxtal_poweron(void);
 /* power down the HXTAL */
@@ -1964,18 +1902,18 @@ void rcu_rfpll_cal_disable(void);
 void rcu_rfpll_poweron(void);
 /* power down the RF PLL */
 void rcu_rfpll_powerdown(void);
-/* power on LDO analog */
+/* power on the RF PLL */
 void rcu_ldoana_poweron(void);
-/* power down LDO analog */
+/* power down the RF PLL */
 void rcu_ldoana_powerdown(void);
 /* power on the LDO clock */
 void rcu_ldoclk_poweron(void);
 /* power down the LDO clock */
 void rcu_ldoclk_powerdown(void);
-/* power on the BandGap */
-void rcu_bandgap_poweron(void);
 /* power down the BandGap */
 void rcu_bandgap_powerdown(void);
+/* power on the BandGap */
+void rcu_bandgap_poweron(void);
 
 /* configure the system clock source */
 void rcu_system_clock_source_config(uint32_t ck_sys);
@@ -2007,20 +1945,18 @@ void rcu_rtc_div_config(uint32_t rtc_div);
 void rcu_i2s_clock_config(uint32_t i2s_clock_source);
 /* configure the PLL divider factor for I2S clock */
 void rcu_pllfi2s_clock_div_config(uint32_t pllfi2s_div);
-#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* configure the HPDF clock source selection */
 void rcu_hpdf_clock_config(uint32_t hpdf_clock_source);
 /* configure the HPDF AUDIO clock source selection */
 void rcu_hpdf_audio_clock_config(uint32_t hpdfaudio_clock_source);
-#endif /* GD32W515PI and GD32W515P0 */
 /* configure the SDIO clock source selection */
 void rcu_sdio_clock_config(uint32_t sdio_clock_source);
 /* configure the frequency division of the sdio source clock */
 void rcu_sdio_div_config(uint32_t sdio_div);
 /* configure the usb clock source selection */
 void rcu_usbfs_clock_config(uint32_t usbfs_clock_source);
-/* configure the frequency division of the usbfs source clock */
-void rcu_usbfs_div_config(uint32_t usbfs_div);
+/* configure the frequency division of the usbfs source clock  */
+void rcu_usbfs_div_config(uint32_t usbfs_div);	
 /* configure the I2C0 clock source selection */
 void rcu_i2c0_clock_config(uint32_t i2c0_clock_source);
 /* configure the USART0 clock source selection */

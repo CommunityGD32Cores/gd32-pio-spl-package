@@ -2,7 +2,7 @@
     \file    gd32w51x_exti.c
     \brief   EXTI driver
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -35,7 +35,7 @@ OF SUCH DAMAGE.
 #include "gd32w51x_exti.h"
 
 /*!
-    \brief      deinitialize the EXTI, reset the value of all EXTI registers into initial values
+    \brief      deinitialize the EXTI
     \param[in]  none
     \param[out] none
     \retval     none
@@ -64,8 +64,8 @@ void exti_deinit(void)
     \param[in]  trig_type: interrupt trigger type, refer to exti_trig_type_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_TRIG_RISING: rising edge trigger
-      \arg        EXTI_TRIG_FALLING: falling edge trigger
-      \arg        EXTI_TRIG_BOTH: rising and falling edge trigger
+      \arg        EXTI_TRIG_FALLING: falling trigger
+      \arg        EXTI_TRIG_BOTH: rising and falling trigger
       \arg        EXTI_TRIG_NONE: without rising edge or falling edge trigger
     \param[out] none
     \retval     none
@@ -256,7 +256,7 @@ void exti_software_interrupt_disable(exti_line_enum linex)
 }
 
 /*!
-    \brief      get EXTI line x pending flag
+    \brief      get EXTI lines pending flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..28): EXTI line x
@@ -273,7 +273,7 @@ FlagStatus exti_flag_get(exti_line_enum linex)
 }
 
 /*!
-    \brief      clear EXTI line x pending flag
+    \brief      clear EXTI lines pending flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..28): EXTI line x
@@ -286,7 +286,7 @@ void exti_flag_clear(exti_line_enum linex)
 }
 
 /*!
-    \brief      get EXTI line x flag when the interrupt flag is set
+    \brief      get EXTI lines flag when the interrupt flag is set
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..28): EXTI line x
@@ -308,7 +308,7 @@ FlagStatus exti_interrupt_flag_get(exti_line_enum linex)
 }
 
 /*!
-    \brief      clear EXTI line x pending flag
+    \brief      clear EXTI lines pending flag
     \param[in]  linex: EXTI line number, refer to exti_line_enum
                 only one parameter can be selected which is shown as below:
       \arg        EXTI_x (x=0..28): EXTI line x

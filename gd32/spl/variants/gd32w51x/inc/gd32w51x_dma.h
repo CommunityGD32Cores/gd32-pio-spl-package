@@ -2,7 +2,7 @@
     \file    gd32w51x_dma.c
     \brief   definitions for the DMA
 
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -328,8 +328,8 @@ typedef struct
 #define DMA_FIFO_4_WORD                    CHFCTL_FCCV(3)                            /*!< critical value 4 word */
 
 /* memory select */
-#define DMA_MEMORY_0                       ((uint32_t)0x00000000U)                   /*!< select memory0 as memory transfer area */
-#define DMA_MEMORY_1                       ((uint32_t)0x00000001U)                   /*!< select memory1 as memory transfer area */
+#define DMA_MEMORY_0                       ((uint32_t)0x00000000U)                   /*!< select memory 0 */
+#define DMA_MEMORY_1                       ((uint32_t)0x00000001U)                   /*!< select memory 1 */
 
 /* DMA circular mode */
 #define DMA_CIRCULAR_MODE_ENABLE           ((uint32_t)0x00000000U)                   /*!< circular mode enable */
@@ -365,26 +365,19 @@ typedef struct
 #define DMA_CHFCTL_RESET_VALUE             ((uint32_t)0x00000000U)                   /*!< the reset value of DMA channel CHXFCTL register */
 
 /* DMA_INTF register */
-/* DMA flag bits */
+/* interrupt flag bits */
+#define DMA_INT_FLAG_FEE                   DMA_INTF_FEEIF                            /*!< FIFO error and exception flag */
+#define DMA_INT_FLAG_SDE                   DMA_INTF_SDEIF                            /*!< single data mode exception flag */
+#define DMA_INT_FLAG_TAE                   DMA_INTF_TAEIF                            /*!< transfer access error flag */
+#define DMA_INT_FLAG_HTF                   DMA_INTF_HTFIF                            /*!< half transfer finish flag */
+#define DMA_INT_FLAG_FTF                   DMA_INTF_FTFIF                            /*!< full transger finish flag */
+
+/* interrupt flag bits */
 #define DMA_FLAG_FEE                       DMA_INTF_FEEIF                            /*!< FIFO error and exception flag */
 #define DMA_FLAG_SDE                       DMA_INTF_SDEIF                            /*!< single data mode exception flag */
 #define DMA_FLAG_TAE                       DMA_INTF_TAEIF                            /*!< transfer access error flag */
 #define DMA_FLAG_HTF                       DMA_INTF_HTFIF                            /*!< half transfer finish flag */
 #define DMA_FLAG_FTF                       DMA_INTF_FTFIF                            /*!< full transger finish flag */
-
-/* interrupt flag bits */
-#define DMA_INT_FLAG_FEE                   DMA_INTF_FEEIF                            /*!< FIFO error and exception interrupt flag */
-#define DMA_INT_FLAG_SDE                   DMA_INTF_SDEIF                            /*!< single data mode exception interrupt flag */
-#define DMA_INT_FLAG_TAE                   DMA_INTF_TAEIF                            /*!< transfer access error interrupt flag */
-#define DMA_INT_FLAG_HTF                   DMA_INTF_HTFIF                            /*!< half transfer finish interrupt flag */
-#define DMA_INT_FLAG_FTF                   DMA_INTF_FTFIF                            /*!< full transger finish interrupt flag */
-
-/* interrupt enable bits */
-#define DMA_INT_SDE                        DMA_CHXCTL_SDEIE                          /* single data mode exception interrupt enable */
-#define DMA_INT_TAE                        DMA_CHXCTL_TAEIE                          /* tranfer access error interrupt enable */
-#define DMA_INT_HTF                        DMA_CHXCTL_HTFIE                          /* half transfer finish interrupt enable */
-#define DMA_INT_FTF                        DMA_CHXCTL_FTFIE                          /* full transfer finish interrupt enable */
-#define DMA_INT_FEE                        DMA_CHXFCTL_FEEIE                         /* FIFO exception interrupt enable */
 
 /* DMA security */
 #define DMA_CHANNEL_SECURE                 DMA_CHXSCTL_SECM                          /*!< the secure mode of DMA channel */
@@ -410,6 +403,8 @@ void dma_multi_data_para_struct_init(dma_multi_data_parameter_struct* init_struc
 void dma_single_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_single_data_parameter_struct* init_struct);
 /* DMA multi data mode initialize */
 void dma_multi_data_mode_init(uint32_t dma_periph, dma_channel_enum channelx, dma_multi_data_parameter_struct* init_struct);
+/* DMA multi data mode copy setting */
+void dma_multi_data_mode_copy(uint32_t dma_periph, dma_channel_enum channelx, uint32_t src_addr, uint32_t dst_addr, uint32_t number);
 
 /* DMA configuration functions */
 /* set DMA peripheral base address */
@@ -447,30 +442,28 @@ void dma_channel_disable(uint32_t dma_periph, dma_channel_enum channelx);
 
 /* configure the direction of data transfer on the channel */
 void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint8_t direction);
-/* configure DMA switch buffer mode */
+/* DMA switch buffer mode config */
 void dma_switch_buffer_mode_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t memory1_addr, uint32_t memory_select);
-/* get the current buffer used by the DMA */
+/* DMA using memory get */
 uint32_t dma_using_memory_get(uint32_t dma_periph, dma_channel_enum channelx);
-/* select DMA channel peripheral */
+/* DMA channel peripheral select */
 void dma_channel_subperipheral_select(uint32_t dma_periph, dma_channel_enum channelx, dma_subperipheral_enum sub_periph);
-/* configure DMA flow controller */
+/* DMA flow controller configure */
 void dma_flow_controller_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t controller);
-/* enable DMA switch buffer mode */
-void dma_switch_buffer_mode_enable(uint32_t dma_periph, dma_channel_enum channelx);
-/* disable DMA switch buffer mode */
-void dma_switch_buffer_mode_disable(uint32_t dma_periph, dma_channel_enum channelx);
-/* get DMA FIFO status */
+/* DMA flow controller enable */
+void dma_switch_buffer_mode_enable(uint32_t dma_periph, dma_channel_enum channelx, ControlStatus newvalue);
+/* DMA FIFO status get */
 uint32_t dma_fifo_status_get(uint32_t dma_periph, dma_channel_enum channelx);
 
 /* flag and interrupt functions */
-/* check the designated flag of a DMA channel is set or not */
+/* check DMA flag is set or not */
 FlagStatus dma_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t flag);
-/* clear the designated flag of a DMA channel */
+/* clear DMA a channel flag */
 void dma_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t flag);
-/* check the designated interrupt flag of a DMA channel is set or not */
-FlagStatus dma_interrupt_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t int_flag);
-/* clear the designated interrupt flag of a DMA channel */
-void dma_interrupt_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t int_flag);
+/* check DMA flag is set or not */
+FlagStatus dma_interrupt_flag_get(uint32_t dma_periph, dma_channel_enum channelx, uint32_t interrupt);
+/* clear DMA a channel flag */
+void dma_interrupt_flag_clear(uint32_t dma_periph, dma_channel_enum channelx, uint32_t interrupt);
 /* enable DMA interrupt */
 void dma_interrupt_enable(uint32_t dma_periph, dma_channel_enum channelx, uint32_t source);
 /* disable DMA interrupt */

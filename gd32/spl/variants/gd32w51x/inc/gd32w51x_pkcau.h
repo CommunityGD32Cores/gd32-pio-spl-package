@@ -1,39 +1,39 @@
 /*!
     \file    gd32w51x_PKCAU.h
     \brief   definitions for the PKCAU
-    
-    \version 2021-03-25, V1.0.0, firmware for GD32W51x
+
+    \version 2021-10-30, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
 #ifndef GD32W51X_PKCAU_H
-#define GD32W51X_PKCAU_H 
+#define GD32W51X_PKCAU_H
 
 #include "gd32w51x.h"
 
@@ -109,13 +109,14 @@ typedef struct{
 typedef struct{
     const uint8_t* oprd_a;                                              /*!< operand A */
     const uint8_t* oprd_b;                                              /*!< operand B */
-    uint32_t oprd_len;                                                  /*!< length of operand in byte */
+    uint32_t oprd_len_a;                                                /*!< length of operand in byte */
+    uint32_t oprd_len_b;                                                /*!< length of operand in byte */
 }pkcau_arithmetic_parameter_struct;
 
 /* CRT paramter structure */
 typedef struct{
     const uint8_t* oprd_a;                                              /*!< operand A */
-    uint32_t oprd_len;                                                  /*!< length of operand in byte */
+    uint32_t oprd_len;                                                  /*!< operand length in byte */
     uint8_t* oprd_dp;                                                   /*!< operand dp */
     uint8_t* oprd_dq;                                                   /*!< operand dq */
     uint8_t* oprd_qinv;                                                 /*!< operand qinv */
@@ -141,8 +142,8 @@ typedef struct{
 
 /* point structure */
 typedef struct{
-    const uint8_t* point_x;                                             /*!< point coordinate x */  
-    const uint8_t* point_y;                                             /*!< point coordinate y */  
+    const uint8_t* point_x;                                             /*!< point coordinate x */
+    const uint8_t* point_y;                                             /*!< point coordinate y */
 }pkcau_point_parameter_struct;
 
 /* signature structure */
@@ -153,7 +154,7 @@ typedef struct{
 
 /* hash structure */
 typedef struct{
-    const uint8_t* hash_z;                                              /*!< hash value z */  
+    const uint8_t* hash_z;                                              /*!< hash value z */
     uint32_t hash_z_len;                                                /*!< hash value z length in byte */
 }pkcau_hash_parameter_struct;
 
@@ -243,17 +244,23 @@ void pkcau_mod_reduc_operation(pkcau_mod_reduc_parameter_struct *mod_reduc_para)
 /* execute arithmetic addition operation */
 void pkcau_arithmetic_operation(pkcau_arithmetic_parameter_struct *arithmetic_para, uint32_t mode);
 /* execute RSA CRT exponentation operation */
-void pkcau_crt_exp_operation(pkcau_crt_parameter_struct* crt_para);
+void pkcau_crt_exp_operation(const pkcau_crt_parameter_struct* crt_para);
 /* execute point check operation */
 void pkcau_point_check_operation(pkcau_point_parameter_struct* point_para, const pkcau_ec_group_parameter_struct* curve_group_para);
 /* execute point multiplication operation */
 void pkcau_point_mul_operation(pkcau_point_parameter_struct *point_para, const pkcau_ec_group_parameter_struct* curve_group_para, uint32_t mode);
 /* execute ECDSA sign operation */
 void pkcau_ecdsa_sign_operation(const uint8_t* p_key_d, const uint8_t* k, pkcau_hash_parameter_struct *hash_para, const pkcau_ec_group_parameter_struct* curve_group_para);
-/* execute ECDSA verify operation */
-void pkcau_ecdsa_verification_operation(pkcau_point_parameter_struct *point_para, pkcau_hash_parameter_struct *hash_para, pkcau_signature_parameter_struct *signature_para, const pkcau_ec_group_parameter_struct* curve_group_para);
+/* execute ECDSA sign operation */
+void pkcau_ecdsa_verification_operation(pkcau_point_parameter_struct *point_para, pkcau_hash_parameter_struct *hash_para, pkcau_signature_parameter_struct *signature_para, pkcau_ec_group_parameter_struct* curve_group_para);
 /* read result from PKCAU RAM */
 void pkcau_memread(uint32_t offset, uint8_t buf[], uint32_t size);
+/* read result from PKCAU RAM and reverse the value */
+void pkcau_memread_reverse(uint32_t offset, uint8_t buf[], uint32_t size);
+/* Get optimal number of bits inside an array of uint8_t */
+uint32_t get_bit_size(uint32_t byte, uint8_t msb);
+/* set value for pkcau related array in RAM and write an extra appended value 0 */
+void pkcau_memset(uint32_t offset, const uint32_t val, uint32_t word_sz);
 
 /* interrupt & flag functions */
 /* get PKCAU flag status */
