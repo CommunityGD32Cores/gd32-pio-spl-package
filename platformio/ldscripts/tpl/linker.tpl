@@ -1,7 +1,7 @@
 /*
  *
  * Automatically generated file
- * PlatformIO default linker script template for STM32 F1/F2/F3/F4/F7/L0/L1/L4
+ * PlatformIO default linker script template for GD32
  *
  */
 
