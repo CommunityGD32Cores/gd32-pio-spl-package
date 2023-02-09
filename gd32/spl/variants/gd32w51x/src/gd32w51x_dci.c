@@ -2,7 +2,7 @@
     \file    gd32w51x_dci.c
     \brief   DCI driver
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -48,8 +48,10 @@ OF SUCH DAMAGE.
 */
 void dci_deinit(void)
 {
+#if defined (GD32W515PI) || defined (GD32W515P0)
     rcu_periph_reset_enable(RCU_DCIRST);
     rcu_periph_reset_disable(RCU_DCIRST);
+#endif /* GD32W515PI and GD32W515P0 */
 }
 
 /*!

@@ -2,7 +2,7 @@
     \file    gd32w51x_hpdf.c
     \brief   HPDF driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -37,6 +37,8 @@ OF SUCH DAMAGE.
 #include "gd32w51x_hpdf.h"
 #include <stdlib.h>
 
+#if defined (GD32W515PI) || defined (GD32W515P0)
+
 /* HPDF register bit offset */
 #define CH0CTL_CKOUTDIV_OFFSET              ((uint32_t)0x00000010U)               /*!< bit offset of CKOUTDIV in HPDf_CH0CTL */
 #define CHyCTL_SPICKSS_OFFSET               ((uint32_t)0x00000002U)               /*!< bit offset of CKOUTDIV in HPDf_CH0CTL */
@@ -55,7 +57,7 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      reset HPDF
-    \param[in]  hpdf_periph: HPDF
+    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -192,7 +194,7 @@ void hpdf_ic_struct_para_init(hpdf_ic_parameter_struct* init_struct)
     init_struct->icdmaen            = ICDMAEN_DISABLE;
     init_struct->ic_channel_group   = IGCSEL_CHANNEL0;
     init_struct->icsyn              = ICSYN_DISABLE;
-    init_struct->trigger_dege       = TRG_DISABLE;
+    init_struct->trigger_edge       = TRG_DISABLE;
     init_struct->trigger_signal     = HPDF_ITRG0;
 }
 
@@ -331,7 +333,7 @@ void hpdf_ic_init(hpdf_filter_enum filtery, hpdf_ic_parameter_struct* init_struc
     reg = HPDF_FLTyCTL0(filtery);
     reg &= ~(HPDF_FLTyCTL0_ICTEEN | HPDF_FLTyCTL0_ICTSSEL | HPDF_FLTyCTL0_ICDMAEN | HPDF_FLTyCTL0_SCMOD |\
              HPDF_FLTyCTL0_ICSYN);
-    reg |= (init_struct->trigger_dege | init_struct->trigger_signal | init_struct->icdmaen | init_struct->scmod |\
+    reg |= (init_struct->trigger_edge | init_struct->trigger_signal | init_struct->icdmaen | init_struct->scmod |\
                 init_struct->icsyn);
     HPDF_FLTyCTL0(filtery) = reg;
     /* configure the HPDF_FLT0IGCS */
@@ -458,7 +460,7 @@ void hpdf_channel_disable(hpdf_channel_enum channelx)
     \arg          EXTERNAL_CKIN: external input clock 
     \arg          INTERNAL_CKOUT: internal CKOUT clock 
     \arg          HALF_CKOUT_FALLING_EDGE: internal CKOUT clock, sampling point on each second CKOUT falling edge
-    \arg          HALF_CKOUT_RISING_EDGE: internal CKOUT clock, sampling point on each second CKOUT rising edge.
+    \arg          HALF_CKOUT_RISING_EDGE: internal CKOUT clock, sampling point on each second CKOUT rising edge
     \param[out] none
     \retval     none
 */
@@ -574,8 +576,8 @@ void hpdf_channel_pin_redirection_enable(hpdf_channel_enum channelx)
     \param[in]  channelx: CHANNELx(x=0,1)
     \param[in]  data_source: input data source
                 only one parameter can be selected which is shown as below:
-    \arg          SERIAL_INPUT: Input data source is taken from serial inputs 
-    \arg          INTERNAL_INPUT: Input data source is taken from internal HPDF_CHxPDI register
+    \arg          SERIAL_INPUT: input data source is taken from serial inputs 
+    \arg          INTERNAL_INPUT: input data source is taken from internal HPDF_CHxPDI register
     \param[out] none
     \retval     none
 */
@@ -595,11 +597,11 @@ void hpdf_channel_multiplexer_config(hpdf_channel_enum channelx, uint32_t data_s
 /*!
     \brief      configure data packing mode
     \param[in]  channelx: CHANNELx(x=0,1)
-    \param[in]  mode: data packing mode
+    \param[in]  mode: parallel data packing mode
                 only one parameter can be selected which is shown as below:
-    \arg          DPM_STANDARD_MODE : Standard mode
-    \arg          DPM_INTERLEAVED_MODE: Interleaved mode
-    \arg          DPM_DUAL_MODE: Dual mode
+    \arg          DPM_STANDARD_MODE : standard mode
+    \arg          DPM_INTERLEAVED_MODE: interleaved mode
+    \arg          DPM_DUAL_MODE: dual mode
     \param[out] none
     \retval     none
 */
@@ -638,7 +640,7 @@ void hpdf_data_right_bit_shift_config(hpdf_channel_enum channelx, uint8_t right_
 /*!
     \brief      configure calibration offset
     \param[in]  channelx: CHANNELx(x=0,1)
-    \param[in]  offset: 24-bit calibration offset,must be in (-8388608~8388607)
+    \param[in]  offset: 24-bit calibration offset, must be in (-8388608~8388607)
     \param[out] none
     \retval     none
 */
@@ -657,10 +659,10 @@ void hpdf_calibration_offset_config(hpdf_channel_enum channelx, int32_t offset)
     \param[in]  channelx: CHANNELx(x=0,1)
     \param[in]  break_signal: malfunction monitor break signal distribution
                   only one parameter can be selected which is shown as below:
-    \arg          NO_MM_BREAK: Break signal is not distributed to malfunction monitor on channel
-    \arg          MM_BREAK0: Break signal 0 is distributed to malfunction monitor on channel
-    \arg          MM_BREAK1: Break signal 1 is distributed to malfunction monitor on channel
-    \arg          MM_BREAK0_1: Break signal 0 and 1 is distributed to malfunction monitor on channel
+    \arg          NO_MM_BREAK: break signal is not distributed to malfunction monitor on channel
+    \arg          MM_BREAK0: break signal 0 is distributed to malfunction monitor on channel
+    \arg          MM_BREAK1: break signal 1 is distributed to malfunction monitor on channel
+    \arg          MM_BREAK0_1: break signal 0 and 1 is distributed to malfunction monitor on channel
     \param[out] none
     \retval     none
 */
@@ -760,7 +762,7 @@ void hpdf_write_parallel_data_dual_mode(hpdf_channel_enum channelx, int32_t data
 /*!
     \brief      update the number of pulses to skip
     \param[in]  channelx: CHANNELy(y=0)
-    \param[in]  number: the number of serial input samples that will be skipped.
+    \param[in]  number: the number of serial input samples that will be skipped
     \param[out] none
     \retval     none
 */
@@ -990,7 +992,7 @@ void hpdf_threshold_monitor_low_threshold(hpdf_filter_enum filtery, int32_t valu
 /*!
     \brief      configure threshold monitor high threshold event break signal
     \param[in]  filtery: FLTy(y=0,1)
-    \param[in]   break_signal: the HPDF break signal
+    \param[in]   break_signal: HPDF break signal
                  only one parameter can be selected which is shown as below:
     \arg          NO_TM_HT_BREAK: break signal is not distributed to an threshold monitor high threshold event
     \arg          TM_HT_BREAK0: break signal 0 is distributed to an threshold monitor high threshold event
@@ -1056,8 +1058,7 @@ void hpdf_extremes_monitor_channel(hpdf_filter_enum filtery, uint32_t channel)
 /*!
     \brief      get the extremes monitor maximum value
     \param[in]  filtery: FLTy(y=0,1)
-    \param[out] maximum: the extremes monitor maximum value
-    \param[out] channel: the maximum value come from which channel
+    \param[out] none
     \retval     the maximum value
 */
 int32_t hpdf_extremes_monitor_maximum_get(hpdf_filter_enum filtery)
@@ -1075,8 +1076,7 @@ int32_t hpdf_extremes_monitor_maximum_get(hpdf_filter_enum filtery)
 /*!
     \brief      get the extremes monitor minimum value
     \param[in]  filtery: FLTy(y=0,1)
-    \param[out] minimum: the extremes monitor minimum value
-    \param[out] channel: the minimum value come from which channel
+    \param[out] none
     \retval     the minimum value
 */
 int32_t hpdf_extremes_monitor_minimum_get(hpdf_filter_enum filtery)
@@ -1360,13 +1360,13 @@ void hpdf_ic_trigger_signal_disbale(hpdf_filter_enum filtery)
     \param[in]  filtery: FLTy(y=0,1)
     \param[in]  trigger: inserted conversions trigger signal
                 only one parameter can be selected which is shown as below:
-    \arg          HPDF_ITRG0: TIM1_TRGO is selected to start inserted conversion
-    \arg          HPDF_ITRG1: TIM2_TRGO is selected to start inserted conversion
-    \arg          HPDF_ITRG2: TIM3_TRGO is selected to start inserted conversion
-    \arg          HPDF_ITRG3: TIM4_TRG) is selected to start inserted conversion
+    \arg          HPDF_ITRG0: TIMER1_TRGO is selected to start inserted conversion
+    \arg          HPDF_ITRG1: TIMER2_TRGO is selected to start inserted conversion
+    \arg          HPDF_ITRG2: TIMER3_TRGO is selected to start inserted conversion
+    \arg          HPDF_ITRG3: TIMER4_TRGO is selected to start inserted conversion
     \arg          HPDF_ITRG24: EXTI11 is selected to start inserted conversion
     \arg          HPDF_ITRG25: EXTI15 is selected to start inserted conversion
-    \arg          HPDF_ITRG26: TIM5_TRGO is selected to start inserted conversion
+    \arg          HPDF_ITRG26: TIMER5_TRGO is selected to start inserted conversion
     \param[in]  trigger_edge: inserted conversions trigger edge
                 only one parameter can be selected which is shown as below:
     \arg          TRG_DISABLE: disable trigger siganl
@@ -1433,7 +1433,7 @@ int32_t hpdf_ic_data_get(hpdf_filter_enum filtery)
     \brief      get the channel of inserted group channel most recently converted 
     \param[in]  filtery: HPDF_FLTy(y=0,1)
     \param[out] none
-    \retval     the channe
+    \retval     the channel
 */
 uint8_t hpdf_ic_channel_get(hpdf_filter_enum filtery)
 {
@@ -1445,7 +1445,7 @@ uint8_t hpdf_ic_channel_get(hpdf_filter_enum filtery)
 
 /*!
     \brief      get the HPDF flags
-    \param[in]  hpdf_fltx: FLTy(y=0,1)
+    \param[in]  filtery: FLTy(y=0,1)
     \param[in]  flag: HPDF flags, refer to hpdf_flag_enum
                 only one parameter can be selected which is shown as below:
       \arg        HPDF_FLAG_FLTy_ICEF: FLTy inserted conversion end flag
@@ -1634,7 +1634,7 @@ FlagStatus hpdf_interrupt_flag_get(hpdf_filter_enum filtery, hpdf_interrput_flag
 }
 
 /*!
-    \brief      get the HPDF interrupt flags
+    \brief      clear the HPDF interrupt flags
     \param[in]  hpdf_fltx: FLTy(y=0,1)
     \param[in]  interrupt: HPDF flags, refer to hpdf_interrput_enum
                 only one parameter can be selected which is shown as below:
@@ -1648,7 +1648,7 @@ FlagStatus hpdf_interrupt_flag_get(hpdf_filter_enum filtery, hpdf_interrput_flag
       \arg        HPDF_INT_FLAG_FLT0_MMF0: malfunction event occurred on channel0 interrupt flag
       \arg        HPDF_INT_FLAG_FLT0_MMF1: malfunction event occurred on channel1 interrupt flag
     \param[out] none
-    \retval     FlagStatus: SET or RESET
+    \retval     none
 */
 void hpdf_interrupt_flag_clear(hpdf_filter_enum filtery, hpdf_interrput_flag_enum int_flag)
 {
@@ -1662,3 +1662,5 @@ void hpdf_interrupt_flag_clear(hpdf_filter_enum filtery, hpdf_interrput_flag_enu
         HPDF_FLTyINTC(filtery) |= BIT(HPDF_BIT_POS2(int_flag)); 
     }
 }
+
+#endif /* GD32W515PI and GD32W515P0 */ 

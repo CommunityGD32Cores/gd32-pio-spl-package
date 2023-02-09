@@ -2,7 +2,7 @@
     \file    gd32w51x_pmu.h
     \brief   definitions for the PMU
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -68,7 +68,7 @@ OF SUCH DAMAGE.
 #define PMU_CS0_WUF                   BIT(0)                                /*!< wakeup flag */
 #define PMU_CS0_STBF                  BIT(1)                                /*!< standby flag */
 #define PMU_CS0_LVDF                  BIT(2)                                /*!< VDD low voltage detector status flag */
-#define PMU_CS0_VLVDF                  BIT(3)                               /*!< VDDA low voltage detector status flag */
+#define PMU_CS0_VLVDF                 BIT(3)                                /*!< VDDA low voltage detector status flag */
 #define PMU_CS0_WUPEN0                BIT(8)                                /*!< wakeup pin0 enable */
 #define PMU_CS0_WUPEN1                BIT(9)                                /*!< wakeup pin1 enable */
 #define PMU_CS0_WUPEN2                BIT(10)                               /*!< wakeup pin2 enable */
@@ -117,6 +117,10 @@ OF SUCH DAMAGE.
 #define PMU_PRICFG_PRIV               BIT(0)                                /*!< privileged access only */
 
 /* constants definitions */
+/* PMU LDO definitions */
+#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)               /*!< LDO normal work when PMU enter deepsleep mode */
+#define PMU_LDO_LOWPOWER              PMU_CTL0_LDOLP                        /*!< LDO work at low power status when PMU enter deepsleep mode */
+
 /* PMU low voltage detector threshold definitions */
 #define CTL0_LVDT(regval)             (BITS(5,7)&((uint32_t)(regval)<<5))
 #define PMU_LVDT_0                    CTL0_LVDT(0)                          /*!< voltage threshold is 2.1V */
@@ -128,11 +132,6 @@ OF SUCH DAMAGE.
 #define PMU_LVDT_6                    CTL0_LVDT(6)                          /*!< voltage threshold is 3.0V */
 #define PMU_LVDT_7                    CTL0_LVDT(7)                          /*!< voltage threshold is 3.1V */
 
-/* PMU LDO output voltage select definitions */
-#define CTL0_LDOVS(regval)            (BITS(14,15)&((uint32_t)(regval)<<14))
-#define PMU_LDOVS_LOW                 CTL0_LDOVS(0)                         /*!< LDO output voltage low mode */
-#define PMU_LDOVS_HIGH                CTL0_LDOVS(2)                         /*!< LDO output voltage high mode */
-
 /* PMU low-driver mode when use low power LDO */
 #define CTL0_LDLP(regval)             (BIT(10)&((uint32_t)(regval)<<10))
 #define PMU_NORMALDR_LOWPWR           CTL0_LDLP(0)                          /*!< normal driver when use low power LDO */
@@ -143,10 +142,54 @@ OF SUCH DAMAGE.
 #define PMU_NORMALDR_NORMALPWR        CTL0_LDNP(0)                          /*!< normal driver when use normal power LDO */
 #define PMU_LOWDR_NORMALPWR           CTL0_LDNP(1)                          /*!< low-driver mode enabled when LDEN is 11 and use normal power LDO */
 
+/* PMU LDO output voltage select definitions */
+#define CTL0_LDOVS(regval)            (BITS(14,15)&((uint32_t)(regval)<<14))
+#define PMU_LDOVS_LOW                 CTL0_LDOVS(0)                         /*!< LDO output voltage low mode */
+#define PMU_LDOVS_HIGH                CTL0_LDOVS(2)                         /*!< LDO output voltage high mode */
+
+/* Low-driver mode in deep-sleep mode */
+#define PMU_LOWDRIVER_DISABLE         ((uint32_t)0x00000000U)               /*!< Low-driver mode disable in deep-sleep mode */
+#define PMU_LOWDRIVER_ENABLE          PMU_CTL0_LDEN                         /*!< Low-driver mode enable in deep-sleep mode */
+
+/* PMU wakeup pin definitions */
+#define PMU_WAKEUP_PIN0               PMU_CS0_WUPEN0                        /*!< WKUP Pin 0 (PA2) enable */
+#define PMU_WAKEUP_PIN1               PMU_CS0_WUPEN1                        /*!< WKUP Pin 1 (PA15) enable */
+#define PMU_WAKEUP_PIN2               PMU_CS0_WUPEN2                        /*!< WKUP Pin 2 (PB2) enable */
+#define PMU_WAKEUP_PIN3               PMU_CS0_WUPEN3                        /*!< WKUP Pin 3 (PA12) enable */
+
 /* PMU low-drive mode ready flag definitions */
 #define CS0_LDRF(regval)              (BITS(18,19)&((uint32_t)(regval)<<18))
 #define PMU_LDRF_NORMAL               CS0_LDRF(0)                           /*!< normal driver in deep-sleep mode */
 #define PMU_LDRF_LOWDRIVER            CS0_LDRF(3)                           /*!< low-driver mode in deep-sleep mode */
+
+/* PMU WIFI SRAM control */
+#define PMU_WIFI_SLEEP                PMU_CTL1_WPSLEEP                     /*!< WIFI go to sleep */
+#define PMU_WIFI_WAKE                 PMU_CTL1_WPWAKE                      /*!< WIFI wakeup */
+#define PMU_SRAM1_SLEEP               PMU_CTL1_SRAM1PSLEEP                  /*!< SRAM1 go to sleep */
+#define PMU_SRAM1_WAKE                PMU_CTL1_SRAM1PWAKE                   /*!< SRAM1 wakeup */
+#define PMU_SRAM2_SLEEP               PMU_CTL1_SRAM2PSLEEP                  /*!< SRAM2 go to sleep */
+#define PMU_SRAM2_WAKE                PMU_CTL1_SRAM2PWAKE                   /*!< SRAM2 wakeup */
+#define PMU_SRAM3_SLEEP               PMU_CTL1_SRAM3PSLEEP                  /*!< SRAM3 go to sleep */
+#define PMU_SRAM3_WAKE                PMU_CTL1_SRAM3PWAKE                   /*!< SRAM3 wakeup */
+
+/* RF sequence definitions */
+#define PMU_RF_HARDWARE               ((uint32_t)0x00000000U)               /*!< RF hardware sequence enable */
+#define PMU_RF_SOFTWARE               PMU_RFCTL_RFSWEN                      /*!< RF software sequence enable */
+
+/* RF force definitions */
+#define PMU_RF_FORCE_OPEN             PMU_RFCTL_RFFS                        /*!< Software force start, open RF power */
+#define PMU_RF_FORCE_CLOSE            PMU_RFCTL_RFFC                        /*!< Software force close, close RF power */
+
+/* PMU security definitions */
+#define PMU_SEC_WAKEUP_PIN0           PMU_SECCFG_WUP0SEC                    /*!< WKUP pin 0 security */
+#define PMU_SEC_WAKEUP_PIN1           PMU_SECCFG_WUP1SEC                    /*!< WKUP pin 1 security */
+#define PMU_SEC_WAKEUP_PIN2           PMU_SECCFG_WUP2SEC                    /*!< WKUP pin 2 security */
+#define PMU_SEC_WAKEUP_PIN3           PMU_SECCFG_WUP3SEC                    /*!< WKUP pin 3 security */
+#define PMU_SEC_LPLDO_DPSLP_STB       PMU_SECCFG_LPMSEC                     /*!< Low-power mode security */
+#define PMU_SEC_LVD_VLVD              PMU_SECCFG_VDMSEC                     /*!< Voltage detection and monitoring security */
+#define PMU_SEC_BACKUP_WRITE          PMU_SECCFG_DBPSEC                     /*!< Backup domain write access security */
+#define PMU_SEC_WIFI_SRAM_CONTROL     PMU_SECCFG_LPSSEC                     /*!< WIFI_sleep and SRAM_sleep mode security */
+#define PMU_SEC_RF_SEQUENCE           PMU_SECCFG_RFSEC                      /*!< RF security */
 
 /* PMU flag definitions */
 #define PMU_FLAG_WAKEUP               PMU_CS0_WUF                           /*!< wakeup flag status */
@@ -163,49 +206,6 @@ OF SUCH DAMAGE.
 #define PMU_FLAG_SRAM2_ACTIVE         (BIT(31) | PMU_CS1_SRAM2PS_ACTIVE)    /*!< SRAM2 is in active state */
 #define PMU_FLAG_SRAM3_SLEEP          (BIT(31) | PMU_CS1_SRAM3PS_SLEEP)     /*!< SRAM3 is in sleep state */
 #define PMU_FLAG_SRAM3_ACTIVE         (BIT(31) | PMU_CS1_SRAM3PS_ACTIVE)    /*!< SRAM3 is in active state */
-
-/* PMU wakeup pin definitions */
-#define PMU_WAKEUP_PIN0               PMU_CS0_WUPEN0                        /*!< WKUP Pin 0 (PA2) enable */
-#define PMU_WAKEUP_PIN1               PMU_CS0_WUPEN1                        /*!< WKUP Pin 1 (PA15) enable */
-#define PMU_WAKEUP_PIN2               PMU_CS0_WUPEN2                        /*!< WKUP Pin 2 (PB2) enable */
-#define PMU_WAKEUP_PIN3               PMU_CS0_WUPEN3                        /*!< WKUP Pin 3 (PA12) enable */
-
-/* PMU WIFI SRAM control */
-#define PMU_WIFI_SLEEP                PMU_CTL1_WPSLEEP                     /*!< WIFI go to sleep */
-#define PMU_WIFI_WAKE                 PMU_CTL1_WPWAKE                      /*!< WIFI wakeup */
-#define PMU_SRAM1_SLEEP               PMU_CTL1_SRAM1PSLEEP                  /*!< SRAM1 go to sleep */
-#define PMU_SRAM1_WAKE                PMU_CTL1_SRAM1PWAKE                   /*!< SRAM1 wakeup */
-#define PMU_SRAM2_SLEEP               PMU_CTL1_SRAM2PSLEEP                  /*!< SRAM2 go to sleep */
-#define PMU_SRAM2_WAKE                PMU_CTL1_SRAM2PWAKE                   /*!< SRAM2 wakeup */
-#define PMU_SRAM3_SLEEP               PMU_CTL1_SRAM3PSLEEP                  /*!< SRAM3 go to sleep */
-#define PMU_SRAM3_WAKE                PMU_CTL1_SRAM3PWAKE                   /*!< SRAM3 wakeup */
-
-/* PMU LDO definitions */
-#define PMU_LDO_NORMAL                ((uint32_t)0x00000000U)               /*!< LDO normal work when PMU enter deepsleep mode */
-#define PMU_LDO_LOWPOWER              PMU_CTL0_LDOLP                        /*!< LDO work at low power status when PMU enter deepsleep mode */
-
-/* Low-driver mode in deep-sleep mode */
-#define PMU_LOWDRIVER_DISABLE         ((uint32_t)0x00000000U)               /*!< Low-driver mode disable in deep-sleep mode */
-#define PMU_LOWDRIVER_ENABLE          PMU_CTL0_LDEN                         /*!< Low-driver mode enable in deep-sleep mode */
-
-/* RF force definitions */
-#define PMU_RF_FORCE_OPEN             PMU_RFCTL_RFFS                        /*!< Software force start, open RF power */
-#define PMU_RF_FORCE_CLOSE            PMU_RFCTL_RFFC                        /*!< Software force close, close RF power */
-
-/* RF sequence definitions */
-#define PMU_RF_SOFTWARE               PMU_RFCTL_RFSWEN                      /*!< RF software sequence enable */
-#define PMU_RF_HARDWARE               ((uint32_t)0x00000000U)               /*!< RF hardware sequence enable */
-
-/* PMU security definitions */
-#define PMU_SEC_WAKEUP_PIN0           PMU_SECCFG_WUP0SEC                    /*!< WKUP pin 0 security */
-#define PMU_SEC_WAKEUP_PIN1           PMU_SECCFG_WUP1SEC                    /*!< WKUP pin 1 security */
-#define PMU_SEC_WAKEUP_PIN2           PMU_SECCFG_WUP2SEC                    /*!< WKUP pin 2 security */
-#define PMU_SEC_WAKEUP_PIN3           PMU_SECCFG_WUP3SEC                    /*!< WKUP pin 3 security */
-#define PMU_SEC_LPLDO_DPSLP_STB       PMU_SECCFG_LPMSEC                     /*!< Low-power mode security */
-#define PMU_SEC_LVD_VLVD              PMU_SECCFG_VDMSEC                     /*!< Voltage detection and monitoring security */
-#define PMU_SEC_BACKUP_WRITE          PMU_SECCFG_DBPSEC                     /*!< Backup domain write access security */
-#define PMU_SEC_WIFI_SRAM_CONTROL     PMU_SECCFG_LPSSEC                     /*!< WIFI_sleep and SRAM_sleep mode security */
-#define PMU_SEC_RF_SEQUENCE           PMU_SECCFG_RFSEC                      /*!< RF security */
 
 /* PMU flag reset definitions */
 #define PMU_FLAG_RESET_WAKEUP         PMU_CTL0_WURST                        /*!< wakeup flag reset */
@@ -234,14 +234,12 @@ void pmu_vlvd_disable(void);
 void pmu_ldo_output_select(uint32_t ldo_output);
 
 /* set PMU mode */
-/* PMU work at sleep mode */
+/* PMU work in sleep mode */
 void pmu_to_sleepmode(uint8_t sleepmodecmd);
-/* PMU work at deep-sleep mode */
+/* PMU work in deep-sleep mode */
 void pmu_to_deepsleepmode(uint32_t ldo, uint32_t lowdrive, uint8_t deepsleepmodecmd);
-/* PMU work at standby mode */
+/* PMU work in standby mode */
 void pmu_to_standbymode(void);
-
-/* wakeup pin related functions */
 /* enable PMU wakeup pin */
 void pmu_wakeup_pin_enable(uint32_t wakeup_pin);
 /* disable PMU wakeup pin */
@@ -280,9 +278,9 @@ void pmu_privilege_enable(void);
 void pmu_privilege_disable(void);
 
 /* flag functions */
-/* reset flag bit */
-void pmu_flag_reset(uint32_t flag_reset);
 /* get flag status */
-FlagStatus pmu_flag_get(uint32_t pmu_flag);
+FlagStatus pmu_flag_get(uint32_t flag);
+/* clear flag bit */
+void pmu_flag_clear(uint32_t flag);
 
 #endif /* GD32W51X_PMU_H */

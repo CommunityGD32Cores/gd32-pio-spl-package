@@ -4,10 +4,11 @@
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
     \version 2021-08-06, V1.0.1, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -33,10 +34,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "drv_usb_core.h"
-#include "drv_usb_host.h"
 #include "drv_usbh_int.h"
-#include "usbh_core.h"
 
 #if defined   (__CC_ARM)        /*!< ARM compiler */
     #pragma O0
@@ -214,11 +212,11 @@ static uint32_t usbh_int_port (usb_core_driver *udev)
                 port_reset = 1U;
             }
 
-            usbh_int_fop->port_enabled(udev->host.data);
+            udev->host.port_enabled = 1;
 
             udev->regs.gr->GINTEN |= GINTEN_DISCIE | GINTEN_SOFIE;
         } else {
-            usbh_int_fop->port_disabled(udev->host.data);
+            udev->host.port_enabled = 0;
         }
     }
 
@@ -272,7 +270,8 @@ static uint32_t usbh_int_pipe_in (usb_core_driver *udev, uint32_t pp_num)
 
     usb_pipe *pp = &udev->host.pipe[pp_num];
 
-    __IO uint32_t intr_pp = pp_reg->HCHINTF & pp_reg->HCHINTEN;
+    uint32_t intr_pp = pp_reg->HCHINTF;
+    intr_pp &= pp_reg->HCHINTEN;
 
     uint8_t ep_type = (uint8_t)((pp_reg->HCHCTL & HCHCTL_EPTYPE) >> 18);
 
@@ -399,7 +398,8 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
 
     usb_pipe *pp = &udev->host.pipe[pp_num];
 
-    uint32_t intr_pp = pp_reg->HCHINTF & pp_reg->HCHINTEN;
+    uint32_t intr_pp = pp_reg->HCHINTF;
+    intr_pp &= pp_reg->HCHINTEN;
 
     if (intr_pp & HCHINTF_ACK) {
         if (URB_PING == pp->urb_state) {
@@ -483,7 +483,7 @@ static uint32_t usbh_int_pipe_out (usb_core_driver *udev, uint32_t pp_num)
 #endif /* __ICCARM */
 static uint32_t usbh_int_rxfifonoempty (usb_core_driver *udev)
 {
-    uint32_t count = 0U;
+    uint32_t count = 0U,xfer_count = 0U;
 
     __IO uint8_t pp_num = 0U;
     __IO uint32_t rx_stat = 0U;
@@ -506,11 +506,13 @@ static uint32_t usbh_int_rxfifonoempty (usb_core_driver *udev)
                 udev->host.pipe[pp_num].xfer_buf += count;
                 udev->host.pipe[pp_num].xfer_count += count;
 
-                udev->host.backup_xfercount[pp_num] = udev->host.pipe[pp_num].xfer_count;
+                xfer_count = udev->host.pipe[pp_num].xfer_count;
+
+                udev->host.backup_xfercount[pp_num] = xfer_count;
 
                 if (udev->regs.pr[pp_num]->HCHLEN & HCHLEN_PCNT) {
                     /* re-activate the channel when more packets are expected */
-                    __IO uint32_t pp_ctl = udev->regs.pr[pp_num]->HCHCTL;
+                    uint32_t pp_ctl = udev->regs.pr[pp_num]->HCHCTL;
 
                     pp_ctl |= HCHCTL_CEN;
                     pp_ctl &= ~HCHCTL_CDIS;

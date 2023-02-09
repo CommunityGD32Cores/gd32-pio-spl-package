@@ -3,10 +3,11 @@
     \brief   USB SCSI layer functions
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
     
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,7 +36,44 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usbd_msc_bbb.h"
 #include "usbd_msc_scsi.h"
-#include "usbd_msc_data.h"
+
+/* USB mass storage page 0 inquiry data */
+const uint8_t msc_page00_inquiry_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    (INQUIRY_PAGE00_LENGTH - 4U),
+    0x80U,
+    0x83U,
+};
+
+/* USB mass storage sense 6 data */
+const uint8_t msc_mode_sense6_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
+
+/* USB mass storage sense 10 data */
+const uint8_t msc_mode_sense10_data[] = 
+{
+    0x00U,
+    0x06U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
 
 /* local function prototypes ('static') */
 static int8_t scsi_test_unit_ready      (usb_core_driver *udev, uint8_t lun, uint8_t *params);

@@ -3,10 +3,11 @@
     \brief   USB device mode low level driver
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -207,7 +208,7 @@ usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc)
 usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc)
 {
     __IO uint32_t *reg_addr = NULL;
-    __IO uint32_t epinten = 0U;
+    uint32_t epinten = 0U;
 
     /* get the endpoint number */
     uint8_t ep_num = transc->ep_addr.num;

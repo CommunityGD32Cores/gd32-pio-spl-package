@@ -3,10 +3,11 @@
     \brief   definitions for the USB MSC SCSI commands
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -89,7 +90,8 @@ OF SUCH DAMAGE.
 #define STANDARD_INQUIRY_DATA_LEN                   0x24U
 #define BLKVFY                                      0x04U
 
-enum sense_state {
+enum sense_state
+{
     NO_SENSE = 0U,
     RECOVERED_ERROR,
     NOT_READY,
@@ -107,7 +109,8 @@ enum sense_state {
     MISCOMPARE
 };
 
-typedef struct {
+typedef struct 
+{
     uint8_t  SenseKey;
     uint32_t Information;
     uint8_t  ASC;
@@ -115,4 +118,3 @@ typedef struct {
 } msc_scsi_sense;
 
 #endif /* __MSC_SCSI_H */
-

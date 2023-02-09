@@ -3,10 +3,11 @@
     \brief   IAP driver
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -204,7 +205,8 @@ static uint8_t iap_deinit (usb_dev *udev, uint8_t config_index);
 static uint8_t iap_req_handler (usb_dev *udev, usb_req *req);
 static uint8_t iap_data_out (usb_dev *udev, uint8_t ep_num);
 
-usb_class_core iap_class = {
+usb_class_core iap_class = 
+{
     .init            = iap_init,
     .deinit          = iap_deinit,
     .req_proc        = iap_req_handler,

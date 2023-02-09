@@ -1,8 +1,8 @@
 /*!
-    \file  gd32w51x_hpdf.h
-    \brief definitions for the HPDF
+    \file    gd32w51x_hpdf.h
+    \brief   definitions for the HPDF
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -39,6 +39,8 @@ OF SUCH DAMAGE.
 #define GD32W51X_HPDF_H
 
 #include "gd32w51x.h"
+
+#if defined (GD32W515PI) || defined (GD32W515P0)
 
 /* peripheral definitions */
 #define HPDF                            HPDF_BASE                      /*!< HPDF base address */
@@ -238,7 +240,7 @@ typedef struct
 /* inserted conversions configuration params */
 typedef struct
 {
-    uint32_t trigger_dege;                      /* inserted conversions trigger edge */
+    uint32_t trigger_edge;                      /* inserted conversions trigger edge */
     uint32_t trigger_signal;                    /* inserted conversions trigger signal */
     uint32_t icdmaen;                           /* DMA channel enabled to read data for the inserted channel group */
     uint32_t scmod;                             /* scan conversion mode of inserted conversions */
@@ -546,9 +548,9 @@ void hpdf_channel_disable(hpdf_channel_enum channelx);
 void hpdf_spi_clock_source_config(hpdf_channel_enum channelx, uint32_t clock_source);
 /* configure serial interface type */
 void hpdf_serial_interface_type_config(hpdf_channel_enum channelx, uint32_t type);
-/* disable malfunction monitor detector */
+/* disable malfunction monitor */
 void hpdf_malfunction_monitor_disable(hpdf_channel_enum channelx);
-/* enable malfunction monitor detector */
+/* enable malfunction monitor */
 void hpdf_malfunction_monitor_enable(hpdf_channel_enum channelx);
 /* disable clock loss detector */
 void hpdf_clock_loss_disable(hpdf_channel_enum channelx);
@@ -564,7 +566,7 @@ void hpdf_channel_multiplexer_config(hpdf_channel_enum channelx, uint32_t data_s
 void hpdf_data_pack_mode_config(hpdf_channel_enum channelx, uint32_t mode);
 /* configure data right bit-shift */
 void hpdf_data_right_bit_shift_config(hpdf_channel_enum channelx, uint8_t right_shift);
-/* calibration offset configuration */
+/* configure calibration offset */
 void hpdf_calibration_offset_config(hpdf_channel_enum channelx, int32_t offset);
 /* configure malfunction monitor break signal */
 void hpdf_malfunction_break_signal_config(hpdf_channel_enum channelx, uint32_t break_signal);
@@ -684,4 +686,7 @@ void hpdf_interrupt_disable(hpdf_filter_enum filtery, hpdf_interrput_enum interr
 FlagStatus hpdf_interrupt_flag_get(hpdf_filter_enum filtery, hpdf_interrput_flag_enum int_flag);
 /* clear the HPDF interrupt flags */
 void hpdf_interrupt_flag_clear(hpdf_filter_enum filtery, hpdf_interrput_flag_enum int_flag);
+
+#endif /* GD32W515PI and GD32W515P0 */ 
+
 #endif /* GD32W51X_HPDF_H */

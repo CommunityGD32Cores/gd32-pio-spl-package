@@ -3,10 +3,11 @@
     \brief   the header file of communication device class standard
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -106,21 +107,23 @@ OF SUCH DAMAGE.
 #define CDC_DEACTIVATE_SIGNAL_DTR                           0x0000U
 
 /* CDC subclass code */
-enum usb_cdc_subclass {
-    USB_CDC_SUBCLASS_RESERVED = 0U,  /*!< reseved */
-    USB_CDC_SUBCLASS_DLCM,           /*!< direct line control mode */
-    USB_CDC_SUBCLASS_ACM,            /*!< abstract control mode */
-    USB_CDC_SUBCLASS_TCM,            /*!< telephone control mode */
-    USB_CDC_SUBCLASS_MCM,            /*!< multichannel control model */
-    USB_CDC_SUBCLASS_CCM,            /*!< CAPI control model */
-    USB_CDC_SUBCLASS_ENCM,           /*!< ethernet networking control model */
-    USB_CDC_SUBCLASS_ANCM            /*!< ATM networking control model */
+enum usb_cdc_subclass 
+{
+    USB_CDC_SUBCLASS_RESERVED = 0U,       /*!< reserved */
+    USB_CDC_SUBCLASS_DLCM,                /*!< direct line control mode */
+    USB_CDC_SUBCLASS_ACM,                 /*!< abstract control mode */
+    USB_CDC_SUBCLASS_TCM,                 /*!< telephone control mode */
+    USB_CDC_SUBCLASS_MCM,                 /*!< multichannel control model */
+    USB_CDC_SUBCLASS_CCM,                 /*!< CAPI control model */
+    USB_CDC_SUBCLASS_ENCM,                /*!< ethernet networking control model */
+    USB_CDC_SUBCLASS_ANCM                 /*!< ATM networking control model */
 };
 
 #pragma pack(1)
 
 /* cdc acm line coding structure */
-typedef struct {
+typedef struct 
+{
     uint32_t dwDTERate;                   /*!< data terminal rate */
     uint8_t  bCharFormat;                 /*!< stop bits */
     uint8_t  bParityType;                 /*!< parity */
@@ -128,7 +131,8 @@ typedef struct {
 } acm_line;
 
 /* notification structure */
-typedef struct {
+typedef struct 
+{
     uint8_t bmRequestType;                /*!< type of request */
     uint8_t bNotification;                /*!< communication interface class notifications */
     uint16_t wValue;                      /*!< value of notification */
@@ -136,26 +140,30 @@ typedef struct {
     uint16_t wLength;                     /*!< length of notification data */
 } acm_notification;
 
-typedef struct {
+typedef struct 
+{
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t   bDescriptorSubtype;         /*!< bDescriptorSubtype: header function descriptor */
     uint16_t  bcdCDC;                     /*!< bcdCDC: low byte of spec release number (CDC1.10) */
 } usb_desc_header_func;
 
-typedef struct {
+typedef struct 
+{
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype:  call management function descriptor */
     uint8_t  bmCapabilities;              /*!< bmCapabilities: D0 is reset, D1 is ignored */
     uint8_t  bDataInterface;              /*!< bDataInterface: 1 interface used for call management */
 } usb_desc_call_managment_func;
 
-typedef struct {
+typedef struct 
+{
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype: abstract control management descriptor */
     uint8_t  bmCapabilities;              /*!< bmCapabilities: D1 */
 } usb_desc_acm_func;
 
-typedef struct {
+typedef struct 
+{
     usb_desc_header header;               /*!< descriptor header, including type and size. */
     uint8_t  bDescriptorSubtype;          /*!< bDescriptorSubtype: union function descriptor */
     uint8_t  bMasterInterface;            /*!< bMasterInterface: communication class interface */
@@ -164,7 +172,8 @@ typedef struct {
 
 #pragma pack()
 
-typedef struct {
+typedef struct 
+{
     usb_desc_config                  config;
     usb_desc_itf                     cmd_itf;
     usb_desc_header_func             cdc_header;
@@ -178,4 +187,3 @@ typedef struct {
 } usb_cdc_desc_config_set;
 
 #endif  /* __USB_CDC_H */
-

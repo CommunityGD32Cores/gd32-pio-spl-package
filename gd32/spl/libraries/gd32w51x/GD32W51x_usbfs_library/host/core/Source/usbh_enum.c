@@ -3,6 +3,7 @@
     \brief   USB host mode enumberation driver
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*

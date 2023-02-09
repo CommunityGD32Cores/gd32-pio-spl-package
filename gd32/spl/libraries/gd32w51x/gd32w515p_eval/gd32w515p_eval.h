@@ -71,9 +71,9 @@ typedef enum
 #define LED2_GPIO_PORT                   GPIOA
 #define LED2_GPIO_CLK                    RCU_GPIOA
   
-#define LED3_PIN                         GPIO_PIN_8
-#define LED3_GPIO_PORT                   GPIOB
-#define LED3_GPIO_CLK                    RCU_GPIOB
+#define LED3_PIN                         GPIO_PIN_6
+#define LED3_GPIO_PORT                   GPIOA
+#define LED3_GPIO_CLK                    RCU_GPIOA
 
 #define COMn                             1U
 #define EVAL_COM0                        USART2

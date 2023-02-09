@@ -3,10 +3,11 @@
     \brief   USB device mode core functions protype
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
     
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -45,7 +46,8 @@ typedef enum
     USBD_FAIL,                               /*!< status fail */
 } usbd_status;
 
-enum _usbd_status {
+enum _usbd_status
+{
     USBD_DEFAULT    = 1U,                    /*!< default status */
     USBD_ADDRESSED  = 2U,                    /*!< address send status */
     USBD_CONFIGURED = 3U,                    /*!< configured status */
@@ -101,4 +103,3 @@ void usbd_connect (usb_core_driver *udev);
 void usbd_disconnect (usb_core_driver *udev);
 
 #endif /* __USBD_CORE_H */
-

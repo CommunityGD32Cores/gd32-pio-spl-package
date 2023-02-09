@@ -2,7 +2,7 @@
     \file    gd32w51x_fwdgt.h
     \brief   definitions for the FWDGT
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -31,7 +31,6 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
-
 
 #ifndef GD32W51X_FWDGT_H
 #define GD32W51X_FWDGT_H
@@ -86,10 +85,13 @@ OF SUCH DAMAGE.
 #define FWDGT_FLAG_PUD                  FWDGT_STAT_PUD                                  /*!< a write operation to FWDGT_PSC register is on going */
 #define FWDGT_FLAG_RUD                  FWDGT_STAT_RUD                                  /*!< a write operation to FWDGT_RLD register is on going */
 
+/* write value to FWDGT_RLD_RLD bit field */
+#define RLD_RLD(regval)                 (BITS(0,11) & ((uint32_t)(regval) << 0))
+
 /* function declarations */
-/* enable write access to FWDGT_PSC, FWDGT_RLD and FWDGT_WND */
+/* enable write access to FWDGT_PSC and FWDGT_RLD */
 void fwdgt_write_enable(void);
-/* disable write access to FWDGT_PSC, FWDGT_RLD and FWDGT_WND */
+/* disable write access to FWDGT_PSC and FWDGT_RLD */
 void fwdgt_write_disable(void);
 /* start the FWDGT counter */
 void fwdgt_enable(void);

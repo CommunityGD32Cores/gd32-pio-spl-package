@@ -2,7 +2,7 @@
     \file    gd32w51x_adc.c
     \brief   ADC driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -338,14 +338,14 @@ void adc_channel_length_config(uint8_t channel_group, uint32_t length)
       \arg        ADC_CHANNEL_x(x=0..11): ADC Channelx
     \param[in]  sample_time: the sample time value
                 only one parameter can be selected which is shown as below:
-      \arg        ADC_SAMPLETIME_2: 2 cycles
-      \arg        ADC_SAMPLETIME_15: 15 cycles
-      \arg        ADC_SAMPLETIME_28: 28 cycles
-      \arg        ADC_SAMPLETIME_56: 56 cycles
-      \arg        ADC_SAMPLETIME_84: 84 cycles
-      \arg        ADC_SAMPLETIME_112: 112 cycles
-      \arg        ADC_SAMPLETIME_144: 144 cycles
-      \arg        ADC_SAMPLETIME_480: 480 cycles
+      \arg        ADC_SAMPLETIME_1POINT5: 1.5 cycles
+      \arg        ADC_SAMPLETIME_14POINT5: 14.5 cycles
+      \arg        ADC_SAMPLETIME_27POINT5: 27.5 cycles
+      \arg        ADC_SAMPLETIME_55POINT5: 55.5 cycles
+      \arg        ADC_SAMPLETIME_83POINT5: 83.5 cycles
+      \arg        ADC_SAMPLETIME_111POINT5: 111.5 cycles
+      \arg        ADC_SAMPLETIME_143POINT5: 143.5 cycles
+      \arg        ADC_SAMPLETIME_479POINT5: 479.5 cycles
     \param[out] none
     \retval     none
 */
@@ -400,14 +400,14 @@ void adc_regular_channel_config(uint8_t rank, uint8_t channel, uint32_t sample_t
       \arg        ADC_CHANNEL_x(x=0..11): ADC Channelx
     \param[in]  sample_time: The sample time value
                 only one parameter can be selected which is shown as below:
-      \arg        ADC_SAMPLETIME_2: 2 cycles
-      \arg        ADC_SAMPLETIME_15: 15 cycles
-      \arg        ADC_SAMPLETIME_28: 28 cycles
-      \arg        ADC_SAMPLETIME_56: 56 cycles
-      \arg        ADC_SAMPLETIME_84: 84 cycles
-      \arg        ADC_SAMPLETIME_112: 112 cycles
-      \arg        ADC_SAMPLETIME_144: 144 cycles
-      \arg        ADC_SAMPLETIME_480: 480 cycles
+      \arg        ADC_SAMPLETIME_1POINT5: 1.5 cycles
+      \arg        ADC_SAMPLETIME_14POINT5: 14.5 cycles
+      \arg        ADC_SAMPLETIME_27POINT5: 27.5 cycles
+      \arg        ADC_SAMPLETIME_55POINT5: 55.5 cycles
+      \arg        ADC_SAMPLETIME_83POINT5: 83.5 cycles
+      \arg        ADC_SAMPLETIME_111POINT5: 111.5 cycles
+      \arg        ADC_SAMPLETIME_143POINT5: 143.5 cycles
+      \arg        ADC_SAMPLETIME_479POINT5: 479.5 cycles
     \param[out] none
     \retval     none
 */

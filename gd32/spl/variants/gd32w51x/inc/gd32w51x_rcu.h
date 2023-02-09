@@ -2,7 +2,7 @@
     \file    gd32w51x_rcu.h
     \brief   definitions for the RCU
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -156,7 +156,9 @@ OF SUCH DAMAGE.
 #define RCU_AHB1RST_USBFSRST            BIT(29)                   /*!< USBFS reset */
 
 /* RCU_AHB2RST */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2RST_DCIRST              BIT(0)                    /*!< DCI reset */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2RST_PKCAURST            BIT(3)                    /*!< PKCAU reset */
 #define RCU_AHB2RST_CAURST              BIT(4)                    /*!< CAU reset */
 #define RCU_AHB2RST_HAURST              BIT(5)                    /*!< HAU reset */
@@ -170,7 +172,9 @@ OF SUCH DAMAGE.
 /* RCU_APB1RST */
 #define RCU_APB1RST_TIMER1RST           BIT(0)                    /*!< TIMER1 reset */
 #define RCU_APB1RST_TIMER2RST           BIT(1)                    /*!< TIMER2 reset */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1RST_TIMER3RST           BIT(2)                    /*!< TIMER3 reset */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1RST_TIMER4RST           BIT(3)                    /*!< TIMER4 reset */
 #define RCU_APB1RST_TIMER5RST           BIT(4)                    /*!< TIMER5 reset */
 #define RCU_APB1RST_WWDGTRST            BIT(11)                   /*!< WWDGT reset */
@@ -190,7 +194,9 @@ OF SUCH DAMAGE.
 #define RCU_APB2RST_SYSCFGRST           BIT(14)                   /*!< SYSCFG reset */
 #define RCU_APB2RST_TIMER15RST          BIT(17)                   /*!< TIMER15 reset */
 #define RCU_APB2RST_TIMER16RST          BIT(18)                   /*!< TIMER16 reset */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2RST_HPDFRST             BIT(30)                   /*!< HPDF reset */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2RST_RFRST               BIT(31)                   /*!< RF reset */
 
 /* RCU_AHB1EN */
@@ -211,7 +217,9 @@ OF SUCH DAMAGE.
 #define RCU_AHB1EN_USBFSEN              BIT(29)                   /*!< USBFS clock enable */
 
 /* RCU_AHB2EN */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2EN_DCIEN                BIT(0)                    /*!< DCI clock enable */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2EN_PKCAUEN              BIT(3)                    /*!< PKCAU clock enable */
 #define RCU_AHB2EN_CAUEN                BIT(4)                    /*!< CAU clock enable */
 #define RCU_AHB2EN_HAUEN                BIT(5)                    /*!< HAU clock enable */
@@ -224,7 +232,9 @@ OF SUCH DAMAGE.
 /* RCU_APB1EN */
 #define RCU_APB1EN_TIMER1EN             BIT(0)                    /*!< TIMER1 clock enable */
 #define RCU_APB1EN_TIMER2EN             BIT(1)                    /*!< TIMER2 clock enable */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1EN_TIMER3EN             BIT(2)                    /*!< TIMER3 clock enable */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1EN_TIMER4EN             BIT(3)                    /*!< TIMER4 clock enable */
 #define RCU_APB1EN_TIMER5EN             BIT(4)                    /*!< TIMER5 clock enable */
 #define RCU_APB1EN_WWDGTEN              BIT(11)                   /*!< WWDGT clock enable */
@@ -244,7 +254,9 @@ OF SUCH DAMAGE.
 #define RCU_APB2EN_SYSCFGEN             BIT(14)                   /*!< SYSCFG clock enable */
 #define RCU_APB2EN_TIMER15EN            BIT(17)                   /*!< TIMER15 clock enable */
 #define RCU_APB2EN_TIMER16EN            BIT(18)                   /*!< TIMER16 clock enable */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2EN_HPDFEN               BIT(30)                   /*!< HPDF clock enable */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2EN_RFEN                 BIT(31)                   /*!< RF clock enable */
 
 /* RCU_AHB1SPEN */
@@ -266,7 +278,9 @@ OF SUCH DAMAGE.
 #define RCU_AHB1SPEN_USBFSSPEN          BIT(29)                   /*!< USBFS clock enable when sleep mode */
 
 /* RCU_AHB2SPEN */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2SPEN_DCISPEN            BIT(0)                    /*!< DCI clock enable when sleep mode */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2SPEN_PKCAUSPEN          BIT(3)                    /*!< PKCAU clock enable when sleep mode */
 #define RCU_AHB2SPEN_CAUSPEN            BIT(4)                    /*!< CAU clock enable when sleep mode */
 #define RCU_AHB2SPEN_HAUSPEN            BIT(5)                    /*!< HAU clock enable when sleep mode */
@@ -279,7 +293,9 @@ OF SUCH DAMAGE.
 /* RCU_APB1SPEN */
 #define RCU_APB1SPEN_TIMER1SPEN         BIT(0)                    /*!< TIMER1 clock enable when sleep mode */
 #define RCU_APB1SPEN_TIMER2SPEN         BIT(1)                    /*!< TIMER2 clock enable when sleep mode */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1SPEN_TIMER3SPEN         BIT(2)                    /*!< TIMER3 clock enable when sleep mode */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1SPEN_TIMER4SPEN         BIT(3)                    /*!< TIMER4 clock enable when sleep mode */
 #define RCU_APB1SPEN_TIMER5SPEN         BIT(4)                    /*!< TIMER5 clock enable when sleep mode */
 #define RCU_APB1SPEN_WWDGTSPEN          BIT(11)                   /*!< WWDGT clock enable when sleep mode */
@@ -299,7 +315,9 @@ OF SUCH DAMAGE.
 #define RCU_APB2SPEN_SYSCFGSPEN         BIT(14)                   /*!< SYSCFG clock enable when sleep mode */
 #define RCU_APB2SPEN_TIMER15SPEN        BIT(17)                   /*!< TIMER15 clock enable when sleep mode */
 #define RCU_APB2SPEN_TIMER16SPEN        BIT(18)                   /*!< TIMER16 clock enable when sleep mode */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2SPEN_HPDFSPEN           BIT(30)                   /*!< HPDF clock enable when sleep mode */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2SPEN_RFSPEN             BIT(31)                   /*!< RF clock enable when sleep mode */
 
 /* RCU_BDCTL */
@@ -338,11 +356,11 @@ OF SUCH DAMAGE.
 #define RCU_PLLCFG_PLLI2SN              BITS(8,14)                /*!< the PLLI2S VCO clock multiplication factor */
 #define RCU_PLLCFG_PLLI2SPSC            BITS(16,18)               /*!< the PLLI2S VCO source clock pre-scale */
 #define RCU_PLLCFG_PLLDIGOSEL           BITS(24,25)               /*!< PLLDIG output frequency select */
-#define RCU_PLLCFG_PLLDIGFSYSDIV        BITS(26,31)               /*!< PLLDIG clock divider factor for system clock */
+#define RCU_PLLCFG_PLLDIGDIV_SYS        BITS(26,31)               /*!< PLLDIG clock divider factor for system clock */
 
 /* RCU_CFG1 */
 #define RCU_CFG1_IRC16MDIV              BITS(0,8)                 /*!< IRC16M clock divider factor for system clock */
-#define RCU_CFG1_BGVBIT                 BITS(9,11)                /*!< bandGap Power adjust */
+#define RCU_CFG1_BGVBIT                 BITS(9,11)                /*!< bandGap power adjust */
 #define RCU_CFG1_RFPLLCALEN             BIT(14)                   /*!< RF PLL Calculation enable */
 #define RCU_CFG1_RFPLLLOCK              BIT(15)                   /*!< RF PLL LOCK */
 #define RCU_CFG1_RFPLLPU                BIT(16)                   /*!< RFPLL power on enable */
@@ -359,13 +377,17 @@ OF SUCH DAMAGE.
 /* RCU_ADDCTL */
 #define RCU_ADDCTL_USBFSSEL             BIT(0)                    /*!< USBFS clock selection */
 #define RCU_ADDCTL_USBFSDIV             BITS(1,5)                 /*!< USBFS clock divider factor */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_ADDCTL_HPDFSEL              BIT(11)                   /*!< HPDF clock source selection */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_ADDCTL_I2SSEL               BITS(12,13)               /*!< I2S clock source selection */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_ADDCTL_HPDFAUDIOSEL         BITS(14,15)               /*!< HPDF AUDIO clock source selection */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_ADDCTL_SDIOSEL_0            BIT(16)                   /*!< SDIO clock selection */
 #define RCU_ADDCTL_SDIODIV              BITS(17,21)               /*!< SDIO clock divider factor */
 #define RCU_ADDCTL_SDIOSEL_1            BIT(22)                   /*!< SDIO clock selection */
-#define RCU_ADDCTL_PLLFI2SDIV           BITS(24,29)               /*!< the PLL divider factor for I2S clock */
+#define RCU_ADDCTL_PLLDIV_I2S           BITS(24,29)               /*!< the PLL divider factor for I2S clock */
 
 /* RCU_SECP_CFG */
 #define RCU_SECP_CFG_IRC16MSECP            BIT(0)                 /*!< IRC16M clock configuration and status bits security */
@@ -409,7 +431,9 @@ OF SUCH DAMAGE.
 #define RCU_AHB1SECP_STAT_USBFSSECF       BIT(29)                 /*!< USBFS security flag */
 
 /* RCU_AHB2SECP_STAT */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_AHB2SECP_STAT_DCISECF         BIT(0)                  /*!< DCI security flag */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_AHB2SECP_STAT_PKCAUSECF       BIT(3)                  /*!< PKCAU security flag */
 #define RCU_AHB2SECP_STAT_CAUSECF         BIT(4)                  /*!< CAU security flag */
 #define RCU_AHB2SECP_STAT_HAUSECF         BIT(5)                  /*!< HAU security flag */
@@ -422,7 +446,9 @@ OF SUCH DAMAGE.
 /* RCU_APB1SECP_STAT */
 #define RCU_APB1SECP_STAT_TIMER1SECF      BIT(0)                  /*!< TIMER1 security flag */
 #define RCU_APB1SECP_STAT_TIMER2SECF      BIT(1)                  /*!< TIMER2 security flag */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB1SECP_STAT_TIMER3SECF      BIT(2)                  /*!< TIMER3 security flag */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB1SECP_STAT_TIMER4SECF      BIT(3)                  /*!< TIMER4 security flag */
 #define RCU_APB1SECP_STAT_TIMER5SECF      BIT(4)                  /*!< TIMER5 security flag */
 #define RCU_APB1SECP_STAT_WWDGTSECF       BIT(11)                 /*!< WWDGT security flag */
@@ -442,7 +468,9 @@ OF SUCH DAMAGE.
 #define RCU_APB2SECP_STAT_SYSCFGSECF      BIT(14)                 /*!< SYSCFG security flag */
 #define RCU_APB2SECP_STAT_TIMER15SECF     BIT(17)                 /*!< TIMER15 security flag */
 #define RCU_APB2SECP_STAT_TIMER16SECF     BIT(18)                 /*!< TIMER16 security flag */
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 #define RCU_APB2SECP_STAT_HPDFSECF        BIT(30)                 /*!< HPDF security flag */
+#endif /* GD32W515PI and GD32W515P0 */
 #define RCU_APB2SECP_STAT_RFSECF          BIT(31)                 /*!< RF security flag */
 
 /* RCU_VKEY */
@@ -519,7 +547,9 @@ typedef enum
     RCU_DMA1RST      = RCU_REGIDX_BIT(AHB1RST_REG_OFFSET, 22U),             /*!< DMA1 clock reset */ 
     RCU_USBFSRST     = RCU_REGIDX_BIT(AHB1RST_REG_OFFSET, 29U),             /*!< USBFS clock reset */
     /* AHB2 peripherals */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCIRST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 0U),              /*!< DCI clock reset */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAURST     = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 3U),              /*!< PKCAU clock reset */
     RCU_CAURST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 4U),              /*!< CAU clock reset */
     RCU_HAURST       = RCU_REGIDX_BIT(AHB2RST_REG_OFFSET, 5U),              /*!< HAU clock reset */
@@ -530,7 +560,9 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 0U),              /*!< TIMER1 clock reset */
     RCU_TIMER2RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 1U),              /*!< TIMER2 clock reset */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 2U),              /*!< TIMER3 clock reset */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 3U),              /*!< TIMER4 clock reset */
     RCU_TIMER5RST    = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 4U),              /*!< TIMER5 clock reset */
     RCU_WWDGTRST     = RCU_REGIDX_BIT(APB1RST_REG_OFFSET, 11U),             /*!< WWDGT clock reset */
@@ -549,7 +581,9 @@ typedef enum
     RCU_SYSCFGRST    = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 14U),             /*!< SYSCFG clock reset */
     RCU_TIMER15RST   = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 17U),             /*!< TIMER15 clock reset */
     RCU_TIMER16RST   = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 18U),             /*!< TIMER16 clock reset */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDFRST      = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 30U),             /*!< HPDF clock reset */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RFRST        = RCU_REGIDX_BIT(APB2RST_REG_OFFSET, 31U)              /*!< RF clock reset */
 }rcu_periph_reset_enum;
 
@@ -573,7 +607,9 @@ typedef enum
     RCU_DMA1      = RCU_REGIDX_BIT(AHB1EN_REG_OFFSET, 22U),                 /*!< DMA1 clock */
     RCU_USBFS     = RCU_REGIDX_BIT(AHB1EN_REG_OFFSET, 29U),                 /*!< USBFS clock */
     /* AHB2 peripherals */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCI       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 0U),                  /*!< DCI clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAU     = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 3U),                  /*!< PKCAU clock */
     RCU_CAU       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 4U),                  /*!< CAU clock */
     RCU_HAU       = RCU_REGIDX_BIT(AHB2EN_REG_OFFSET, 5U),                  /*!< HAU clock */
@@ -584,7 +620,9 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 0U),                  /*!< TIMER1 clock */
     RCU_TIMER2    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 1U),                  /*!< TIMER2 clock */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 2U),                  /*!< TIMER3 clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 3U),                  /*!< TIMER4 clock */
     RCU_TIMER5    = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 4U),                  /*!< TIMER5 clock */
     RCU_WWDGT     = RCU_REGIDX_BIT(APB1EN_REG_OFFSET, 11U),                 /*!< WWDGT clock */
@@ -604,7 +642,9 @@ typedef enum
     RCU_SYSCFG    = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 14U),                 /*!< SYSCFG clock */
     RCU_TIMER15   = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 17U),                 /*!< TIMER15 clock */
     RCU_TIMER16   = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 18U),                 /*!< TIMER16 clock */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDF      = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 30U),                 /*!< HPDF clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RF        = RCU_REGIDX_BIT(APB2EN_REG_OFFSET, 31U)                  /*!< RF clock */
 }rcu_periph_enum;
 
@@ -629,7 +669,9 @@ typedef enum
     RCU_DMA1_SLP      = RCU_REGIDX_BIT(AHB1SPEN_REG_OFFSET, 22U),           /*!< DMA1 clock when sleep mode */
     RCU_USBFS_SLP     = RCU_REGIDX_BIT(AHB1SPEN_REG_OFFSET, 29U),           /*!< USBFS clock when sleep mode */
     /* AHB2 peripherals */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_DCI_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 0U),            /*!< DCI clock when sleep mode */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_PKCAU_SLP     = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 3U),            /*!< PKCAU clock when sleep mode*/
     RCU_CAU_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 4U),            /*!< CAU clock when sleep mode */
     RCU_HAU_SLP       = RCU_REGIDX_BIT(AHB2SPEN_REG_OFFSET, 5U),            /*!< HAU clock when sleep mode */
@@ -640,7 +682,9 @@ typedef enum
     /* APB1 peripherals */
     RCU_TIMER1_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 0U),            /*!< TIMER1 clock when sleep mode */
     RCU_TIMER2_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 1U),            /*!< TIMER2 clock when sleep mode */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_TIMER3_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 2U),            /*!< TIMER3 clock when sleep mode */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_TIMER4_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 3U),            /*!< TIMER4 clock when sleep mode*/
     RCU_TIMER5_SLP    = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 4U),            /*!< TIMER5 clock when sleep mode */ 
     RCU_WWDGT_SLP     = RCU_REGIDX_BIT(APB1SPEN_REG_OFFSET, 11U),           /*!< WWDGT clock when sleep mode */
@@ -659,7 +703,9 @@ typedef enum
     RCU_SYSCFG_SLP    = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 14U),           /*!< SYSCFG clock when sleep mode */
     RCU_TIMER15_SLP   = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 17U),           /*!< TIMER15 clock when sleep mode*/
     RCU_TIMER16_SLP   = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 18U),           /*!< TIMER16 clock when sleep mode */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_HPDF_SLP      = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 30U),           /*!< HPDF clock when sleep mode */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_RF_SLP        = RCU_REGIDX_BIT(APB2SPEN_REG_OFFSET, 31U)            /*!< RF clock when sleep mode */
 }rcu_periph_sleep_enum;
 
@@ -669,7 +715,7 @@ typedef enum
     /* clock stabilization flags */
     RCU_FLAG_IRC16MSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 1U),            /*!< IRC16M stabilization flags */
     RCU_FLAG_HXTALSTB      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 17U),           /*!< HXTAL stabilization flags */
-    RCU_FLAG_PLLDIGSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 23U),           /*!< PLL stabilization flags */
+    RCU_FLAG_PLLDIGSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 23U),           /*!< PLLDIG stabilization flags */
     RCU_FLAG_PLLSTB        = RCU_REGIDX_BIT(CTL_REG_OFFSET, 25U),           /*!< PLL stabilization flags */
     RCU_FLAG_PLLI2SSTB     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 27U),           /*!< PLLI2S stabilization flags */
     RCU_FLAG_LXTALSTB      = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 1U),          /*!< LXTAL stabilization flags */
@@ -722,16 +768,26 @@ typedef enum
     RCU_INT_PLLDIGSTB       = RCU_REGIDX_BIT(INT_REG_OFFSET, 14U)           /*!< PLLDIG stabilization interrupt */
 }rcu_int_enum;
 
+typedef enum
+{
+    RCU_UNIT_HXTAL         = RCU_REGIDX_BIT(CTL_REG_OFFSET, 28U),          /*!< HXTAL */
+    RCU_UNIT_PLLDIG        = RCU_REGIDX_BIT(CTL_REG_OFFSET, 20U),          /*!< PLLDIG */
+    RCU_UNIT_RFPLL         = RCU_REGIDX_BIT(CFG1_REG_OFFSET, 16U),         /*!< RFPLL */
+    RCU_UNIT_LDOANA        = RCU_REGIDX_BIT(CFG1_REG_OFFSET, 17U),         /*!< LDOANA */
+    RCU_UNIT_LDOCLK        = RCU_REGIDX_BIT(CFG1_REG_OFFSET, 18U),         /*!< LDOCLK */
+    RCU_UNIT_BANDGAP       = RCU_REGIDX_BIT(CFG1_REG_OFFSET, 19U)          /*!< BANDGAP */
+}rcu_unit_enum;
+
 /* oscillator types */
 typedef enum
 {
-    RCU_HXTAL      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 16U),                   /*!< HXTAL */
-    RCU_LXTAL      = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 0U),                  /*!< LXTAL */
-    RCU_IRC16M     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 0U),                    /*!< IRC16M */
-    RCU_IRC32K     = RCU_REGIDX_BIT(RSTSCK_REG_OFFSET, 0U),                 /*!< IRC32K */
-    RCU_PLLDIG_CK  = RCU_REGIDX_BIT(CTL_REG_OFFSET, 21U),                   /*!< PLLDIG */
-    RCU_PLL_CK     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 24U),                   /*!< PLL */
-    RCU_PLLI2S_CK  = RCU_REGIDX_BIT(CTL_REG_OFFSET, 26U)                    /*!< PLLI2S */
+    RCU_HXTAL      = RCU_REGIDX_BIT(CTL_REG_OFFSET, 16U),                  /*!< HXTAL */
+    RCU_LXTAL      = RCU_REGIDX_BIT(BDCTL_REG_OFFSET, 0U),                 /*!< LXTAL */
+    RCU_IRC16M     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 0U),                   /*!< IRC16M */
+    RCU_IRC32K     = RCU_REGIDX_BIT(RSTSCK_REG_OFFSET, 0U),                /*!< IRC32K */
+    RCU_PLLDIG_CK  = RCU_REGIDX_BIT(CTL_REG_OFFSET, 21U),                  /*!< PLLDIG */
+    RCU_PLL_CK     = RCU_REGIDX_BIT(CTL_REG_OFFSET, 24U),                  /*!< PLL */
+    RCU_PLLI2S_CK  = RCU_REGIDX_BIT(CTL_REG_OFFSET, 26U)                   /*!< PLLI2S */
 }rcu_osci_type_enum;
 
 /* rcu clock frequency */
@@ -791,7 +847,9 @@ typedef enum
     RCU_SEC_FLAG_DMA1      = RCU_REGIDX_BIT(AHB1SECPSTAT_REG_OFFSET, 22U),                 /*!< DMA1 clock */
     RCU_SEC_FLAG_USBFS     = RCU_REGIDX_BIT(AHB1SECPSTAT_REG_OFFSET, 29U),                 /*!< USBFS clock */
     /* AHB2 peripherals */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_DCI       = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 0U),                  /*!< DCI clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_PKCAU       = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 3U),                /*!< PKCAU clock */
     RCU_SEC_FLAG_CAU      = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 4U),                   /*!< CAU clock */
     RCU_SEC_FLAG_HAU      = RCU_REGIDX_BIT(AHB2SECPSTAT_REG_OFFSET, 5U),                   /*!< HAU clock */
@@ -802,7 +860,9 @@ typedef enum
     /* APB1 peripherals */
     RCU_SEC_FLAG_TIMER1    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 0U),                  /*!< TIMER1 clock */
     RCU_SEC_FLAG_TIMER2    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 1U),                  /*!< TIMER2 clock */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_TIMER3    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 2U),                  /*!< TIMER3 clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_TIMER4    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 3U),                  /*!< TIMER4 clock */
     RCU_SEC_FLAG_TIMER5    = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 4U),                  /*!< TIMER5 clock */
     RCU_SEC_FLAG_WWDGT     = RCU_REGIDX_BIT(APB1SECPSTAT_REG_OFFSET, 11U),                 /*!< WWDGT clock */
@@ -821,7 +881,9 @@ typedef enum
     RCU_SEC_FLAG_SYSCFG    = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 14U),                 /*!< SYSCFG clock */
     RCU_SEC_FLAG_TIMER15   = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 17U),                 /*!< TIMER15 clock */
     RCU_SEC_FLAG_TIMER16   = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 18U),                 /*!< TIMER16 clock */
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     RCU_SEC_FLAG_HPDF      = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 30U),                 /*!< HPDF clock */
+    #endif /* GD32W515PI and GD32W515P0 */
     RCU_SEC_FLAG_RF        = RCU_REGIDX_BIT(APB2SECPSTAT_REG_OFFSET, 31U)                  /*!< RF clock */
 }rcu_sec_flag_enum;
 
@@ -860,7 +922,7 @@ typedef enum
 
 /* APB2 prescaler selection */
 #define CFG0_APB2PSC(regval)            (BITS(13,15) & ((uint32_t)(regval) << 13U))
-#define RCU_APB2_CKAHB_DIV1             CFG0_APB2PSC(0)                    /*!< APB2 prescaler select CK_AHB/2 */
+#define RCU_APB2_CKAHB_DIV1             CFG0_APB2PSC(0)                    /*!< APB2 prescaler select CK_AHB */
 #define RCU_APB2_CKAHB_DIV2             CFG0_APB2PSC(4)                    /*!< APB2 prescaler select CK_AHB/2 */
 #define RCU_APB2_CKAHB_DIV4             CFG0_APB2PSC(5)                    /*!< APB2 prescaler select CK_AHB/4 */
 #define RCU_APB2_CKAHB_DIV8             CFG0_APB2PSC(6)                    /*!< APB2 prescaler select CK_AHB/8 */
@@ -991,9 +1053,11 @@ typedef enum
 #define RCU_USBFS_DIV31                 ADDCTL_USBFSDIV(30)                         /*!< USBFSDIV input source clock divided by 31 */
 #define RCU_USBFS_DIV32                 ADDCTL_USBFSDIV(31)                         /*!< USBFSDIV input source clock divided by 32 */
 
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* HPDF Clock source selection */
 #define RCU_HPDFSRC_PCLK2               ((uint32_t)0x00000000U)                       /*!< PCLK2 clock selected as HPDF source clock */
 #define RCU_HPDFSRC_CKSYS               RCU_ADDCTL_HPDFSEL                            /*!< system Clock selected as HPDF source clock */
+#endif /* GD32W515PI and GD32W515P0 */
 
 /* I2S Clock source selection */
 #define ADDCTL_I2SSEL(regval)           (BITS(12,13) & ((uint32_t)(regval) << 12U))
@@ -1001,12 +1065,14 @@ typedef enum
 #define RCU_I2SSRC_I2S_CKIN             ADDCTL_I2SSEL(1)                              /*!< external I2S_CKIN pin selected as I2S source clock */
 #define RCU_I2SSRC_I2S_PLLDIV           ADDCTL_I2SSEL(2)                              /*!< PLL division selected as I2S source clock */
 
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* HPDFAUDIO Clock source selection */
 #define ADDCTL_HPDFAUDIOSEL(regval)     (BITS(14,15) & ((uint32_t)(regval) << 14U))
 #define RCU_HPDFAUDIOSRC_PLLI2S          ADDCTL_HPDFAUDIOSEL(0)                       /*!< PLLI2S output clock selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_I2S_CKIN        ADDCTL_HPDFAUDIOSEL(1)                       /*!< external I2S_CKIN pin selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_PLL             ADDCTL_HPDFAUDIOSEL(2)                       /*!< PLL selected as I2S source clock */
 #define RCU_HPDFAUDIOSRC_IRC16M          ADDCTL_HPDFAUDIOSEL(3)                       /*!< IRC16M selected as I2S source clock */
+#endif /* GD32W515PI and GD32W515P0 */
 
 /* SDIO Clock source selection */
 #define RCU_SDIOSRC_MASK                 0X00410000U    
@@ -1051,72 +1117,72 @@ typedef enum
 #define RCU_SDIODIV_DIV32                 ADDCTL_SDIODIV(31)                        /*!< SDIODIV input source clock divided by 32 */
 
 /* RCU_ADDCTL register bit define */
-/* PLLFI2SDIV division factor */
-#define ADDCTL_PLLFI2SDIV(regval)         (BITS(24,29) & ((uint32_t)(regval) << 24U))
-#define RCU_PLLFI2SDIV_DIV1                ADDCTL_PLLFI2SDIV(0)                     /*!< PLL clock divided by 1 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV2                ADDCTL_PLLFI2SDIV(1)                     /*!< PLL clock divided by 2 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV3                ADDCTL_PLLFI2SDIV(2)                     /*!< PLL clock divided by 3 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV4                ADDCTL_PLLFI2SDIV(3)                     /*!< PLL clock divided by 4 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV5                ADDCTL_PLLFI2SDIV(4)                     /*!< PLL clock divided by 5 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV6                ADDCTL_PLLFI2SDIV(5)                     /*!< PLL clock divided by 6 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV7                ADDCTL_PLLFI2SDIV(6)                     /*!< PLL clock divided by 7 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV8                ADDCTL_PLLFI2SDIV(7)                     /*!< PLL clock divided by 8 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV9                ADDCTL_PLLFI2SDIV(8)                     /*!< PLL clock divided by 9 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV10               ADDCTL_PLLFI2SDIV(9)                     /*!< PLL clock divided by 10 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV11               ADDCTL_PLLFI2SDIV(10)                    /*!< PLL clock divided by 11 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV12               ADDCTL_PLLFI2SDIV(11)                    /*!< PLL clock divided by 12 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV13               ADDCTL_PLLFI2SDIV(12)                    /*!< PLL clock divided by 13 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV14               ADDCTL_PLLFI2SDIV(13)                    /*!< PLL clock divided by 14 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV15               ADDCTL_PLLFI2SDIV(14)                    /*!< PLL clock divided by 15 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV16               ADDCTL_PLLFI2SDIV(15)                    /*!< PLL clock divided by 16 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV17               ADDCTL_PLLFI2SDIV(16)                    /*!< PLL clock divided by 17 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV18               ADDCTL_PLLFI2SDIV(17)                    /*!< PLL clock divided by 18 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV19               ADDCTL_PLLFI2SDIV(18)                    /*!< PLL clock divided by 19 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV20               ADDCTL_PLLFI2SDIV(19)                    /*!< PLL clock divided by 20 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV21               ADDCTL_PLLFI2SDIV(20)                    /*!< PLL clock divided by 21 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV22               ADDCTL_PLLFI2SDIV(21)                    /*!< PLL clock divided by 22 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV23               ADDCTL_PLLFI2SDIV(22)                    /*!< PLL clock divided by 23 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV24               ADDCTL_PLLFI2SDIV(23)                    /*!< PLL clock divided by 24 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV25               ADDCTL_PLLFI2SDIV(24)                    /*!< PLL clock divided by 25 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV26               ADDCTL_PLLFI2SDIV(25)                    /*!< PLL clock divided by 26 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV27               ADDCTL_PLLFI2SDIV(26)                    /*!< PLL clock divided by 27 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV28               ADDCTL_PLLFI2SDIV(27)                    /*!< PLL clock divided by 28 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV29               ADDCTL_PLLFI2SDIV(28)                    /*!< PLL clock divided by 29 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV30               ADDCTL_PLLFI2SDIV(29)                    /*!< PLL clock divided by 30 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV31               ADDCTL_PLLFI2SDIV(30)                    /*!< PLL clock divided by 31 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV32               ADDCTL_PLLFI2SDIV(31)                    /*!< PLL clock divided by 32 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV33               ADDCTL_PLLFI2SDIV(32)                    /*!< PLL clock divided by 33 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV34               ADDCTL_PLLFI2SDIV(33)                    /*!< PLL clock divided by 34 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV35               ADDCTL_PLLFI2SDIV(34)                    /*!< PLL clock divided by 35 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV36               ADDCTL_PLLFI2SDIV(35)                    /*!< PLL clock divided by 36 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV37               ADDCTL_PLLFI2SDIV(36)                    /*!< PLL clock divided by 37 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV38               ADDCTL_PLLFI2SDIV(37)                    /*!< PLL clock divided by 38 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV39               ADDCTL_PLLFI2SDIV(38)                    /*!< PLL clock divided by 39 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV40               ADDCTL_PLLFI2SDIV(39)                    /*!< PLL clock divided by 40 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV41               ADDCTL_PLLFI2SDIV(40)                    /*!< PLL clock divided by 41 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV42               ADDCTL_PLLFI2SDIV(41)                    /*!< PLL clock divided by 42 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV43               ADDCTL_PLLFI2SDIV(42)                    /*!< PLL clock divided by 43 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV44               ADDCTL_PLLFI2SDIV(43)                    /*!< PLL clock divided by 44 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV45               ADDCTL_PLLFI2SDIV(44)                    /*!< PLL clock divided by 45 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV46               ADDCTL_PLLFI2SDIV(45)                    /*!< PLL clock divided by 46 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV47               ADDCTL_PLLFI2SDIV(46)                    /*!< PLL clock divided by 47 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV48               ADDCTL_PLLFI2SDIV(47)                    /*!< PLL clock divided by 48 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV49               ADDCTL_PLLFI2SDIV(48)                    /*!< PLL clock divided by 49 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV50               ADDCTL_PLLFI2SDIV(49)                    /*!< PLL clock divided by 50 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV51               ADDCTL_PLLFI2SDIV(50)                    /*!< PLL clock divided by 51 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV52               ADDCTL_PLLFI2SDIV(51)                    /*!< PLL clock divided by 52 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV53               ADDCTL_PLLFI2SDIV(52)                    /*!< PLL clock divided by 53 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV54               ADDCTL_PLLFI2SDIV(53)                    /*!< PLL clock divided by 54 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV55               ADDCTL_PLLFI2SDIV(54)                    /*!< PLL clock divided by 55 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV56               ADDCTL_PLLFI2SDIV(55)                    /*!< PLL clock divided by 56 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV57               ADDCTL_PLLFI2SDIV(56)                    /*!< PLL clock divided by 57 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV58               ADDCTL_PLLFI2SDIV(57)                    /*!< PLL clock divided by 58 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV59               ADDCTL_PLLFI2SDIV(58)                    /*!< PLL clock divided by 59 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV60               ADDCTL_PLLFI2SDIV(59)                    /*!< PLL clock divided by 60 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV61               ADDCTL_PLLFI2SDIV(60)                    /*!< PLL clock divided by 61 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV62               ADDCTL_PLLFI2SDIV(61)                    /*!< PLL clock divided by 62 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV63               ADDCTL_PLLFI2SDIV(62)                    /*!< PLL clock divided by 63 for I2S clock */
-#define RCU_PLLFI2SDIV_DIV64               ADDCTL_PLLFI2SDIV(63)                    /*!< PLL clock divided by 64 for I2S clock */
+/* PLLDIV_I2S division factor */
+#define ADDCTL_PLLDIV_I2S(regval)         (BITS(24,29) & ((uint32_t)(regval) << 24U))
+#define RCU_PLLDIV_I2S_DIV1               ADDCTL_PLLDIV_I2S(0)                      /*!< PLL clock divided by 1 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV2               ADDCTL_PLLDIV_I2S(1)                      /*!< PLL clock divided by 2 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV3               ADDCTL_PLLDIV_I2S(2)                      /*!< PLL clock divided by 3 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV4               ADDCTL_PLLDIV_I2S(3)                      /*!< PLL clock divided by 4 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV5               ADDCTL_PLLDIV_I2S(4)                      /*!< PLL clock divided by 5 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV6               ADDCTL_PLLDIV_I2S(5)                      /*!< PLL clock divided by 6 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV7               ADDCTL_PLLDIV_I2S(6)                      /*!< PLL clock divided by 7 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV8               ADDCTL_PLLDIV_I2S(7)                      /*!< PLL clock divided by 8 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV9               ADDCTL_PLLDIV_I2S(8)                      /*!< PLL clock divided by 9 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV10              ADDCTL_PLLDIV_I2S(9)                      /*!< PLL clock divided by 10 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV11              ADDCTL_PLLDIV_I2S(10)                     /*!< PLL clock divided by 11 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV12              ADDCTL_PLLDIV_I2S(11)                     /*!< PLL clock divided by 12 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV13              ADDCTL_PLLDIV_I2S(12)                     /*!< PLL clock divided by 13 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV14              ADDCTL_PLLDIV_I2S(13)                     /*!< PLL clock divided by 14 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV15              ADDCTL_PLLDIV_I2S(14)                     /*!< PLL clock divided by 15 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV16              ADDCTL_PLLDIV_I2S(15)                     /*!< PLL clock divided by 16 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV17              ADDCTL_PLLDIV_I2S(16)                     /*!< PLL clock divided by 17 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV18              ADDCTL_PLLDIV_I2S(17)                     /*!< PLL clock divided by 18 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV19              ADDCTL_PLLDIV_I2S(18)                     /*!< PLL clock divided by 19 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV20              ADDCTL_PLLDIV_I2S(19)                     /*!< PLL clock divided by 20 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV21              ADDCTL_PLLDIV_I2S(20)                     /*!< PLL clock divided by 21 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV22              ADDCTL_PLLDIV_I2S(21)                     /*!< PLL clock divided by 22 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV23              ADDCTL_PLLDIV_I2S(22)                     /*!< PLL clock divided by 23 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV24              ADDCTL_PLLDIV_I2S(23)                     /*!< PLL clock divided by 24 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV25              ADDCTL_PLLDIV_I2S(24)                     /*!< PLL clock divided by 25 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV26              ADDCTL_PLLDIV_I2S(25)                     /*!< PLL clock divided by 26 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV27              ADDCTL_PLLDIV_I2S(26)                     /*!< PLL clock divided by 27 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV28              ADDCTL_PLLDIV_I2S(27)                     /*!< PLL clock divided by 28 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV29              ADDCTL_PLLDIV_I2S(28)                     /*!< PLL clock divided by 29 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV30              ADDCTL_PLLDIV_I2S(29)                     /*!< PLL clock divided by 30 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV31              ADDCTL_PLLDIV_I2S(30)                     /*!< PLL clock divided by 31 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV32              ADDCTL_PLLDIV_I2S(31)                     /*!< PLL clock divided by 32 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV33              ADDCTL_PLLDIV_I2S(32)                     /*!< PLL clock divided by 33 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV34              ADDCTL_PLLDIV_I2S(33)                     /*!< PLL clock divided by 34 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV35              ADDCTL_PLLDIV_I2S(34)                     /*!< PLL clock divided by 35 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV36              ADDCTL_PLLDIV_I2S(35)                     /*!< PLL clock divided by 36 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV37              ADDCTL_PLLDIV_I2S(36)                     /*!< PLL clock divided by 37 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV38              ADDCTL_PLLDIV_I2S(37)                     /*!< PLL clock divided by 38 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV39              ADDCTL_PLLDIV_I2S(38)                     /*!< PLL clock divided by 39 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV40              ADDCTL_PLLDIV_I2S(39)                     /*!< PLL clock divided by 40 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV41              ADDCTL_PLLDIV_I2S(40)                     /*!< PLL clock divided by 41 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV42              ADDCTL_PLLDIV_I2S(41)                     /*!< PLL clock divided by 42 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV43              ADDCTL_PLLDIV_I2S(42)                     /*!< PLL clock divided by 43 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV44              ADDCTL_PLLDIV_I2S(43)                     /*!< PLL clock divided by 44 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV45              ADDCTL_PLLDIV_I2S(44)                     /*!< PLL clock divided by 45 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV46              ADDCTL_PLLDIV_I2S(45)                     /*!< PLL clock divided by 46 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV47              ADDCTL_PLLDIV_I2S(46)                     /*!< PLL clock divided by 47 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV48              ADDCTL_PLLDIV_I2S(47)                     /*!< PLL clock divided by 48 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV49              ADDCTL_PLLDIV_I2S(48)                     /*!< PLL clock divided by 49 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV50              ADDCTL_PLLDIV_I2S(49)                     /*!< PLL clock divided by 50 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV51              ADDCTL_PLLDIV_I2S(50)                     /*!< PLL clock divided by 51 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV52              ADDCTL_PLLDIV_I2S(51)                     /*!< PLL clock divided by 52 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV53              ADDCTL_PLLDIV_I2S(52)                     /*!< PLL clock divided by 53 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV54              ADDCTL_PLLDIV_I2S(53)                     /*!< PLL clock divided by 54 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV55              ADDCTL_PLLDIV_I2S(54)                     /*!< PLL clock divided by 55 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV56              ADDCTL_PLLDIV_I2S(55)                     /*!< PLL clock divided by 56 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV57              ADDCTL_PLLDIV_I2S(56)                     /*!< PLL clock divided by 57 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV58              ADDCTL_PLLDIV_I2S(57)                     /*!< PLL clock divided by 58 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV59              ADDCTL_PLLDIV_I2S(58)                     /*!< PLL clock divided by 59 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV60              ADDCTL_PLLDIV_I2S(59)                     /*!< PLL clock divided by 60 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV61              ADDCTL_PLLDIV_I2S(60)                     /*!< PLL clock divided by 61 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV62              ADDCTL_PLLDIV_I2S(61)                     /*!< PLL clock divided by 62 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV63              ADDCTL_PLLDIV_I2S(62)                     /*!< PLL clock divided by 63 for I2S clock */
+#define RCU_PLLDIV_I2S_DIV64              ADDCTL_PLLDIV_I2S(63)                     /*!< PLL clock divided by 64 for I2S clock */
 
 /* TIMER clock selection */
 #define RCU_TIMER_PSC_MUL2              ~RCU_CFG1_TIMERSEL                 /*!< if APB1PSC/APB2PSC in RCU_CFG0 register is 0b0xx(CK_APBx = CK_AHB) 
@@ -1258,79 +1324,72 @@ typedef enum
 #define RCU_PLLI2SSRC_DIV7                PLLCFG_PLLI2SPSC(6)                       /*!< PLLI2S vco input source clock divided by 7 */
 #define RCU_PLLI2SSRC_DIV8                PLLCFG_PLLI2SPSC(7)                       /*!< PLLI2S vco input source clock divided by 8 */
 
-/* PLLDIG Clock Selection  */
-#define PLLDIG_OUTPUTSEL(regval)         (BITS(24,25) & ((uint32_t)(regval) << 24U))
-#define RCU_PLLDIG_192M                   PLLDIG_OUTPUTSEL(0)                       /*!< selected 192Mhz as PLLDIG output frequency */
-#define RCU_PLLDIG_240M                   PLLDIG_OUTPUTSEL(1)                       /*!< selected 240Mhz as PLLDIG output frequency */
-#define RCU_PLLDIG_320M                   PLLDIG_OUTPUTSEL(2)                       /*!< selected 320Mhz as PLLDIG output frequency */
-#define RCU_PLLDIG_480M                   PLLDIG_OUTPUTSEL(3)                       /*!< selected 480Mhz as PLLDIG output frequency */
-
 /* PLLDIG clock divider factor for system clock */
-#define PLLCFG_PLLDIGFSYSDIV(regval)         (BITS(26,31) & ((uint32_t)(regval) << 26U))
-#define RCU_PLLDIGFSYS_DIV1               PLLCFG_PLLDIGFSYSDIV(0)                   /*!< PLLDIG clock divided by 1 for system clock */
-#define RCU_PLLDIGFSYS_DIV2               PLLCFG_PLLDIGFSYSDIV(1)                   /*!< PLLDIG clock divided by 2 for system clock */
-#define RCU_PLLDIGFSYS_DIV3               PLLCFG_PLLDIGFSYSDIV(2)                   /*!< PLLDIG clock divided by 3 for system clock */
-#define RCU_PLLDIGFSYS_DIV4               PLLCFG_PLLDIGFSYSDIV(3)                   /*!< PLLDIG clock divided by 4 for system clock */
-#define RCU_PLLDIGFSYS_DIV5               PLLCFG_PLLDIGFSYSDIV(4)                   /*!< PLLDIG clock divided by 5 for system clock */
-#define RCU_PLLDIGFSYS_DIV6               PLLCFG_PLLDIGFSYSDIV(5)                   /*!< PLLDIG clock divided by 6 for system clock */
-#define RCU_PLLDIGFSYS_DIV7               PLLCFG_PLLDIGFSYSDIV(6)                   /*!< PLLDIG clock divided by 7 for system clock */
-#define RCU_PLLDIGFSYS_DIV8               PLLCFG_PLLDIGFSYSDIV(7)                   /*!< PLLDIG clock divided by 8 for system clock */
-#define RCU_PLLDIGFSYS_DIV9               PLLCFG_PLLDIGFSYSDIV(8)                   /*!< PLLDIG clock divided by 9 for system clock */
-#define RCU_PLLDIGFSYS_DIV10              PLLCFG_PLLDIGFSYSDIV(9)                   /*!< PLLDIG clock divided by 10 for system clock */
-#define RCU_PLLDIGFSYS_DIV11              PLLCFG_PLLDIGFSYSDIV(10)                  /*!< PLLDIG clock divided by 11 for system clock */
-#define RCU_PLLDIGFSYS_DIV12              PLLCFG_PLLDIGFSYSDIV(11)                  /*!< PLLDIG clock divided by 12 for system clock */
-#define RCU_PLLDIGFSYS_DIV13              PLLCFG_PLLDIGFSYSDIV(12)                  /*!< PLLDIG clock divided by 13 for system clock */
-#define RCU_PLLDIGFSYS_DIV14              PLLCFG_PLLDIGFSYSDIV(13)                  /*!< PLLDIG clock divided by 14 for system clock */
-#define RCU_PLLDIGFSYS_DIV15              PLLCFG_PLLDIGFSYSDIV(14)                  /*!< PLLDIG clock divided by 15 for system clock */
-#define RCU_PLLDIGFSYS_DIV16              PLLCFG_PLLDIGFSYSDIV(15)                  /*!< PLLDIG clock divided by 16 for system clock */
-#define RCU_PLLDIGFSYS_DIV17              PLLCFG_PLLDIGFSYSDIV(16)                  /*!< PLLDIG clock divided by 17 for system clock */
-#define RCU_PLLDIGFSYS_DIV18              PLLCFG_PLLDIGFSYSDIV(17)                  /*!< PLLDIG clock divided by 18 for system clock */
-#define RCU_PLLDIGFSYS_DIV19              PLLCFG_PLLDIGFSYSDIV(18)                  /*!< PLLDIG clock divided by 19 for system clock */
-#define RCU_PLLDIGFSYS_DIV20              PLLCFG_PLLDIGFSYSDIV(19)                  /*!< PLLDIG clock divided by 20 for system clock */
-#define RCU_PLLDIGFSYS_DIV21              PLLCFG_PLLDIGFSYSDIV(20)                  /*!< PLLDIG clock divided by 21 for system clock */
-#define RCU_PLLDIGFSYS_DIV22              PLLCFG_PLLDIGFSYSDIV(21)                  /*!< PLLDIG clock divided by 22 for system clock */
-#define RCU_PLLDIGFSYS_DIV23              PLLCFG_PLLDIGFSYSDIV(22)                  /*!< PLLDIG clock divided by 23 for system clock */
-#define RCU_PLLDIGFSYS_DIV24              PLLCFG_PLLDIGFSYSDIV(23)                  /*!< PLLDIG clock divided by 24 for system clock */
-#define RCU_PLLDIGFSYS_DIV25              PLLCFG_PLLDIGFSYSDIV(24)                  /*!< PLLDIG clock divided by 25 for system clock */
-#define RCU_PLLDIGFSYS_DIV26              PLLCFG_PLLDIGFSYSDIV(25)                  /*!< PLLDIG clock divided by 26 for system clock */
-#define RCU_PLLDIGFSYS_DIV27              PLLCFG_PLLDIGFSYSDIV(26)                  /*!< PLLDIG clock divided by 27 for system clock */
-#define RCU_PLLDIGFSYS_DIV28              PLLCFG_PLLDIGFSYSDIV(27)                  /*!< PLLDIG clock divided by 28 for system clock */
-#define RCU_PLLDIGFSYS_DIV29              PLLCFG_PLLDIGFSYSDIV(28)                  /*!< PLLDIG clock divided by 29 for system clock */
-#define RCU_PLLDIGFSYS_DIV30              PLLCFG_PLLDIGFSYSDIV(29)                  /*!< PLLDIG clock divided by 30 for system clock */
-#define RCU_PLLDIGFSYS_DIV31              PLLCFG_PLLDIGFSYSDIV(30)                  /*!< PLLDIG clock divided by 31 for system clock */
-#define RCU_PLLDIGFSYS_DIV32              PLLCFG_PLLDIGFSYSDIV(31)                  /*!< PLLDIG clock divided by 32 for system clock */
-#define RCU_PLLDIGFSYS_DIV33              PLLCFG_PLLDIGFSYSDIV(32)                  /*!< PLLDIG clock divided by 33 for system clock */
-#define RCU_PLLDIGFSYS_DIV34              PLLCFG_PLLDIGFSYSDIV(33)                  /*!< PLLDIG clock divided by 34 for system clock */
-#define RCU_PLLDIGFSYS_DIV35              PLLCFG_PLLDIGFSYSDIV(34)                  /*!< PLLDIG clock divided by 35 for system clock */
-#define RCU_PLLDIGFSYS_DIV36              PLLCFG_PLLDIGFSYSDIV(35)                  /*!< PLLDIG clock divided by 36 for system clock */
-#define RCU_PLLDIGFSYS_DIV37              PLLCFG_PLLDIGFSYSDIV(36)                  /*!< PLLDIG clock divided by 37 for system clock */
-#define RCU_PLLDIGFSYS_DIV38              PLLCFG_PLLDIGFSYSDIV(37)                  /*!< PLLDIG clock divided by 38 for system clock */
-#define RCU_PLLDIGFSYS_DIV39              PLLCFG_PLLDIGFSYSDIV(38)                  /*!< PLLDIG clock divided by 39 for system clock */
-#define RCU_PLLDIGFSYS_DIV40              PLLCFG_PLLDIGFSYSDIV(39)                  /*!< PLLDIG clock divided by 40 for system clock */
-#define RCU_PLLDIGFSYS_DIV41              PLLCFG_PLLDIGFSYSDIV(40)                  /*!< PLLDIG clock divided by 41 for system clock */
-#define RCU_PLLDIGFSYS_DIV42              PLLCFG_PLLDIGFSYSDIV(41)                  /*!< PLLDIG clock divided by 42 for system clock */
-#define RCU_PLLDIGFSYS_DIV43              PLLCFG_PLLDIGFSYSDIV(42)                  /*!< PLLDIG clock divided by 43 for system clock */
-#define RCU_PLLDIGFSYS_DIV44              PLLCFG_PLLDIGFSYSDIV(43)                  /*!< PLLDIG clock divided by 44 for system clock */
-#define RCU_PLLDIGFSYS_DIV45              PLLCFG_PLLDIGFSYSDIV(44)                  /*!< PLLDIG clock divided by 45 for system clock */
-#define RCU_PLLDIGFSYS_DIV46              PLLCFG_PLLDIGFSYSDIV(45)                  /*!< PLLDIG clock divided by 46 for system clock */
-#define RCU_PLLDIGFSYS_DIV47              PLLCFG_PLLDIGFSYSDIV(46)                  /*!< PLLDIG clock divided by 47 for system clock */
-#define RCU_PLLDIGFSYS_DIV48              PLLCFG_PLLDIGFSYSDIV(47)                  /*!< PLLDIG clock divided by 48 for system clock */
-#define RCU_PLLDIGFSYS_DIV49              PLLCFG_PLLDIGFSYSDIV(48)                  /*!< PLLDIG clock divided by 49 for system clock */
-#define RCU_PLLDIGFSYS_DIV50              PLLCFG_PLLDIGFSYSDIV(49)                  /*!< PLLDIG clock divided by 50 for system clock */
-#define RCU_PLLDIGFSYS_DIV51              PLLCFG_PLLDIGFSYSDIV(50)                  /*!< PLLDIG clock divided by 51 for system clock */
-#define RCU_PLLDIGFSYS_DIV52              PLLCFG_PLLDIGFSYSDIV(51)                  /*!< PLLDIG clock divided by 52 for system clock */
-#define RCU_PLLDIGFSYS_DIV53              PLLCFG_PLLDIGFSYSDIV(52)                  /*!< PLLDIG clock divided by 53 for system clock */
-#define RCU_PLLDIGFSYS_DIV54              PLLCFG_PLLDIGFSYSDIV(53)                  /*!< PLLDIG clock divided by 54 for system clock */
-#define RCU_PLLDIGFSYS_DIV55              PLLCFG_PLLDIGFSYSDIV(54)                  /*!< PLLDIG clock divided by 55 for system clock */
-#define RCU_PLLDIGFSYS_DIV56              PLLCFG_PLLDIGFSYSDIV(55)                  /*!< PLLDIG clock divided by 56 for system clock */
-#define RCU_PLLDIGFSYS_DIV57              PLLCFG_PLLDIGFSYSDIV(56)                  /*!< PLLDIG clock divided by 57 for system clock */
-#define RCU_PLLDIGFSYS_DIV58              PLLCFG_PLLDIGFSYSDIV(57)                  /*!< PLLDIG clock divided by 58 for system clock */
-#define RCU_PLLDIGFSYS_DIV59              PLLCFG_PLLDIGFSYSDIV(58)                  /*!< PLLDIG clock divided by 59 for system clock */
-#define RCU_PLLDIGFSYS_DIV60              PLLCFG_PLLDIGFSYSDIV(59)                  /*!< PLLDIG clock divided by 60 for system clock */
-#define RCU_PLLDIGFSYS_DIV61              PLLCFG_PLLDIGFSYSDIV(60)                  /*!< PLLDIG clock divided by 61 for system clock */
-#define RCU_PLLDIGFSYS_DIV62              PLLCFG_PLLDIGFSYSDIV(61)                  /*!< PLLDIG clock divided by 62 for system clock */
-#define RCU_PLLDIGFSYS_DIV63              PLLCFG_PLLDIGFSYSDIV(62)                  /*!< PLLDIG clock divided by 63 for system clock */
-#define RCU_PLLDIGFSYS_DIV64              PLLCFG_PLLDIGFSYSDIV(63)                  /*!< PLLDIG clock divided by 64 for system clock */
+#define PLLCFG_PLLDIGDIV_SYS(regval)     (BITS(26,31) & ((uint32_t)(regval) << 26U))
+#define RCU_PLLDIG_SYS_DIV1               PLLCFG_PLLDIGDIV_SYS(0)                   /*!< PLLDIG clock divided by 1 for system clock */
+#define RCU_PLLDIG_SYS_DIV2               PLLCFG_PLLDIGDIV_SYS(1)                   /*!< PLLDIG clock divided by 2 for system clock */
+#define RCU_PLLDIG_SYS_DIV3               PLLCFG_PLLDIGDIV_SYS(2)                   /*!< PLLDIG clock divided by 3 for system clock */
+#define RCU_PLLDIG_SYS_DIV4               PLLCFG_PLLDIGDIV_SYS(3)                   /*!< PLLDIG clock divided by 4 for system clock */
+#define RCU_PLLDIG_SYS_DIV5               PLLCFG_PLLDIGDIV_SYS(4)                   /*!< PLLDIG clock divided by 5 for system clock */
+#define RCU_PLLDIG_SYS_DIV6               PLLCFG_PLLDIGDIV_SYS(5)                   /*!< PLLDIG clock divided by 6 for system clock */
+#define RCU_PLLDIG_SYS_DIV7               PLLCFG_PLLDIGDIV_SYS(6)                   /*!< PLLDIG clock divided by 7 for system clock */
+#define RCU_PLLDIG_SYS_DIV8               PLLCFG_PLLDIGDIV_SYS(7)                   /*!< PLLDIG clock divided by 8 for system clock */
+#define RCU_PLLDIG_SYS_DIV9               PLLCFG_PLLDIGDIV_SYS(8)                   /*!< PLLDIG clock divided by 9 for system clock */
+#define RCU_PLLDIG_SYS_DIV10              PLLCFG_PLLDIGDIV_SYS(9)                   /*!< PLLDIG clock divided by 10 for system clock */
+#define RCU_PLLDIG_SYS_DIV11              PLLCFG_PLLDIGDIV_SYS(10)                  /*!< PLLDIG clock divided by 11 for system clock */
+#define RCU_PLLDIG_SYS_DIV12              PLLCFG_PLLDIGDIV_SYS(11)                  /*!< PLLDIG clock divided by 12 for system clock */
+#define RCU_PLLDIG_SYS_DIV13              PLLCFG_PLLDIGDIV_SYS(12)                  /*!< PLLDIG clock divided by 13 for system clock */
+#define RCU_PLLDIG_SYS_DIV14              PLLCFG_PLLDIGDIV_SYS(13)                  /*!< PLLDIG clock divided by 14 for system clock */
+#define RCU_PLLDIG_SYS_DIV15              PLLCFG_PLLDIGDIV_SYS(14)                  /*!< PLLDIG clock divided by 15 for system clock */
+#define RCU_PLLDIG_SYS_DIV16              PLLCFG_PLLDIGDIV_SYS(15)                  /*!< PLLDIG clock divided by 16 for system clock */
+#define RCU_PLLDIG_SYS_DIV17              PLLCFG_PLLDIGDIV_SYS(16)                  /*!< PLLDIG clock divided by 17 for system clock */
+#define RCU_PLLDIG_SYS_DIV18              PLLCFG_PLLDIGDIV_SYS(17)                  /*!< PLLDIG clock divided by 18 for system clock */
+#define RCU_PLLDIG_SYS_DIV19              PLLCFG_PLLDIGDIV_SYS(18)                  /*!< PLLDIG clock divided by 19 for system clock */
+#define RCU_PLLDIG_SYS_DIV20              PLLCFG_PLLDIGDIV_SYS(19)                  /*!< PLLDIG clock divided by 20 for system clock */
+#define RCU_PLLDIG_SYS_DIV21              PLLCFG_PLLDIGDIV_SYS(20)                  /*!< PLLDIG clock divided by 21 for system clock */
+#define RCU_PLLDIG_SYS_DIV22              PLLCFG_PLLDIGDIV_SYS(21)                  /*!< PLLDIG clock divided by 22 for system clock */
+#define RCU_PLLDIG_SYS_DIV23              PLLCFG_PLLDIGDIV_SYS(22)                  /*!< PLLDIG clock divided by 23 for system clock */
+#define RCU_PLLDIG_SYS_DIV24              PLLCFG_PLLDIGDIV_SYS(23)                  /*!< PLLDIG clock divided by 24 for system clock */
+#define RCU_PLLDIG_SYS_DIV25              PLLCFG_PLLDIGDIV_SYS(24)                  /*!< PLLDIG clock divided by 25 for system clock */
+#define RCU_PLLDIG_SYS_DIV26              PLLCFG_PLLDIGDIV_SYS(25)                  /*!< PLLDIG clock divided by 26 for system clock */
+#define RCU_PLLDIG_SYS_DIV27              PLLCFG_PLLDIGDIV_SYS(26)                  /*!< PLLDIG clock divided by 27 for system clock */
+#define RCU_PLLDIG_SYS_DIV28              PLLCFG_PLLDIGDIV_SYS(27)                  /*!< PLLDIG clock divided by 28 for system clock */
+#define RCU_PLLDIG_SYS_DIV29              PLLCFG_PLLDIGDIV_SYS(28)                  /*!< PLLDIG clock divided by 29 for system clock */
+#define RCU_PLLDIG_SYS_DIV30              PLLCFG_PLLDIGDIV_SYS(29)                  /*!< PLLDIG clock divided by 30 for system clock */
+#define RCU_PLLDIG_SYS_DIV31              PLLCFG_PLLDIGDIV_SYS(30)                  /*!< PLLDIG clock divided by 31 for system clock */
+#define RCU_PLLDIG_SYS_DIV32              PLLCFG_PLLDIGDIV_SYS(31)                  /*!< PLLDIG clock divided by 32 for system clock */
+#define RCU_PLLDIG_SYS_DIV33              PLLCFG_PLLDIGDIV_SYS(32)                  /*!< PLLDIG clock divided by 33 for system clock */
+#define RCU_PLLDIG_SYS_DIV34              PLLCFG_PLLDIGDIV_SYS(33)                  /*!< PLLDIG clock divided by 34 for system clock */
+#define RCU_PLLDIG_SYS_DIV35              PLLCFG_PLLDIGDIV_SYS(34)                  /*!< PLLDIG clock divided by 35 for system clock */
+#define RCU_PLLDIG_SYS_DIV36              PLLCFG_PLLDIGDIV_SYS(35)                  /*!< PLLDIG clock divided by 36 for system clock */
+#define RCU_PLLDIG_SYS_DIV37              PLLCFG_PLLDIGDIV_SYS(36)                  /*!< PLLDIG clock divided by 37 for system clock */
+#define RCU_PLLDIG_SYS_DIV38              PLLCFG_PLLDIGDIV_SYS(37)                  /*!< PLLDIG clock divided by 38 for system clock */
+#define RCU_PLLDIG_SYS_DIV39              PLLCFG_PLLDIGDIV_SYS(38)                  /*!< PLLDIG clock divided by 39 for system clock */
+#define RCU_PLLDIG_SYS_DIV40              PLLCFG_PLLDIGDIV_SYS(39)                  /*!< PLLDIG clock divided by 40 for system clock */
+#define RCU_PLLDIG_SYS_DIV41              PLLCFG_PLLDIGDIV_SYS(40)                  /*!< PLLDIG clock divided by 41 for system clock */
+#define RCU_PLLDIG_SYS_DIV42              PLLCFG_PLLDIGDIV_SYS(41)                  /*!< PLLDIG clock divided by 42 for system clock */
+#define RCU_PLLDIG_SYS_DIV43              PLLCFG_PLLDIGDIV_SYS(42)                  /*!< PLLDIG clock divided by 43 for system clock */
+#define RCU_PLLDIG_SYS_DIV44              PLLCFG_PLLDIGDIV_SYS(43)                  /*!< PLLDIG clock divided by 44 for system clock */
+#define RCU_PLLDIG_SYS_DIV45              PLLCFG_PLLDIGDIV_SYS(44)                  /*!< PLLDIG clock divided by 45 for system clock */
+#define RCU_PLLDIG_SYS_DIV46              PLLCFG_PLLDIGDIV_SYS(45)                  /*!< PLLDIG clock divided by 46 for system clock */
+#define RCU_PLLDIG_SYS_DIV47              PLLCFG_PLLDIGDIV_SYS(46)                  /*!< PLLDIG clock divided by 47 for system clock */
+#define RCU_PLLDIG_SYS_DIV48              PLLCFG_PLLDIGDIV_SYS(47)                  /*!< PLLDIG clock divided by 48 for system clock */
+#define RCU_PLLDIG_SYS_DIV49              PLLCFG_PLLDIGDIV_SYS(48)                  /*!< PLLDIG clock divided by 49 for system clock */
+#define RCU_PLLDIG_SYS_DIV50              PLLCFG_PLLDIGDIV_SYS(49)                  /*!< PLLDIG clock divided by 50 for system clock */
+#define RCU_PLLDIG_SYS_DIV51              PLLCFG_PLLDIGDIV_SYS(50)                  /*!< PLLDIG clock divided by 51 for system clock */
+#define RCU_PLLDIG_SYS_DIV52              PLLCFG_PLLDIGDIV_SYS(51)                  /*!< PLLDIG clock divided by 52 for system clock */
+#define RCU_PLLDIG_SYS_DIV53              PLLCFG_PLLDIGDIV_SYS(52)                  /*!< PLLDIG clock divided by 53 for system clock */
+#define RCU_PLLDIG_SYS_DIV54              PLLCFG_PLLDIGDIV_SYS(53)                  /*!< PLLDIG clock divided by 54 for system clock */
+#define RCU_PLLDIG_SYS_DIV55              PLLCFG_PLLDIGDIV_SYS(54)                  /*!< PLLDIG clock divided by 55 for system clock */
+#define RCU_PLLDIG_SYS_DIV56              PLLCFG_PLLDIGDIV_SYS(55)                  /*!< PLLDIG clock divided by 56 for system clock */
+#define RCU_PLLDIG_SYS_DIV57              PLLCFG_PLLDIGDIV_SYS(56)                  /*!< PLLDIG clock divided by 57 for system clock */
+#define RCU_PLLDIG_SYS_DIV58              PLLCFG_PLLDIGDIV_SYS(57)                  /*!< PLLDIG clock divided by 58 for system clock */
+#define RCU_PLLDIG_SYS_DIV59              PLLCFG_PLLDIGDIV_SYS(58)                  /*!< PLLDIG clock divided by 59 for system clock */
+#define RCU_PLLDIG_SYS_DIV60              PLLCFG_PLLDIGDIV_SYS(59)                  /*!< PLLDIG clock divided by 60 for system clock */
+#define RCU_PLLDIG_SYS_DIV61              PLLCFG_PLLDIGDIV_SYS(60)                  /*!< PLLDIG clock divided by 61 for system clock */
+#define RCU_PLLDIG_SYS_DIV62              PLLCFG_PLLDIGDIV_SYS(61)                  /*!< PLLDIG clock divided by 62 for system clock */
+#define RCU_PLLDIG_SYS_DIV63              PLLCFG_PLLDIGDIV_SYS(62)                  /*!< PLLDIG clock divided by 63 for system clock */
+#define RCU_PLLDIG_SYS_DIV64              PLLCFG_PLLDIGDIV_SYS(63)                  /*!< PLLDIG clock divided by 64 for system clock */
 
 /* PLLDIG Clock Selection  */
 #define PLLDIG_OUTPUTSEL(regval)         (BITS(24,25) & ((uint32_t)(regval) << 24U))
@@ -1862,6 +1921,7 @@ typedef enum
 #define RCU_DEEPSLEEP_V_0_8               DSV_DSLPVS(3)                             /*!< core voltage is 0.8V in deep-sleep mode */
 
 /* function declarations */
+/* peripherals clock configure functions */
 /* deinitialize the RCU */
 void rcu_deinit(void);
 /* enable the peripherals clock */
@@ -1882,39 +1942,22 @@ void rcu_bkp_reset_enable(void);
 void rcu_bkp_reset_disable(void);
 /* enable HXTAL for PLLI2S */
 void rcu_hxtal_plli2s_enable(void);
+/* disable HXTAL for PLLI2S */
+void rcu_hxtal_plli2s_disable(void);
 /* enable HXTAL for system CK_PLLP */
 void rcu_hxtal_pllp_enable(void);
-/* enable CK_PLLDIG */
-void rcu_plldig_enable(void);
-/* power on the HXTAL */
-void rcu_hxtal_poweron(void);
-/* power down the HXTAL */
-void rcu_hxtal_powerdown(void);
-/* power on the PLLDIG */
-void rcu_plldig_poweron(void);
-/*  power down the PLLDIG */
-void rcu_plldig_powerdown(void);
+/* disable HXTAL for system CK_PLLP */
+void rcu_hxtal_pllp_disable(void);
 /* enable the RF PLL calculation */
 void rcu_rfpll_cal_enable(void);
 /* disable the RF PLL calculation */
 void rcu_rfpll_cal_disable(void);
-/* power on the RF PLL */
-void rcu_rfpll_poweron(void);
-/* power down the RF PLL */
-void rcu_rfpll_powerdown(void);
-/* power on the RF PLL */
-void rcu_ldoana_poweron(void);
-/* power down the RF PLL */
-void rcu_ldoana_powerdown(void);
-/* power on the LDO clock */
-void rcu_ldoclk_poweron(void);
-/* power down the LDO clock */
-void rcu_ldoclk_powerdown(void);
-/* power down the BandGap */
-void rcu_bandgap_powerdown(void);
-/* power on the BandGap */
-void rcu_bandgap_poweron(void);
+/* power up rcu control unit */
+void rcu_control_unit_powerup(rcu_unit_enum rcu_unit);
+/* power donwn rcu control unit */
+void rcu_control_unit_powerdown(rcu_unit_enum rcu_unit);
 
+/* system and peripherals clock source, system reset configure functions */
 /* configure the system clock source */
 void rcu_system_clock_source_config(uint32_t ck_sys);
 /* get the system clock source */
@@ -1936,7 +1979,7 @@ ErrStatus rcu_plli2s_config(uint32_t plli2s_n, uint32_t plli2s_psc,uint32_t plli
 /* configure the PLLDIG clock */
 void rcu_plldig_config(uint32_t plldig_clk);
 /* configure PLLDIG clock divider factor for system clock */
-void rcu_plldigfsys_div_config(uint32_t plldigfsys_div);
+void rcu_plldig_div_sys_config(uint32_t plldig_div_sys);
 /* configure the RTC clock source selection */
 void rcu_rtc_clock_config(uint32_t rtc_clock_source);
 /* configure the frequency division of RTC clock when HXTAL was selected as its clock source */
@@ -1944,19 +1987,21 @@ void rcu_rtc_div_config(uint32_t rtc_div);
 /* configure the I2S clock source selection */
 void rcu_i2s_clock_config(uint32_t i2s_clock_source);
 /* configure the PLL divider factor for I2S clock */
-void rcu_pllfi2s_clock_div_config(uint32_t pllfi2s_div);
+void rcu_pll_div_i2s_config(uint32_t plldiv_i2s);
+#if (defined(GD32W515PI) || defined(GD32W515P0))
 /* configure the HPDF clock source selection */
 void rcu_hpdf_clock_config(uint32_t hpdf_clock_source);
 /* configure the HPDF AUDIO clock source selection */
 void rcu_hpdf_audio_clock_config(uint32_t hpdfaudio_clock_source);
+#endif /* GD32W515PI and GD32W515P0 */
 /* configure the SDIO clock source selection */
 void rcu_sdio_clock_config(uint32_t sdio_clock_source);
 /* configure the frequency division of the sdio source clock */
 void rcu_sdio_div_config(uint32_t sdio_div);
 /* configure the usb clock source selection */
 void rcu_usbfs_clock_config(uint32_t usbfs_clock_source);
-/* configure the frequency division of the usbfs source clock  */
-void rcu_usbfs_div_config(uint32_t usbfs_div);	
+/* configure the frequency division of the usbfs source clock */
+void rcu_usbfs_div_config(uint32_t usbfs_div);
 /* configure the I2C0 clock source selection */
 void rcu_i2c0_clock_config(uint32_t i2c0_clock_source);
 /* configure the USART0 clock source selection */
@@ -1966,21 +2011,9 @@ void rcu_usart2_clock_config(uint32_t usart2_clock_source);
 /* configure IRC16M clock divider factor for system clock */
 void rcu_irc16m_div_config(uint32_t irc16m_div);
 /* configure the TIMER clock prescaler selection */
-void rcu_timer_clock_prescaler_config(uint32_t timer_clock_prescaler);       
+void rcu_timer_clock_prescaler_config(uint32_t timer_clock_prescaler);
 
-/* get the clock stabilization and periphral reset flags */
-FlagStatus rcu_flag_get(rcu_flag_enum flag);
-/* clear the reset flag */
-void rcu_all_reset_flag_clear(void);
-/* get the clock stabilization interrupt and ckm flags */
-FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag);
-/* clear the interrupt flags */
-void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag);
-/* enable the stabilization interrupt */
-void rcu_interrupt_enable(rcu_int_enum interrupt);
-/* disable the stabilization interrupt */
-void rcu_interrupt_disable(rcu_int_enum interrupt);
-
+/* LXTAL, IRC16M, PLL and other oscillator configure functions */
 /* configure the LXTAL drive capability */
 void rcu_lxtal_drive_capability_config(uint32_t lxtal_dricap);
 /* wait for oscillator stabilization flags is SET or oscillator startup is timeout */
@@ -1993,6 +2026,16 @@ void rcu_osci_off(rcu_osci_type_enum osci);
 void rcu_osci_bypass_mode_enable(rcu_osci_type_enum osci);
 /* disable the oscillator bypass mode, HXTALEN or LXTALEN must be reset before it */
 void rcu_osci_bypass_mode_disable(rcu_osci_type_enum osci);
+/* set the IRC16M adjust value */
+void rcu_irc16m_adjust_value_set(uint32_t irc16m_adjval);
+/* configure the spread spectrum modulation for the main PLL clock */
+void rcu_spread_spectrum_config(uint32_t spread_spectrum_type, uint32_t modstep, uint32_t modcnt);
+/* enable the spread spectrum modulation for the main PLL clock */
+void rcu_spread_spectrum_enable(void);
+/* disable the spread spectrum modulation for the main PLL clock */
+void rcu_spread_spectrum_disable(void);
+
+/* clock monitor configure functions */
 /* enable the HXTAL clock monitor */
 void rcu_hxtal_clock_monitor_enable(void);
 /* disable the HXTAL clock monitor */
@@ -2002,19 +2045,15 @@ void rcu_rf_hxtal_clock_monitor_enable(void);
 /* disable the RF HXTAL clock monitor */
 void rcu_rf_hxtal_clock_monitor_disable(void);
 
-/* set the IRC16M adjust value */
-void rcu_irc16m_adjust_value_set(uint32_t irc16m_adjval);
-/* configure the spread spectrum modulation for the main PLL clock */
-void rcu_spread_spectrum_config(uint32_t spread_spectrum_type, uint32_t modstep, uint32_t modcnt);
-/* enable the spread spectrum modulation for the main PLL clock */
-void rcu_spread_spectrum_enable(void);
-/* disable the spread spectrum modulation for the main PLL clock */
-void rcu_spread_spectrum_disable(void);          
+/* voltage configure and clock frequency get functions */
 /* unlock the voltage key */
 void rcu_voltage_key_unlock(void);
 /* set the deep sleep mode voltage */
 void rcu_deepsleep_voltage_set(uint32_t dsvol);
+/* get the system clock, bus and peripheral clock frequency */
+uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock);
 
+/* security & privilege functions */
 /* enable the security attribution */
 void rcu_security_enable(rcu_sec_enum security);
 /* disable the security attribution */
@@ -2023,8 +2062,21 @@ void rcu_security_disable(rcu_sec_enum security);
 void rcu_privilege_enable(void);
 /* disable the privileged access */
 void rcu_privilege_disable(void);
+
+/* flag & interrupt functions */
+/* get the clock stabilization and periphral reset flags */
+FlagStatus rcu_flag_get(rcu_flag_enum flag);
+/* clear the reset flag */
+void rcu_all_reset_flag_clear(void);
+/* get the clock stabilization interrupt and ckm flags */
+FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag);
+/* clear the interrupt flags */
+void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag);
 /* get the secure status flag */
 FlagStatus rcu_security_flag_get(rcu_sec_flag_enum sec_flag);
-/* get the system clock, bus and peripheral clock frequency */
-uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock);
+/* enable the stabilization interrupt */
+void rcu_interrupt_enable(rcu_int_enum interrupt);
+/* disable the stabilization interrupt */
+void rcu_interrupt_disable(rcu_int_enum interrupt);
+
 #endif /* GD32W51X_RCU_H */

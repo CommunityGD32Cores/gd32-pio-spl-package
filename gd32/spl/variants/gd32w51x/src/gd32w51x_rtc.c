@@ -2,7 +2,7 @@
     \file    gd32w51x_rtc.c
     \brief   RTC driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -50,7 +50,7 @@ OF SUCH DAMAGE.
 ErrStatus rtc_deinit(void)
 {
   /* After Backup domain reset, some of the RTC registers are write-protected: RTC_TIME, RTC_DATE, RTC_PSC, 
-     RTC_HRFC, RTC_COSC, RTC_SHIFTCTL, the bit INITM in RTC_ICSR and the bits CS, S1H, A1H, REFEN in RTC_CTL. */
+     RTC_HRFC, RTC_COSC, RTC_SHIFTCTL, the bit INITM in RTC_ICS and the bits CS, S1H, A1H, REFEN in RTC_CTL. */
     ErrStatus error_status = ERROR;
     volatile uint32_t time_index = RTC_WTWF_TIMEOUT;
     uint32_t flag_status = RESET;
@@ -66,12 +66,12 @@ ErrStatus rtc_deinit(void)
     RTC_ALRM0SS = RTC_REGISTER_RESET;
     RTC_ALRM1SS = RTC_REGISTER_RESET;
 
-    /* 1 only when RTC_CTL_WTEN=0 and RTC_ICSR_WTWF=1 can write RTC_CTL[2:0] 
+    /* 1 only when RTC_CTL_WTEN=0 and RTC_ICS_WTWF=1 can write RTC_CTL[2:0] 
        2 or configure the wakeup timer in INIT mode*/
     RTC_CTL &= ((uint32_t)~RTC_CTL_WTEN); 
     /* wait until the WTWF flag to be set */
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_WTWF;
+        flag_status = RTC_ICS & RTC_ICS_WTWF;
     }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
     if ((uint32_t)RESET == flag_status){
@@ -86,7 +86,7 @@ ErrStatus rtc_deinit(void)
 
         /* enter init mode */
         error_status = rtc_init_mode_enter();
-        /* RTC_TIME, RTC_DATE, RTC_PSC registers, plus INITM in RTC_ICSR, plus CS control bits in RTC_CTL */
+        /* RTC_TIME, RTC_DATE, RTC_PSC registers, plus INITM in RTC_ICS, plus CS control bits in RTC_CTL */
         RTC_CTL = RTC_REGISTER_RESET;
 
         /* before reset RTC_TIME and RTC_DATE, BPSHAD bit in RTC_CTL should be reset as the condition.
@@ -96,9 +96,9 @@ ErrStatus rtc_deinit(void)
         RTC_PSC = RTC_PSC_RESET;   
         /* write protected and can only be written in initialization state */
         RTC_COSC = RTC_REGISTER_RESET;
-        /* reset RTC_ICSR register, also exit init mode.
-           at the same time, RTC_ICSR_SOPF bit is reset, as the condition to reset RTC_SHIFTCTL register later */
-        RTC_ICSR = RTC_ICSR_RESET;
+        /* reset RTC_ICS register, also exit init mode.
+           at the same time, RTC_ICS_SOPF bit is reset, as the condition to reset RTC_SHIFTCTL register later */
+        RTC_ICS = RTC_ICS_RESET;
         /* reset RTC_SHIFTCTL and RTC_HRFC register, and the bits S1H, A1H, REFEN in RTC_CTL, these can be done without the init mode */
         RTC_SHIFTCTL = RTC_REGISTER_RESET;
         RTC_HRFC = RTC_REGISTER_RESET;
@@ -194,12 +194,12 @@ ErrStatus rtc_init_mode_enter(void)
     ErrStatus error_status = ERROR;
 
     /* check whether it has been in init mode */
-    if ((uint32_t)RESET == (RTC_ICSR & RTC_ICSR_INITF)){   
-        RTC_ICSR |= RTC_ICSR_INITM;
+    if ((uint32_t)RESET == (RTC_ICS & RTC_ICS_INITF)){   
+        RTC_ICS |= RTC_ICS_INITM;
         
         /* wait until the INITF flag to be set */
         do{
-           flag_status = RTC_ICSR & RTC_ICSR_INITF;
+           flag_status = RTC_ICS & RTC_ICS_INITF;
         }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
         if ((uint32_t)RESET != flag_status){        
@@ -219,7 +219,7 @@ ErrStatus rtc_init_mode_enter(void)
 */
 void rtc_init_mode_exit(void)
 {
-    RTC_ICSR &= (uint32_t)(~RTC_ICSR_INITM);
+    RTC_ICS &= (uint32_t)(~RTC_ICS_INITM);
 }
 
 /*!
@@ -241,11 +241,11 @@ ErrStatus rtc_register_sync_wait(void)
         RTC_WPK = RTC_UNLOCK_KEY2;
 
         /* firstly clear RSYNF flag */
-        RTC_ICSR &= (uint32_t)(~RTC_ICSR_RSYNF);
+        RTC_ICS &= (uint32_t)(~RTC_ICS_RSYNF);
 
         /* wait until RSYNF flag to be set */
         do{
-            flag_status = RTC_ICSR & RTC_ICSR_RSYNF;
+            flag_status = RTC_ICS & RTC_ICS_RSYNF;
         }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
         if ((uint32_t)RESET != flag_status){  
@@ -480,13 +480,13 @@ ErrStatus rtc_alarm_disable(uint8_t rtc_alarm)
         RTC_CTL &= (uint32_t)(~RTC_CTL_ALRM0EN); 
         /* wait until ALRM0WF flag to be set after the alarm is disabled */
         do{
-            flag_status = RTC_ICSR & RTC_ICSR_ALRM0WF;
+            flag_status = RTC_ICS & RTC_ICS_ALRM0WF;
         }while((--time_index > 0U) && ((uint32_t)RESET == flag_status)); 
     }else{
         RTC_CTL &= (uint32_t)(~RTC_CTL_ALRM1EN);  
         /* wait until ALRM1WF flag to be set after the alarm is disabled */
         do{
-            flag_status = RTC_ICSR & RTC_ICSR_ALRM1WF;
+            flag_status = RTC_ICS & RTC_ICS_ALRM1WF;
         }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
     }
 
@@ -679,7 +679,7 @@ void rtc_software_bkp_reset(void)
       \arg        RTC_TAMPXNOER_NONE: both tamper0 and tamper1 event will trigger RTC_BKP registers reset 
       \arg        RTC_TAMPXNOER_TP0: tamper0 event will not trigger RTC_BKP registers reset 
       \arg        RTC_TAMPXNOER_TP1: tamper1 event will not trigger RTC_BKP registers reset 
-      \arg        c: Neither tamper0 nor tamepr1 event will trigger RTC_BKP registers reset 
+      \arg        RTC_TAMPXNOER_TP0_TP1: Neither tamper0 nor tamepr1 event will trigger RTC_BKP registers reset 
     \param[out] none
     \retval     none
 */
@@ -757,7 +757,7 @@ FlagStatus rtc_flag_get(uint32_t flag)
 {
     FlagStatus flag_state = RESET;
     if((flag & RTC_FLAG_ICSRM) == RTC_FLAG_ICSRM){
-        if ((uint32_t)RESET != (RTC_ICSR & flag)){
+        if ((uint32_t)RESET != (RTC_ICS & flag)){
             flag_state = SET;
         }
     }else{
@@ -786,7 +786,7 @@ void rtc_flag_clear(uint32_t flag)
 {
     if((flag & RTC_FLAG_ICSRM) == RTC_FLAG_ICSRM){
     /* RSYNF bit is also can be cleared by software writing 0 */
-        RTC_ICSR &= (uint32_t)(~flag);  
+        RTC_ICS &= (uint32_t)(~flag);  
     }else{
     /* Writing 1 in a bit clears the corresponding bit in the RTC_STAT register. */
         RTC_STATC |= flag;
@@ -892,12 +892,12 @@ void rtc_output_pad_select(uint32_t pad)
 /*!
     \brief      configure rtc alarm output source
     \param[in]  source: specify signal to output
-      \arg        RTC_ALARM0_HIGH: when the  alarm0 flag is set, the output pin is high
-      \arg        RTC_ALARM0_LOW: when the  alarm0 flag is set, the output pin is low
-      \arg        RTC_ALARM1_HIGH: when the  alarm1 flag is set, the output pin is high
-      \arg        RTC_ALARM1_LOW: when the  alarm1 flag is set, the output pin is low
-      \arg        RTC_WAKEUP_HIGH: when the  wakeup flag is set, the output pin is high
-      \arg        RTC_WAKEUP_LOW: when the  wakeup flag is set, the output pin is low
+      \arg        RTC_ALARM0_HIGH: when the alarm0 flag is set, the output pin is high
+      \arg        RTC_ALARM0_LOW: when the alarm0 flag is set, the output pin is low
+      \arg        RTC_ALARM1_HIGH: when the alarm1 flag is set, the output pin is high
+      \arg        RTC_ALARM1_LOW: when the alarm1 flag is set, the output pin is low
+      \arg        RTC_WAKEUP_HIGH: when the wakeup flag is set, the output pin is high
+      \arg        RTC_WAKEUP_LOW: when the wakeup flag is set, the output pin is low
     \param[in]  mode: specify the output pin mode when output alarm signal or auto wakeup signal
       \arg        RTC_ALARM_OUTPUT_OD: open drain mode
       \arg        RTC_ALARM_OUTPUT_PP: push pull mode
@@ -978,7 +978,7 @@ ErrStatus rtc_second_adjust(uint32_t add, uint32_t minus)
 
     /* check if a shift operation is ongoing */    
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_SOPF;
+        flag_status = RTC_ICS & RTC_ICS_SOPF;
     }while((--time_index > 0U) && ((uint32_t)RESET != flag_status));
 
     /* check if the function of reference clock detection is disabled */
@@ -1096,7 +1096,7 @@ ErrStatus rtc_wakeup_disable(void)
     RTC_CTL &= ~RTC_CTL_WTEN;
     /* wait until the WTWF flag to be set */
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_WTWF;
+        flag_status = RTC_ICS & RTC_ICS_WTWF;
     }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
     if ((uint32_t)RESET == flag_status){
@@ -1126,10 +1126,10 @@ ErrStatus rtc_wakeup_clock_set(uint8_t wakeup_clock)
     volatile uint32_t time_index = RTC_WTWF_TIMEOUT;
     uint32_t flag_status = RESET;
 
-    /* only when RTC_CTL_WTEN=0 and RTC_ICSR_WTWF=1 can write RTC_CTL[2��0] */
+    /* only when RTC_CTL_WTEN=0 and RTC_ICS_WTWF=1 can write RTC_CTL[2:0] */
     /* wait until the WTWF flag to be set */
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_WTWF;
+        flag_status = RTC_ICS & RTC_ICS_WTWF;
     }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
     if ((uint32_t)RESET == flag_status){
@@ -1157,7 +1157,7 @@ ErrStatus rtc_wakeup_timer_set(uint16_t wakeup_timer)
 
     /* wait until the WTWF flag to be set */
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_WTWF;
+        flag_status = RTC_ICS & RTC_ICS_WTWF;
     }while((--time_index > 0U) && ((uint32_t)RESET == flag_status));
 
     if ((uint32_t)RESET == flag_status){
@@ -1206,7 +1206,7 @@ ErrStatus rtc_smooth_calibration_config(uint32_t window, uint32_t plus, uint32_t
 
     /* check if a smooth calibration operation is ongoing */        
     do{
-        flag_status = RTC_ICSR & RTC_ICSR_SCPF;
+        flag_status = RTC_ICS & RTC_ICS_SCPF;
     }while((--time_index > 0U) && ((uint32_t)RESET != flag_status));
 
     if((uint32_t)RESET == flag_status){
@@ -1327,8 +1327,8 @@ ErrStatus rtc_coarse_calibration_config(uint8_t direction, uint8_t step)
       \arg        RTC_PPM_CTL_CALCPRIP: Shift register, daylight saving, calibration and reference clock privilege protection 
       \arg        RTC_PPM_CTL_INITPRIP: Initialization privilege protection
       \arg        RTC_PPM_CTL_RTCPRIP: RTC privilege protection 
-      \arg        RTC_PPM_CTL_BKPRWPRIP: backup registers zone 1 privilege protection
-      \arg        RTC_PPM_CTL_BKPWPRIP: backup registers zone 2 privilege protection 
+      \arg        RTC_PPM_CTL_BKPRWPRIP: backup registers zone a privilege protection
+      \arg        RTC_PPM_CTL_BKPWPRIP: backup registers zone b privilege protection 
     \param[out] none
     \retval     none
 */
@@ -1348,8 +1348,8 @@ void rtc_pri_pro_enable(uint32_t sub_area)
       \arg        RTC_PPM_CTL_CALCPRIP: Shift register, daylight saving, calibration and reference clock privilege protection 
       \arg        RTC_PPM_CTL_INITPRIP: Initialization privilege protection
       \arg        RTC_PPM_CTL_RTCPRIP: RTC privilege protection 
-      \arg        RTC_PPM_CTL_BKPRWPRIP: backup registers zone 1 privilege protection
-      \arg        RTC_PPM_CTL_BKPWPRIP: backup registers zone 2 privilege protection 
+      \arg        RTC_PPM_CTL_BKPRWPRIP: backup registers zone a privilege protection
+      \arg        RTC_PPM_CTL_BKPWPRIP: backup registers zone b privilege protection 
     \param[out] none
     \retval     none
 */
@@ -1361,14 +1361,14 @@ void rtc_pri_pro_disable(uint32_t sub_area)
 /*!
     \brief      enable RTC secure protection mode
     \param[in]  sub_area: specify which sub area of the RTC module to be protected by the secure mode
-      \arg        RTC_SPM_CTL_ALRM0SECP: Alarm 0 protection
-      \arg        RTC_SPM_CTL_ALRM1SECP: Alarm 1 protection 
-      \arg        RTC_SPM_CTL_WUTSECP: Wakeup timer protection 
-      \arg        RTC_SPM_CTL_TSSECP: Timestamp protection 
-      \arg        RTC_SPM_CTL_TAMPSECP: Tamper protection (excluding backup registers)
-      \arg        RTC_SPM_CTL_CALCSECP: Shift register, daylight saving, calibration and reference clock protection 
-      \arg        RTC_SPM_CTL_INITSECP: Initialization protection
-      \arg        RTC_SPM_CTL_RTCSECP: RTC global protection 
+      \arg        RTC_SPM_CTL_ALRM0SECP: Alarm 0 secure protection
+      \arg        RTC_SPM_CTL_ALRM1SECP: Alarm 1 secure protection 
+      \arg        RTC_SPM_CTL_WUTSECP: Wakeup timer secure  protection 
+      \arg        RTC_SPM_CTL_TSSECP: Timestamp secure protection 
+      \arg        RTC_SPM_CTL_TAMPSECP: Tamper secure protection (excluding backup registers)
+      \arg        RTC_SPM_CTL_CALCSECP: Shift register, daylight saving, calibration and reference clock secure protection 
+      \arg        RTC_SPM_CTL_INITSECP: Initialization secure protection
+      \arg        RTC_SPM_CTL_RTCSECP: RTC global secure protection 
     \param[out] none
     \retval     none
 */
@@ -1398,28 +1398,10 @@ void rtc_sec_pro_disable(uint32_t sub_area)
 
 /*!
     \brief      set the RTC_BKP secure protection zonea tail value
-    \param[in]  zonea_tail:
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_NONE
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_0
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_1
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_2
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_3
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_4
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_5
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_6
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_7
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_8
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_9
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_10
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_11
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_12
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_13
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_14
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_15
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_16
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_17
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_18
-      \arg        RTC_BKP_PRO_ZONEA_TAIL_19
+    \param[in]  zonea_tail:RTC_BKP registers secure protection zonea
+      \arg        RTC_BKP_PRO_ZONEA_TAIL_NONE: there is no RTC_BKP registers secure protection zonea
+      \arg        RTC_BKP_PRO_ZONEA_TAIL_x(x = 0,1,2,...19):RTC_BKP registers secure protection zonea is from RTC_BKP0 to RTC_BKPx,\
+                                                            which can be read and written only when the APB is in secure mode
     \param[out] none
     \retval     none
 */
@@ -1431,28 +1413,10 @@ void rtc_bkp_zonea_sec_pro_set(uint32_t zonea_tail)
 
 /*!
     \brief      set the RTC_BKP secure protection zoneb tail value
-    \param[in]  zoneb_tail:
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_NONE
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_0
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_1
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_2
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_3
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_4
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_5
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_6
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_7
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_8
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_9
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_10
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_11
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_12
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_13
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_14
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_15
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_16
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_17
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_18
-      \arg        RTC_BKP_PRO_ZONEB_TAIL_19
+    \param[in]  zoneb_tail:RTC_BKP registers secure protection zoneb
+      \arg        RTC_BKP_PRO_ZONEB_TAIL_NONE: there is no RTC_BKP registers secure protection zoneb
+      \arg        RTC_BKP_PRO_ZONEB_TAIL_x(x = 0,1,2,...19):the last RTC_BKP register of secure protection zoneb is RTC_BKPx, 
+                                                             if there is no RTC_BKP registers secure protection zoneb
     \param[out] none
     \retval     ErrStatus: ERROR or SUCCESS
 */
@@ -1467,7 +1431,7 @@ ErrStatus rtc_bkp_zoneb_sec_pro_set(uint32_t zoneb_tail)
     zonea_tail = GET_SPM_CTL_BKPRWSECP(RTC_SPM_CTL);
     /* if zonea tail value is larger than or equal to the zoneb tail value, there is no zoneb.*/
     if(zonea_tail < zoneb_tail){
-    error_status = SUCCESS;
+        error_status = SUCCESS;
     }
 
     return error_status;

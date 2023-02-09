@@ -3,10 +3,11 @@
     \brief   USB enumeration definitions
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
     
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -43,7 +44,8 @@ OF SUCH DAMAGE.
     #define NULL                0U
 #endif
 
-typedef enum _usb_reqsta {
+typedef enum _usb_reqsta
+{
     REQ_SUPP     = 0x0U,                   /* request support */
     REQ_NOTSUPP  = 0x1U,                   /* request not support */
 } usb_reqsta;
@@ -58,13 +60,14 @@ enum _str_index
     STR_IDX_CONFIG                = 0x4U,  /* configuration string index */
     STR_IDX_ITF                   = 0x5U,  /* interface string index */
 #ifndef WINUSB_EXEMPT_DRIVER
-    STR_IDX_MAX                   = 0x6U,  /* string maximum index */
+    STR_IDX_MAX                   = 0x06U,  /* string maximum index */
 #else
     STR_IDX_MAX                   = 0xEFU, /* string maximum index */
 #endif /* WINUSB_EXEMPT_DRIVER */
 };
 
-typedef enum _usb_pwrsta {
+typedef enum _usb_pwrsta
+{
     USB_PWRSTA_SELF_POWERED       = 0x1U,  /* USB is in self powered status */
     USB_PWRSTA_REMOTE_WAKEUP      = 0x2U,  /* USB is in remote wakeup status */
 } usb_pwrsta;
@@ -81,7 +84,6 @@ typedef enum _usb_feature
 
 /* USB device exported macros */
 #define CTL_EP(ep)           (((ep) == 0x00U) || ((ep) == 0x80U))
-
 
 #define DEVICE_ID1                (0x1FFFF7E8U)  /* device ID1 */
 #define DEVICE_ID2                (0x1FFFF7ECU)  /* device ID2 */
@@ -104,5 +106,3 @@ void int_to_unicode (uint32_t value, uint8_t *pbuf, uint8_t len);
 void serial_string_get (uint16_t *unicode_str);
 
 #endif /* __USBD_ENUM_H */
-
-

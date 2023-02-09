@@ -1,8 +1,8 @@
 /*!
     \file    gd32w51x_syscfg.h
     \brief   definitions for the SYSCFG
-    
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -47,7 +47,7 @@ OF SUCH DAMAGE.
 #define SYSCFG_EXTISS3                          REG32(SYSCFG + 0x00000014U)                       /*!< EXTI sources selection register 3 */
 #define SYSCFG_CPSCTL                           REG32(SYSCFG + 0x00000020U)                       /*!< I/O compensation control register */
 #define SYSCFG_SECCFG                           REG32(SYSCFG + 0x00000040U)                       /*!< SYSCFG secure configuration register */
-#define SYSCFG_FPUINTMSK                        REG32(SYSCFG + 0x00000048U)                       /*!< FPU interrupt mask register */
+#define SYSCFG_FPUINTEN                         REG32(SYSCFG + 0x00000048U)                       /*!< FPU interrupt enable register */
 #define SYSCFG_CNSLOCK                          REG32(SYSCFG + 0x0000004CU)                       /*!< SYSCFG CPU non-secure lock register */
 #define SYSCFG_CSLOCK                           REG32(SYSCFG + 0x00000050U)                       /*!< SYSCFG CPU secure lock register */
 #define SYSCFG_CFG1                             REG32(SYSCFG + 0x00000054U)                       /*!< SYSCFG configuration register 1 */
@@ -55,7 +55,7 @@ OF SUCH DAMAGE.
 #define SYSCFG_SKEY                             REG32(SYSCFG + 0x0000005CU)                       /*!< SYSCFG SRAM1 key register */
 #define SYSCFG_SWP0                             REG32(SYSCFG + 0x00000060U)                       /*!< SYSCFG SRAM1 write protection register 0 */
 #define SYSCFG_SWP1                             REG32(SYSCFG + 0x00000064U)                       /*!< SYSCFG SRAM1 write protection register 1 */
-#define SYSCFG_RSSCMD                           REG32(SYSCFG + 0x0000006CU)                       /*!< SYSCFG RSS command register */
+#define SYSCFG_GSSACMD                          REG32(SYSCFG + 0x0000006CU)                       /*!< SYSCFG GSSA command register */
 
 /* bits definitions */
 /* SYSCFG_CFG0 */
@@ -95,13 +95,13 @@ OF SUCH DAMAGE.
 #define SYSCFG_SECCFG_SRAM1SE                   BIT(2)                                            /*!< SRAM1 security */
 #define SYSCFG_SECCFG_FPUSE                     BIT(3)                                            /*!< FPU security */
 
-/* SYSCFG_FPUIMR */
-#define SYSCFG_FPUINTMSK_FPUIE_0                BIT(0)                                            /*!< invalid operation Interrupt enable */
-#define SYSCFG_FPUINTMSK_FPUIE_1                BIT(1)                                            /*!< divide-by-zero interrupt enable */
-#define SYSCFG_FPUINTMSK_FPUIE_2                BIT(2)                                            /*!< underflow interrupt enable */
-#define SYSCFG_FPUINTMSK_FPUIE_3                BIT(3)                                            /*!< overflow interrupt enable */
-#define SYSCFG_FPUINTMSK_FPUIE_4                BIT(4)                                            /*!< input abnormal interrupt enable */
-#define SYSCFG_FPUINTMSK_FPUIE_5                BIT(5)                                            /*!< inexact interrupt enable */
+/* SYSCFG_FPUINTEN */
+#define SYSCFG_FPUINTEN_IOPIZ                  BIT(0)                                            /*!< invalid operation Interrupt enable */
+#define SYSCFG_FPUINTEN_DZIE                   BIT(1)                                            /*!< divide-by-zero interrupt enable */
+#define SYSCFG_FPUINTEN_UFIE                   BIT(2)                                            /*!< underflow interrupt enable */
+#define SYSCFG_FPUINTEN_OVFIE                  BIT(3)                                            /*!< overflow interrupt enable */
+#define SYSCFG_FPUINTEN_IDIE                   BIT(4)                                            /*!< input abnormal interrupt enable */
+#define SYSCFG_FPUINTEN_IXIE                   BIT(5)                                            /*!< inexact interrupt enable */
 
 /* SYSCFG_CNSLOCK */
 #define SYSCFG_CNSLOCK_LOCKNSVTOR               BIT(0)                                            /*!< VTOR_NS register lock */
@@ -191,8 +191,8 @@ OF SUCH DAMAGE.
 #define SYSCFG_SWP1_P62WP                       BIT(30)                                           /*!< SRAM1 1 Kbyte page 62 write protection */
 #define SYSCFG_SWP1_P63WP                       BIT(31)                                           /*!< SRAM1 1 Kbyte page 63 write protection */
 
-/* SYSCFG_RSSCMD */
-#define SYSCFG_RSSCMD_RSSCMD                    BITS(0,7)                                         /*!< RSS commands */
+/* SYSCFG_GSSACMD */
+#define SYSCFG_GSSACMD_GSSACMD                    BITS(0,7)                                       /*!< GSSA commands */
 
 /* constants definitions */
 /* EXTI source select definition */
@@ -243,16 +243,16 @@ OF SUCH DAMAGE.
 #define SRAM1_SECURE_ACCESS                     SYSCFG_SECCFG_SRAM1SE                             /*!< SYSCFG_SKEY, SYSCFG_SCS and SYSCFG_SWPx registers can be written by secure only */
 #define SRAM1_SECURE_NONSECURE_ACCESS           (~SYSCFG_SECCFG_SRAM1SE)                          /*!< SYSCFG_SKEY, SYSCFG_SCS and SYSCFG_SWPx registers can be written by secure and non-secure access */
 
-#define FPU_SECURE_ACCESS                       SYSCFG_SECCFG_FPUSE                               /*!< SYSCFG_FPUINTMSK register can be written by secure access only */
-#define FPU_SECURE_NONSECURE_ACCESS             (~SYSCFG_SECCFG_FPUSE)                            /*!< SYSCFG_FPUINTMSK register can be written by secure and non-secure access */
+#define FPU_SECURE_ACCESS                       SYSCFG_SECCFG_FPUSE                               /*!< SYSCFG_FPUINTEN register can be written by secure access only */
+#define FPU_SECURE_NONSECURE_ACCESS             (~SYSCFG_SECCFG_FPUSE)                            /*!< SYSCFG_FPUINTEN register can be written by secure and non-secure access */
 
 /* fpu interrupt definitions */
-#define INVALID_OPERATION_INT                   SYSCFG_FPUINTMSK_FPUIE_0                          /*!< invalid operation Interrupt */
-#define DEVIDE_BY_ZERO_INT                      SYSCFG_FPUINTMSK_FPUIE_1                          /*!< divide-by-zero interrupt */
-#define UNDERFLOW_INT                           SYSCFG_FPUINTMSK_FPUIE_2                          /*!< underflow interrupt */
-#define OVERFLOW_INT                            SYSCFG_FPUINTMSK_FPUIE_3                          /*!< overflow interrupt */
-#define INPUT_ABNORMAL_INT                      SYSCFG_FPUINTMSK_FPUIE_4                          /*!< input abnormal interrupt */
-#define INEXACT_INT                             SYSCFG_FPUINTMSK_FPUIE_5                          /*!< inexact interrupt */
+#define INVALID_OPERATION_INT                   SYSCFG_FPUINTEN_IOPIZ                             /*!< invalid operation Interrupt */
+#define DEVIDE_BY_ZERO_INT                      SYSCFG_FPUINTEN_DZIE                              /*!< divide-by-zero interrupt */
+#define UNDERFLOW_INT                           SYSCFG_FPUINTEN_UFIE                              /*!< underflow interrupt */
+#define OVERFLOW_INT                            SYSCFG_FPUINTEN_OVFIE                             /*!< overflow interrupt */
+#define INPUT_ABNORMAL_INT                      SYSCFG_FPUINTEN_IDIE                              /*!< input abnormal interrupt */
+#define INEXACT_INT                             SYSCFG_FPUINTEN_IXIE                              /*!< inexact interrupt */
 
 /* lock definitions */
 #define SYSCFG_LOCK_LOCKUP                      SYSCFG_CFG1_LOCKUP_LOCK                           /*!< LOCKUP output lock*/
@@ -268,70 +268,70 @@ OF SUCH DAMAGE.
 #define SRAM1ERS_LOCK_KEY1                      ((uint8_t)0x22)                                   /*!< lock key1 */
 
 /* SRAM1 write protection definitions */
-#define SRAM1_PAGE0_WRITE_PROTECT               SYSCFG_SWP0_P0WP                                   /*!<SRAM1 page 0 */
-#define SRAM1_PAGE1_WRITE_PROTECT               SYSCFG_SWP0_P1WP                                   /*!<SRAM1 page 1 */
-#define SRAM1_PAGE2_WRITE_PROTECT               SYSCFG_SWP0_P2WP                                   /*!<SRAM1 page 2 */
-#define SRAM1_PAGE3_WRITE_PROTECT               SYSCFG_SWP0_P3WP                                   /*!<SRAM1 page 3 */
-#define SRAM1_PAGE4_WRITE_PROTECT               SYSCFG_SWP0_P4WP                                   /*!<SRAM1 page 4 */
-#define SRAM1_PAGE5_WRITE_PROTECT               SYSCFG_SWP0_P5WP                                   /*!<SRAM1 page 5 */
-#define SRAM1_PAGE6_WRITE_PROTECT               SYSCFG_SWP0_P6WP                                   /*!<SRAM1 page 6 */
-#define SRAM1_PAGE7_WRITE_PROTECT               SYSCFG_SWP0_P7WP                                   /*!<SRAM1 page 7 */
-#define SRAM1_PAGE8_WRITE_PROTECT               SYSCFG_SWP0_P8WP                                   /*!<SRAM1 page 8 */
-#define SRAM1_PAGE9_WRITE_PROTECT               SYSCFG_SWP0_P9WP                                   /*!<SRAM1 page 9 */
-#define SRAM1_PAGE10_WRITE_PROTECT              SYSCFG_SWP0_P10WP                                  /*!<SRAM1 page 10 */
-#define SRAM1_PAGE11_WRITE_PROTECT              SYSCFG_SWP0_P11WP                                  /*!<SRAM1 page 11 */
-#define SRAM1_PAGE12_WRITE_PROTECT              SYSCFG_SWP0_P12WP                                  /*!<SRAM1 page 12 */
-#define SRAM1_PAGE13_WRITE_PROTECT              SYSCFG_SWP0_P13WP                                  /*!<SRAM1 page 13 */
-#define SRAM1_PAGE14_WRITE_PROTECT              SYSCFG_SWP0_P14WP                                  /*!<SRAM1 page 14 */
-#define SRAM1_PAGE15_WRITE_PROTECT              SYSCFG_SWP0_P15WP                                  /*!<SRAM1 page 15 */
-#define SRAM1_PAGE16_WRITE_PROTECT              SYSCFG_SWP0_P16WP                                  /*!<SRAM1 page 16 */
-#define SRAM1_PAGE17_WRITE_PROTECT              SYSCFG_SWP0_P17WP                                  /*!<SRAM1 page 17 */
-#define SRAM1_PAGE18_WRITE_PROTECT              SYSCFE_SWP0_P18WP                                  /*!<SRAM1 page 18 */
-#define SRAM1_PAGE19_WRITE_PROTECT              SYSCFE_SWP0_P19WP                                  /*!<SRAM1 page 19 */
-#define SRAM1_PAGE20_WRITE_PROTECT              SYSCFE_SWP0_P20WP                                  /*!<SRAM1 page 20 */
-#define SRAM1_PAGE21_WRITE_PROTECT              SYSCFE_SWP0_P21WP                                  /*!<SRAM1 page 21 */
-#define SRAM1_PAGE22_WRITE_PROTECT              SYSCFE_SWP0_P22WP                                  /*!<SRAM1 page 22 */
-#define SRAM1_PAGE23_WRITE_PROTECT              SYSCFE_SWP0_P23WP                                  /*!<SRAM1 page 23 */
-#define SRAM1_PAGE24_WRITE_PROTECT              SYSCFE_SWP0_P24WP                                  /*!<SRAM1 page 24 */
-#define SRAM1_PAGE25_WRITE_PROTECT              SYSCFE_SWP0_P25WP                                  /*!<SRAM1 page 25 */
-#define SRAM1_PAGE26_WRITE_PROTECT              SYSCFE_SWP0_P26WP                                  /*!<SRAM1 page 26 */
-#define SRAM1_PAGE27_WRITE_PROTECT              SYSCFE_SWP0_P27WP                                  /*!<SRAM1 page 27 */
-#define SRAM1_PAGE28_WRITE_PROTECT              SYSCFE_SWP0_P28WP                                  /*!<SRAM1 page 28 */
-#define SRAM1_PAGE29_WRITE_PROTECT              SYSCFE_SWP0_P29WP                                  /*!<SRAM1 page 29 */
-#define SRAM1_PAGE30_WRITE_PROTECT              SYSCFE_SWP0_P30WP                                  /*!<SRAM1 page 30 */
-#define SRAM1_PAGE31_WRITE_PROTECT              SYSCFE_SWP0_P31WP                                  /*!<SRAM1 page 31 */
-#define SRAM1_PAGE32_WRITE_PROTECT              SYSCFE_SWP1_P32WP                                  /*!<SRAM1 page 32 */
-#define SRAM1_PAGE33_WRITE_PROTECT              SYSCFE_SWP1_P33WP                                  /*!<SRAM1 page 33 */
-#define SRAM1_PAGE34_WRITE_PROTECT              SYSCFE_SWP1_P34WP                                  /*!<SRAM1 page 34 */
-#define SRAM1_PAGE35_WRITE_PROTECT              SYSCFE_SWP1_P35WP                                  /*!<SRAM1 page 35 */
-#define SRAM1_PAGE36_WRITE_PROTECT              SYSCFE_SWP1_P36WP                                  /*!<SRAM1 page 36 */
-#define SRAM1_PAGE37_WRITE_PROTECT              SYSCFE_SWP1_P37WP                                  /*!<SRAM1 page 37 */
-#define SRAM1_PAGE38_WRITE_PROTECT              SYSCFE_SWP1_P38WP                                  /*!<SRAM1 page 38 */
-#define SRAM1_PAGE39_WRITE_PROTECT              SYSCFE_SWP1_P39WP                                  /*!<SRAM1 page 39 */
-#define SRAM1_PAGE40_WRITE_PROTECT              SYSCFE_SWP1_P40WP                                  /*!<SRAM1 page 40 */
-#define SRAM1_PAGE41_WRITE_PROTECT              SYSCFE_SWP1_P41WP                                  /*!<SRAM1 page 41 */
-#define SRAM1_PAGE42_WRITE_PROTECT              SYSCFE_SWP1_P42WP                                  /*!<SRAM1 page 42 */
-#define SRAM1_PAGE43_WRITE_PROTECT              SYSCFE_SWP1_P43WP                                  /*!<SRAM1 page 43 */
-#define SRAM1_PAGE44_WRITE_PROTECT              SYSCFE_SWP1_P44WP                                  /*!<SRAM1 page 44 */
-#define SRAM1_PAGE45_WRITE_PROTECT              SYSCFE_SWP1_P45WP                                  /*!<SRAM1 page 45 */
-#define SRAM1_PAGE46_WRITE_PROTECT              SYSCFE_SWP1_P46WP                                  /*!<SRAM1 page 46 */
-#define SRAM1_PAGE47_WRITE_PROTECT              SYSCFE_SWP1_P47WP                                  /*!<SRAM1 page 47 */
-#define SRAM1_PAGE48_WRITE_PROTECT              SYSCFE_SWP1_P48WP                                  /*!<SRAM1 page 48 */
-#define SRAM1_PAGE49_WRITE_PROTECT              SYSCFE_SWP1_P49WP                                  /*!<SRAM1 page 49 */
-#define SRAM1_PAGE50_WRITE_PROTECT              SYSCFE_SWP1_P50WP                                  /*!<SRAM1 page 50 */
-#define SRAM1_PAGE51_WRITE_PROTECT              SYSCFE_SWP1_P51WP                                  /*!<SRAM1 page 51 */
-#define SRAM1_PAGE52_WRITE_PROTECT              SYSCFE_SWP1_P52WP                                  /*!<SRAM1 page 52 */
-#define SRAM1_PAGE53_WRITE_PROTECT              SYSCFE_SWP1_P53WP                                  /*!<SRAM1 page 53 */
-#define SRAM1_PAGE54_WRITE_PROTECT              SYSCFE_SWP1_P54WP                                  /*!<SRAM1 page 54 */
-#define SRAM1_PAGE55_WRITE_PROTECT              SYSCFE_SWP1_P55WP                                  /*!<SRAM1 page 55 */
-#define SRAM1_PAGE56_WRITE_PROTECT              SYSCFE_SWP1_P56WP                                  /*!<SRAM1 page 56 */
-#define SRAM1_PAGE57_WRITE_PROTECT              SYSCFE_SWP1_P57WP                                  /*!<SRAM1 page 57 */
-#define SRAM1_PAGE58_WRITE_PROTECT              SYSCFE_SWP1_P58WP                                  /*!<SRAM1 page 58 */
-#define SRAM1_PAGE59_WRITE_PROTECT              SYSCFE_SWP1_P59WP                                  /*!<SRAM1 page 59 */
-#define SRAM1_PAGE60_WRITE_PROTECT              SYSCFE_SWP1_P60WP                                  /*!<SRAM1 page 60 */
-#define SRAM1_PAGE61_WRITE_PROTECT              SYSCFE_SWP1_P61WP                                  /*!<SRAM1 page 61 */
-#define SRAM1_PAGE62_WRITE_PROTECT              SYSCFE_SWP1_P62WP                                  /*!<SRAM1 page 62 */
-#define SRAM1_PAGE63_WRITE_PROTECT              SYSCFE_SWP1_P63WP                                  /*!<SRAM1 page 63 */
+#define SRAM1_PAGE0_WRITE_PROTECT               SYSCFG_SWP0_P0WP                                  /*!<SRAM1 page 0 */
+#define SRAM1_PAGE1_WRITE_PROTECT               SYSCFG_SWP0_P1WP                                  /*!<SRAM1 page 1 */
+#define SRAM1_PAGE2_WRITE_PROTECT               SYSCFG_SWP0_P2WP                                  /*!<SRAM1 page 2 */
+#define SRAM1_PAGE3_WRITE_PROTECT               SYSCFG_SWP0_P3WP                                  /*!<SRAM1 page 3 */
+#define SRAM1_PAGE4_WRITE_PROTECT               SYSCFG_SWP0_P4WP                                  /*!<SRAM1 page 4 */
+#define SRAM1_PAGE5_WRITE_PROTECT               SYSCFG_SWP0_P5WP                                  /*!<SRAM1 page 5 */
+#define SRAM1_PAGE6_WRITE_PROTECT               SYSCFG_SWP0_P6WP                                  /*!<SRAM1 page 6 */
+#define SRAM1_PAGE7_WRITE_PROTECT               SYSCFG_SWP0_P7WP                                  /*!<SRAM1 page 7 */
+#define SRAM1_PAGE8_WRITE_PROTECT               SYSCFG_SWP0_P8WP                                  /*!<SRAM1 page 8 */
+#define SRAM1_PAGE9_WRITE_PROTECT               SYSCFG_SWP0_P9WP                                  /*!<SRAM1 page 9 */
+#define SRAM1_PAGE10_WRITE_PROTECT              SYSCFG_SWP0_P10WP                                 /*!<SRAM1 page 10 */
+#define SRAM1_PAGE11_WRITE_PROTECT              SYSCFG_SWP0_P11WP                                 /*!<SRAM1 page 11 */
+#define SRAM1_PAGE12_WRITE_PROTECT              SYSCFG_SWP0_P12WP                                 /*!<SRAM1 page 12 */
+#define SRAM1_PAGE13_WRITE_PROTECT              SYSCFG_SWP0_P13WP                                 /*!<SRAM1 page 13 */
+#define SRAM1_PAGE14_WRITE_PROTECT              SYSCFG_SWP0_P14WP                                 /*!<SRAM1 page 14 */
+#define SRAM1_PAGE15_WRITE_PROTECT              SYSCFG_SWP0_P15WP                                 /*!<SRAM1 page 15 */
+#define SRAM1_PAGE16_WRITE_PROTECT              SYSCFG_SWP0_P16WP                                 /*!<SRAM1 page 16 */
+#define SRAM1_PAGE17_WRITE_PROTECT              SYSCFG_SWP0_P17WP                                 /*!<SRAM1 page 17 */
+#define SRAM1_PAGE18_WRITE_PROTECT              SYSCFE_SWP0_P18WP                                 /*!<SRAM1 page 18 */
+#define SRAM1_PAGE19_WRITE_PROTECT              SYSCFE_SWP0_P19WP                                 /*!<SRAM1 page 19 */
+#define SRAM1_PAGE20_WRITE_PROTECT              SYSCFE_SWP0_P20WP                                 /*!<SRAM1 page 20 */
+#define SRAM1_PAGE21_WRITE_PROTECT              SYSCFE_SWP0_P21WP                                 /*!<SRAM1 page 21 */
+#define SRAM1_PAGE22_WRITE_PROTECT              SYSCFE_SWP0_P22WP                                 /*!<SRAM1 page 22 */
+#define SRAM1_PAGE23_WRITE_PROTECT              SYSCFE_SWP0_P23WP                                 /*!<SRAM1 page 23 */
+#define SRAM1_PAGE24_WRITE_PROTECT              SYSCFE_SWP0_P24WP                                 /*!<SRAM1 page 24 */
+#define SRAM1_PAGE25_WRITE_PROTECT              SYSCFE_SWP0_P25WP                                 /*!<SRAM1 page 25 */
+#define SRAM1_PAGE26_WRITE_PROTECT              SYSCFE_SWP0_P26WP                                 /*!<SRAM1 page 26 */
+#define SRAM1_PAGE27_WRITE_PROTECT              SYSCFE_SWP0_P27WP                                 /*!<SRAM1 page 27 */
+#define SRAM1_PAGE28_WRITE_PROTECT              SYSCFE_SWP0_P28WP                                 /*!<SRAM1 page 28 */
+#define SRAM1_PAGE29_WRITE_PROTECT              SYSCFE_SWP0_P29WP                                 /*!<SRAM1 page 29 */
+#define SRAM1_PAGE30_WRITE_PROTECT              SYSCFE_SWP0_P30WP                                 /*!<SRAM1 page 30 */
+#define SRAM1_PAGE31_WRITE_PROTECT              SYSCFE_SWP0_P31WP                                 /*!<SRAM1 page 31 */
+#define SRAM1_PAGE32_WRITE_PROTECT              SYSCFE_SWP1_P32WP                                 /*!<SRAM1 page 32 */
+#define SRAM1_PAGE33_WRITE_PROTECT              SYSCFE_SWP1_P33WP                                 /*!<SRAM1 page 33 */
+#define SRAM1_PAGE34_WRITE_PROTECT              SYSCFE_SWP1_P34WP                                 /*!<SRAM1 page 34 */
+#define SRAM1_PAGE35_WRITE_PROTECT              SYSCFE_SWP1_P35WP                                 /*!<SRAM1 page 35 */
+#define SRAM1_PAGE36_WRITE_PROTECT              SYSCFE_SWP1_P36WP                                 /*!<SRAM1 page 36 */
+#define SRAM1_PAGE37_WRITE_PROTECT              SYSCFE_SWP1_P37WP                                 /*!<SRAM1 page 37 */
+#define SRAM1_PAGE38_WRITE_PROTECT              SYSCFE_SWP1_P38WP                                 /*!<SRAM1 page 38 */
+#define SRAM1_PAGE39_WRITE_PROTECT              SYSCFE_SWP1_P39WP                                 /*!<SRAM1 page 39 */
+#define SRAM1_PAGE40_WRITE_PROTECT              SYSCFE_SWP1_P40WP                                 /*!<SRAM1 page 40 */
+#define SRAM1_PAGE41_WRITE_PROTECT              SYSCFE_SWP1_P41WP                                 /*!<SRAM1 page 41 */
+#define SRAM1_PAGE42_WRITE_PROTECT              SYSCFE_SWP1_P42WP                                 /*!<SRAM1 page 42 */
+#define SRAM1_PAGE43_WRITE_PROTECT              SYSCFE_SWP1_P43WP                                 /*!<SRAM1 page 43 */
+#define SRAM1_PAGE44_WRITE_PROTECT              SYSCFE_SWP1_P44WP                                 /*!<SRAM1 page 44 */
+#define SRAM1_PAGE45_WRITE_PROTECT              SYSCFE_SWP1_P45WP                                 /*!<SRAM1 page 45 */
+#define SRAM1_PAGE46_WRITE_PROTECT              SYSCFE_SWP1_P46WP                                 /*!<SRAM1 page 46 */
+#define SRAM1_PAGE47_WRITE_PROTECT              SYSCFE_SWP1_P47WP                                 /*!<SRAM1 page 47 */
+#define SRAM1_PAGE48_WRITE_PROTECT              SYSCFE_SWP1_P48WP                                 /*!<SRAM1 page 48 */
+#define SRAM1_PAGE49_WRITE_PROTECT              SYSCFE_SWP1_P49WP                                 /*!<SRAM1 page 49 */
+#define SRAM1_PAGE50_WRITE_PROTECT              SYSCFE_SWP1_P50WP                                 /*!<SRAM1 page 50 */
+#define SRAM1_PAGE51_WRITE_PROTECT              SYSCFE_SWP1_P51WP                                 /*!<SRAM1 page 51 */
+#define SRAM1_PAGE52_WRITE_PROTECT              SYSCFE_SWP1_P52WP                                 /*!<SRAM1 page 52 */
+#define SRAM1_PAGE53_WRITE_PROTECT              SYSCFE_SWP1_P53WP                                 /*!<SRAM1 page 53 */
+#define SRAM1_PAGE54_WRITE_PROTECT              SYSCFE_SWP1_P54WP                                 /*!<SRAM1 page 54 */
+#define SRAM1_PAGE55_WRITE_PROTECT              SYSCFE_SWP1_P55WP                                 /*!<SRAM1 page 55 */
+#define SRAM1_PAGE56_WRITE_PROTECT              SYSCFE_SWP1_P56WP                                 /*!<SRAM1 page 56 */
+#define SRAM1_PAGE57_WRITE_PROTECT              SYSCFE_SWP1_P57WP                                 /*!<SRAM1 page 57 */
+#define SRAM1_PAGE58_WRITE_PROTECT              SYSCFE_SWP1_P58WP                                 /*!<SRAM1 page 58 */
+#define SRAM1_PAGE59_WRITE_PROTECT              SYSCFE_SWP1_P59WP                                 /*!<SRAM1 page 59 */
+#define SRAM1_PAGE60_WRITE_PROTECT              SYSCFE_SWP1_P60WP                                 /*!<SRAM1 page 60 */
+#define SRAM1_PAGE61_WRITE_PROTECT              SYSCFE_SWP1_P61WP                                 /*!<SRAM1 page 61 */
+#define SRAM1_PAGE62_WRITE_PROTECT              SYSCFE_SWP1_P62WP                                 /*!<SRAM1 page 62 */
+#define SRAM1_PAGE63_WRITE_PROTECT              SYSCFE_SWP1_P63WP                                 /*!<SRAM1 page 63 */
 
 /* function declarations */
 /* initialization functions */
@@ -367,8 +367,8 @@ void mpu_s_write_disable(void);
 void sau_write_disable(void);
 /* connect TIMER0/15/16 break input to the selected parameter */
 void syscfg_lock_config(uint32_t syscfg_lock);
-/* write data to RSS */
-void rsscmd_write_data(uint32_t data);
+/* write data to GSSA */
+void gssacmd_write_data(uint32_t data);
 
 /* SRAM1 operation functions */
 /* enable sram1 erase */

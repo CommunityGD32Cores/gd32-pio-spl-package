@@ -2,33 +2,33 @@
     \file    gd32w51x_fmc.h
     \brief   definitions for the FMC
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification,
+    Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this
+    1. Redistributions of source code must retain the above copyright notice, this 
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice,
-       this list of conditions and the following disclaimer in the documentation
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors
-       may be used to endorse or promote products derived from this software without
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
 
@@ -76,7 +76,7 @@ OF SUCH DAMAGE.
 #define FMC_OFRG                        REG32(FMC + 0x00000080U)                         /*!< FMC offset region register */
 #define FMC_OFVR                        REG32(FMC + 0x00000084U)                         /*!< FMC offset value register */
 /* secure registers */
-#define FMC_DMPCTL                      REG32(FMC + 0x0000008CU)                         /*!< FMC DMPcontrol register */
+#define FMC_DMPCTL                      REG32(FMC + 0x0000008CU)                         /*!< FMC DMP control register */
 /* when TZEN = 1, this register can be read by secure and non-secure access and it is write-protected against non-secure write access when the flash is secure */
 #define FMC_PRIVCFG                     REG32(FMC + 0x00000090U)                         /*!< FMC privilege configuration register */
 /* non-secure register */
@@ -94,7 +94,7 @@ OF SUCH DAMAGE.
 #define FMC_STAT_OBERR                  BIT(3)                                           /*!< option bytes error flag */
 #define FMC_STAT_WPERR                  BIT(4)                                           /*!< erase/program protection error flag */
 #define FMC_STAT_ENDF                   BIT(5)                                           /*!< end of operation flag */
-
+ 
 /* FMC_CTL */
 #define FMC_CTL_PG                      BIT(0)                                           /*!< main flash program command */
 #define FMC_CTL_PER                     BIT(1)                                           /*!< main flash page erase command */
@@ -126,7 +126,7 @@ OF SUCH DAMAGE.
 #define FMC_SECSTAT_SECERR              BIT(3)                                           /*!< flash secure error flag */
 #define FMC_SECSTAT_SECWPERR            BIT(4)                                           /*!< secure erase/program protection error flag */
 #define FMC_SECSTAT_SECENDF             BIT(5)                                           /*!< secure end of operation flag */
-
+ 
 /* FMC_SECCTL */
 #define FMC_SECCTL_SECPG                BIT(0)                                           /*!< main flash secure program command */
 #define FMC_SECCTL_SECPER               BIT(1)                                           /*!< main flash secure page erase command */
@@ -256,6 +256,7 @@ typedef enum
 #define NODEC_INDEX3                    ((uint32_t)0x00000003U)                          /*!< FMC_NODEC3 register index */
 
 /* FMC flags */
+#define OB_FLAG_NSPC                    ((uint32_t)0x00000000U)                          /*!< flash security protection level 0 state */
 #define OB_FLAG_SPC1                    FMC_OBSTAT_SPC                                   /*!< flash security protection level 0.5 state */
 #define OB_FLAG_SPC0_5                  FMC_OBSTAT_SPC_P5                                /*!< flash security protection level 1 state */
 
@@ -291,18 +292,11 @@ typedef enum
 #define FMC_INT_FLAG_END                FMC_STAT_ENDF                                    /*!< FMC end of operation interrupt flag */
 #endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3) */
 
-/* FMC function declarations */
-#define OBSTAT_RDP_0_5()                ((FMC_OBSTAT & FMC_OBSTAT_SPC_P5) ? SET : RESET)
-#define OBSTAT_RDP_1()                  ((FMC_OBSTAT & FMC_OBSTAT_SPC) ? SET : RESET)
-#define OBSTAT_WP()                     ((FMC_OBSTAT & FMC_OBSTAT_WP) ? SET : RESET)
-#define OBSTAT_TZEN()                   ((FMC_OBSTAT & FMC_OBSTAT_TZEN_STAT) ? SET : RESET)
-#define OBSTAT_NQSPI()                  ((FMC_OBSTAT & FMC_OBSTAT_NQSPI) ? SET : RESET)
-#define OBSTAT_FMCOB()                  ((FMC_OBSTAT & FMC_OBSTAT_FMCOB) ? SET : RESET)
-
 /* FMC timeout */
 #define FMC_TIMEOUT_COUNT              ((uint32_t)0x01000000U)                           /*!< FMC timeout count value */
 
 /* function declarations */
+#ifndef GD32W515P0
 /* FMC main memory programming functions */
 /* unlock the main FMC operation */
 void fmc_unlock(void);
@@ -316,11 +310,8 @@ fmc_state_enum fmc_mass_erase(void);
 fmc_state_enum fmc_word_program(uint32_t address, uint32_t data);
 /* FMC program continuously at the corresponding address */
 fmc_state_enum fmc_continuous_program(uint32_t address, uint32_t data[], uint32_t size);
+#endif /* GD32W515PI and GD32W515TX */
 
-/* enable trustzone */
-void trustzone_enable(void);
-/* disable trustzone */
-void trustzone_disable(void);
 /* enable SRAM1 reset automatically function */
 void sram1_reset_enable(void);
 /* disable SRAM1 reset automatically function */
@@ -335,52 +326,63 @@ void fmc_privilege_disable(void);
 void ob_unlock(void);
 /* lock the option bytes operation */
 void ob_lock(void);
+
+#ifndef GD32W515P0
 /* send option bytes modification start command */
 void ob_start(void);
 /* reload option bytes */
 void ob_reload(void);
 /* configure the option bytes security protection */
 fmc_state_enum ob_security_protection_config(uint8_t ob_spc);
+/* enable trustzone */
+fmc_state_enum ob_trustzone_enable(void);
+/* disable trustzone */
+ErrStatus ob_trustzone_disable(void);
 /* program option bytes USER */
 fmc_state_enum ob_user_write(uint16_t ob_user);
-/* get the value of option bytes write protection */
-FlagStatus ob_write_protection_get(void);
-/* get option bytes security protection state */
-FlagStatus ob_security_protection_flag_get(uint32_t spc_state);
-/* get option bytes trustzone state */
-FlagStatus ob_trustzone_state_get(void);
-/* get the state of MCU memory structure is FMC mode or QSPI mode */
-FlagStatus ob_memory_mode_state_get(void);
-/* get the state of whether the option byte exist or not */
-FlagStatus ob_exist_state_get(void);
-/* get the value of option bytes USER */
-uint16_t ob_user_get(void);
-
-/* FMC read offset function */
-/* configure offset region */
-void fmc_offset_region_config(uint32_t of_spage, uint32_t of_epage);
-/* configure offset value */
-void fmc_offset_value_config(uint32_t of_value);
-/* configure NO-RTDEC pages */
-void fmc_no_rtdec_config(uint32_t nodec_spage, uint32_t nodec_epage, uint32_t nodec_register_index);
-
 /* configure write protection pages */
-void ob_write_protection_config(uint32_t wrp_spage, uint32_t wrp_epage, uint32_t wrp_register_index);
+fmc_state_enum ob_write_protection_config(uint32_t wrp_spage, uint32_t wrp_epage, uint32_t wrp_register_index);
+/* configure secure mark pages */
+void ob_secmark_config(uint32_t secm_spage, uint32_t secm_epage, uint32_t secm_register_index);
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3)
 /* enable DMP region access right */
 void ob_dmp_access_enable(uint32_t dmp_register_index);
 /* disable DMP region access right */
 void ob_dmp_access_disable(uint32_t dmp_register_index);
 #endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3) */
-/* configure secure mark pages */
-void ob_secmark_config(uint32_t secm_spage, uint32_t secm_epage, uint32_t secm_register_index);
 /* configure DMP secure pages */
 ErrStatus ob_dmp_config(uint32_t dmp_epage, uint32_t dmp_register_index);
 /* enable DMP function */
-void ob_dmp_enable(uint32_t dmp_register_index);
+fmc_state_enum ob_dmp_enable(uint32_t dmp_register_index);
 /* disable DMP function */
-void ob_dmp_disable(uint32_t dmp_register_index);
+fmc_state_enum ob_dmp_disable(uint32_t dmp_register_index);
+/* configure NO-RTDEC pages */
+void fmc_no_rtdec_config(uint32_t nodec_spage, uint32_t nodec_epage, uint32_t nodec_register_index);
+#endif /* GD32W515PI and GD32W515TX */
 
+/* FMC read offset function */
+/* configure offset region */
+void fmc_offset_region_config(uint32_t of_spage, uint32_t of_epage);
+/* configure offset value */
+void fmc_offset_value_config(uint32_t of_value);
+
+#ifndef GD32W515P0
+/* get option bytes write protection state, only applies to get the status of write/erase protection setting by EFUSE */
+FlagStatus ob_write_protection_get(void);
+/* get the value of option bytes USER */
+uint16_t ob_user_get(void);
+#endif /* GD32W515PI and GD32W515TX */
+
+/* get option bytes security protection state */
+FlagStatus ob_security_protection_flag_get(uint32_t spc_state);
+/* get trustzone state */
+FlagStatus ob_trustzone_state_get(void);
+/* get the state of MCU memory structure is FMC mode or QSPI mode */
+FlagStatus ob_memory_mode_state_get(void);
+/* get the state of whether the option byte exist or not */
+FlagStatus ob_exist_state_get(void);
+
+#ifndef GD32W515P0
 /* FMC interrupts and flags management functions */
 /* get FMC flag status */
 FlagStatus fmc_flag_get(uint32_t flag);
@@ -394,5 +396,6 @@ void fmc_interrupt_disable(uint32_t interrupt);
 FlagStatus fmc_interrupt_flag_get(uint32_t flag);
 /* clear FMC interrupt flag */
 void fmc_interrupt_flag_clear(uint32_t flag);
+#endif /* GD32W515PI and GD32W515TX */
 
 #endif /* GD32W51X_FMC_H */

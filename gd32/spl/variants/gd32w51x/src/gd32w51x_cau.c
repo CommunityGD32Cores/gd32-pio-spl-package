@@ -2,7 +2,7 @@
     \file    gd32w51x_cau.c
     \brief   CAU driver
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -366,7 +366,7 @@ void cau_phase_config(uint32_t phase)
     temp &= ~CAU_CTL_GCM_CCMPH;
     /* Set the selected phase */
     temp |= phase;
-    /* Set the CR register */ 
+    /* Set the CAU_CTL register */ 
     CAU_CTL = temp;
 }
 
@@ -458,7 +458,7 @@ void cau_context_save(cau_context_parameter_struct *cau_context, cau_key_paramet
     CAU_CTL &= ~CAU_CTL_CAUEN;
 
     /* save the current configuration (bit 19, bit[17:16] and bit[9:2] in the CAU_CTL register) */
-    cau_context->ctl_config  = CAU_STAT0 & (CAU_CTL_GCM_CCMPH |
+    cau_context->ctl_config  = CAU_CTL & (CAU_CTL_GCM_CCMPH |
                                             CAU_CTL_KEYM  |
                                             CAU_CTL_DATAM |
                                             CAU_CTL_ALGM  |

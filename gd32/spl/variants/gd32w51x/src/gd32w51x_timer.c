@@ -2,7 +2,7 @@
     \file    gd32w51x_timer.c
     \brief   TIMER driver
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -63,11 +63,13 @@ void timer_deinit(uint32_t timer_periph)
         rcu_periph_reset_enable(RCU_TIMER2RST);
         rcu_periph_reset_disable(RCU_TIMER2RST);
         break;
+    #if (defined(GD32W515PI) || defined(GD32W515P0))
     case TIMER3:
         /* reset TIMER3 */
         rcu_periph_reset_enable(RCU_TIMER3RST);
         rcu_periph_reset_disable(RCU_TIMER3RST);
         break;
+    #endif /* GD32W515PI and GD32W515P0 */
     case TIMER4:
         /* reset TIMER4 */
         rcu_periph_reset_enable(RCU_TIMER4RST);
@@ -1569,9 +1571,9 @@ void timer_master_output_trigger_source_select(uint32_t timer_periph, uint32_t o
     \param[in]  slavemode:
                 only one parameter can be selected which is shown as below: 
       \arg        TIMER_SLAVE_MODE_DISABLE: slave mode disable
-      \arg        TIMER_ENCODER_MODE0: encoder mode 0
-      \arg        TIMER_ENCODER_MODE1: encoder mode 1
-      \arg        TIMER_ENCODER_MODE2: encoder mode 2
+      \arg        TIMER_QUAD_DECODER_MODE0: quadrature decoder mode 0
+      \arg        TIMER_QUAD_DECODER_MODE1: quadrature decoder mode 1
+      \arg        TIMER_QUAD_DECODER_MODE2: quadrature decoder mode 2
       \arg        TIMER_SLAVE_MODE_RESTART: restart mode
       \arg        TIMER_SLAVE_MODE_PAUSE: pause mode
       \arg        TIMER_SLAVE_MODE_EVENT: event mode
@@ -1636,9 +1638,9 @@ void timer_external_trigger_config(uint32_t timer_periph, uint32_t extprescaler,
     \param[in]  timer_periph: TIMERx(x=0..4)
     \param[in]  decomode: 
                 only one parameter can be selected which is shown as below:
-      \arg        TIMER_ENCODER_MODE0: counter counts on CI0FE0 edge depending on CI1FE1 level
-      \arg        TIMER_ENCODER_MODE1: counter counts on CI1FE1 edge depending on CI0FE0 level
-      \arg        TIMER_ENCODER_MODE2: counter counts on both CI0FE0 and CI1FE1 edges depending on the level of the other input
+      \arg        TIMER_QUAD_DECODER_MODE0: counter counts on CI0FE0 edge depending on CI1FE1 level
+      \arg        TIMER_QUAD_DECODER_MODE1: counter counts on CI1FE1 edge depending on CI0FE0 level
+      \arg        TIMER_QUAD_DECODER_MODE2: counter counts on both CI0FE0 and CI1FE1 edges depending on the level of the other input
     \param[in]  ic0polarity: 
                 only one parameter can be selected which is shown as below:
       \arg        TIMER_IC_POLARITY_RISING: capture rising edge
@@ -1821,7 +1823,22 @@ void timer_external_clock_mode1_disable(uint32_t timer_periph)
 {
     TIMER_SMCFG(timer_periph) &= ~(uint32_t)TIMER_SMCFG_SMC1;
 }
-
+/*!
+    \brief    configure TIMER channel remap function
+    \param[in]  timer_periph: TIMERx(x=4)
+    \param[in]  remap: 
+                only one parameter can be selected which is shown as below:
+      \arg        TIMER4_CI3_RMP_GPIO: timer4 channel 3 input remap to GPIO pin
+      \arg        TIMER4_CI3_RMP_IRC32K: timer4 channel 3 input remap to IRC32K
+      \arg        TIMER4_CI3_RMP_LXTAL: timer4 channel 3 input remap to  LXTAL
+      \arg        TIMER4_CI3_RMP_RTC_WAKEUP_INT: timer4 channel 3 input remap to RTC wakeup interrupt 
+    \param[out] none
+    \retval     none
+*/
+void timer_channel_remap_config(uint32_t timer_periph, uint32_t remap)
+{
+    TIMER_IRMP(timer_periph) = (uint32_t)remap;
+}
 /*!
     \brief      configure TIMER write CHxVAL register selection
     \param[in]  timer_periph: TIMERx(x=0..4,15,16)
@@ -1874,7 +1891,7 @@ void timer_output_value_selection_config(uint32_t timer_periph, uint16_t outsel)
       \arg        TIMER_FLAG_CH2: channel 2 flag,TIMERx(x=0..4)
       \arg        TIMER_FLAG_CH3: channel 3 flag,TIMERx(x=0..4)
       \arg        TIMER_FLAG_CMT: channel control update flag,TIMERx(x=0,15,16) 
-      \arg        TIMER_FLAG_TRG: trigger flag,TIMERx(x=0) 
+      \arg        TIMER_FLAG_TRG: trigger flag,TIMERx(x=0..4) 
       \arg        TIMER_FLAG_BRK: break flag,TIMERx(x=0,15,16)
       \arg        TIMER_FLAG_CH0O: channel 0 overcapture flag,TIMERx(x=0..4,15,16)
       \arg        TIMER_FLAG_CH1O: channel 1 overcapture flag,TIMERx(x=0..4)
@@ -1903,7 +1920,7 @@ FlagStatus timer_flag_get(uint32_t timer_periph, uint32_t flag)
       \arg        TIMER_FLAG_CH2: channel 2 flag,TIMERx(x=0..4)
       \arg        TIMER_FLAG_CH3: channel 3 flag,TIMERx(x=0..4)
       \arg        TIMER_FLAG_CMT: channel control update flag,TIMERx(x=0,15,16) 
-      \arg        TIMER_FLAG_TRG: trigger flag,TIMERx(x=0) 
+      \arg        TIMER_FLAG_TRG: trigger flag,TIMERx(x=0..4) 
       \arg        TIMER_FLAG_BRK: break flag,TIMERx(x=0,15,16)
       \arg        TIMER_FLAG_CH0O: channel 0 overcapture flag,TIMERx(x=0..4,15,16)
       \arg        TIMER_FLAG_CH1O: channel 1 overcapture flag,TIMERx(x=0..4)
@@ -1969,7 +1986,7 @@ void timer_interrupt_disable(uint32_t timer_periph, uint32_t interrupt)
       \arg        TIMER_INT_FLAG_CH2: channel 2 interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_CH3: channel 3 interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_CMT: channel commutation interrupt flag,TIMERx(x=0,15,16) 
-      \arg        TIMER_INT_FLAG_TRG: trigger interrupt flag,TIMERx(x=0)
+      \arg        TIMER_INT_FLAG_TRG: trigger interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_BRK:  break interrupt flag,TIMERx(x=0,15,16)
     \param[out] none
     \retval     FlagStatus: SET or RESET
@@ -1996,7 +2013,7 @@ FlagStatus timer_interrupt_flag_get(uint32_t timer_periph, uint32_t int_flag)
       \arg        TIMER_INT_FLAG_CH2: channel 2 interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_CH3: channel 3 interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_CMT: channel commutation interrupt flag,TIMERx(x=0,15,16) 
-      \arg        TIMER_INT_FLAG_TRG: trigger interrupt flag,TIMERx(x=0)
+      \arg        TIMER_INT_FLAG_TRG: trigger interrupt flag,TIMERx(x=0..4)
       \arg        TIMER_INT_FLAG_BRK:  break interrupt flag,TIMERx(x=0,15,16)
     \param[out] none
     \retval     none

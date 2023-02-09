@@ -2,7 +2,7 @@
     \file    gd32w51x_icache.c
     \brief   ICACHE driver
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -71,9 +71,9 @@ void icache_disable(void)
     \brief      enable the icache monitor
     \param[in]  monitor_source: the monitor to be enabled
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_MONITOR_HIT: enable hit monitor
-      \arg        ICACHE_MONITOR_MISS: enable miss monitor
-      \arg        ICACHE_MONITOR_HIT_MISS: enable hit and miss monitor     
+      \arg        ICACHE_MONITOR_HIT: hit monitor
+      \arg        ICACHE_MONITOR_MISS: miss monitor
+      \arg        ICACHE_MONITOR_HIT_MISS: hit and miss monitor     
     \param[out] none
     \retval     none
 */
@@ -86,9 +86,9 @@ void icache_monitor_enable(uint32_t monitor_source)
     \brief      disable the icache monitor
     \param[in]  monitor_source: the monitor to be disabled
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_MONITOR_HIT: enable hit monitor
-      \arg        ICACHE_MONITOR_MISS: enable miss monitor
-      \arg        ICACHE_MONITOR_HIT_MISS: enable hit and miss monitor   
+      \arg        ICACHE_MONITOR_HIT: hit monitor
+      \arg        ICACHE_MONITOR_MISS: miss monitor
+      \arg        ICACHE_MONITOR_HIT_MISS: hit and miss monitor   
     \param[out] none
     \retval     none
 */
@@ -101,9 +101,9 @@ void icache_monitor_disable(uint32_t monitor_source)
     \brief      reset the icache monitor
     \param[in]  reset_monitor_source: the monitor to be reset
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_MONITOR_RESET_HIT: enable hit monitor
-      \arg        ICACHE_MONITOR_RESET_MISS: enable miss monitor
-      \arg        ICACHE_MONITOR_RESET_HIT_MISS: enable hit and miss monitor
+      \arg        ICACHE_MONITOR_RESET_HIT: hit monitor
+      \arg        ICACHE_MONITOR_RESET_MISS: miss monitor
+      \arg        ICACHE_MONITOR_RESET_HIT_MISS: hit and miss monitor
     \param[out] none
     \retval     none
 */
@@ -114,13 +114,12 @@ void icache_monitor_reset(uint32_t reset_monitor_source)
 }
 
 /*!
-    \brief      select icache way (associativity mode) 
-    \param[in]  icache_way: icache way
-      \arg        ICACHE_N_WAYS: n-way set associative cache (n-way cache)
+    \brief      configure icache way (associativity mode) 
+    \param[in]  none
     \param[out] none 
     \retval     ErrStatus: status of result(SUCCESS or ERROR)
 */
-ErrStatus icache_way_selection(uint32_t icache_way)
+ErrStatus icache_way_configure(void)
 {
     if(ENABLE == (ICACHE_CTL & ICACHE_CTL_EN)){ 
         return ERROR;
@@ -139,7 +138,7 @@ ErrStatus icache_way_selection(uint32_t icache_way)
     \param[out] none
     \retval     ErrStatus: status of result(SUCCESS or ERROR)
 */
-ErrStatus icache_burst_type_sel(uint32_t burst_type)
+ErrStatus icache_burst_type_select(uint32_t burst_type)
 {
     if(ENABLE == (ICACHE_CTL & ICACHE_CTL_EN)){ 
         return ERROR;
@@ -155,7 +154,7 @@ ErrStatus icache_burst_type_sel(uint32_t burst_type)
 }
 
 /*!
-    \brief      invalid icache 
+    \brief      invalidate icache 
     \param[in]  none
     \param[out] none
     \retval     ErrStatus: status of result(SUCCESS or ERROR)
@@ -193,7 +192,7 @@ uint32_t icache_hitvalue_get(void)
     \param[out] none
     \retval     miss value
 */
-uint32_t get_icache_missvalue_get(void)
+uint32_t icache_missvalue_get(void)
 {
     return ICACHE_MMC;
 }
@@ -207,14 +206,13 @@ uint32_t get_icache_missvalue_get(void)
 ErrStatus icache_remap_enable(icache_remap_struct * icache_remap_config)
 {
     uint32_t val = 0x00U;
-    uint32_t reg_val;
   
     /* the remap can not be configured when icache en is 1 */
     if(ENABLE == (ICACHE_CTL & ICACHE_CTL_EN)){ 
         return ERROR;
     }else{
         /* select the icache region */
-        __IO uint32_t reg = (ICACHE + 0x20U + (0x04U * icache_remap_config->region_num));
+        uint32_t reg = (ICACHE + 0x20U + (0x04U * icache_remap_config->region_num));
         /* check if the region is already configured */
         if(0U != (REG32(reg) & 0x1000U)){
             return ERROR;
@@ -225,11 +223,9 @@ ErrStatus icache_remap_enable(icache_remap_struct * icache_remap_config)
             val |= ((icache_remap_config->remap_address & 0xFFE00000U) >> 5U);
             /* set the remap size select the master and burst type */
             val |= ((icache_remap_config->remap_size << 9) | (icache_remap_config->master_sel << 28U) | (icache_remap_config->burst_type << 31U));
-            reg_val = (REG32(reg) | val);
-            REG32(reg) = reg_val;
+            REG32(reg) |= val;
             /* enable remap */
-            reg_val = (REG32(reg) | ICACHE_CFGx_EN);
-            REG32(reg) = reg_val;
+            REG32(reg) |= ICACHE_CFGx_EN;
           
             return SUCCESS;
         }
@@ -253,7 +249,6 @@ ErrStatus icache_remap_disable(uint32_t region_num)
         return SUCCESS;
     }
 }
-
 
 /*!
     \brief      get icache flag
@@ -281,8 +276,8 @@ FlagStatus icache_flag_get(uint32_t flag)
     \brief      clear icache flag
     \param[in]  icache_flag: the icache flag to be cleared
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_ENDC_FLAG: icache busy end clear interrupt
-      \arg        ICACHE_ERRC_FLAG: icache error clear interrupt 
+      \arg        ICACHE_ENDC_FLAG: icache busy end clear flag
+      \arg        ICACHE_ERRC_FLAG: icache error clear flag 
     \param[out] none
     \retval     none
 */
@@ -295,8 +290,8 @@ void icache_flag_clear(uint32_t flag)
     \brief      enable icache interrupt
     \param[in]  interrupt: the interrupt to be enabled
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_ENDIE: icache busy end interrupt enable
-      \arg        ICACHE_ERRIE: icache error interrupt enable
+      \arg        ICACHE_ENDIE: icache busy end interrupt
+      \arg        ICACHE_ERRIE: icache error interrupt
     \param[out] none
     \retval     none
 */
@@ -309,8 +304,8 @@ void icache_interrupt_enable(uint32_t interrupt)
     \brief      disable icache interrupt
     \param[in]  interrupt: the interrupt to be disabled
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_ENDIE: icache busy end interrupt enable
-      \arg        ICACHE_ERRIE: icache error interrupt enable
+      \arg        ICACHE_ENDIE: icache busy end interrupt
+      \arg        ICACHE_ERRIE: icache error interrupt
     \param[out] none
     \retval     none
 */
@@ -321,19 +316,19 @@ void icache_interrupt_disable(uint32_t interrupt)
 
 /*!
     \brief      get icache interrupt flag
-    \param[in]  flag_source: the interrupt flag to be get
+    \param[in]  interrupt: the interrupt flag to be get
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_END_FLAG: icache busy end flag
-      \arg        ICACHE_ERR_FLAG: icache error flag
+      \arg        ICACHE_END_FLAG: icache busy end interrupt flag
+      \arg        ICACHE_ERR_FLAG: icache error interrupt flag
     \param[out] none
     \retval     FlagStatus: status of result(SET or RESET)
 */
-FlagStatus icache_interrupt_flag_get(uint32_t flag)
+FlagStatus icache_interrupt_flag_get(uint32_t interrupt)
 {
     __IO uint32_t reg = 0U;
     reg = ICACHE_STAT;
     /* check the status of interrupt source */
-    if(RESET != (reg & flag)){
+    if(RESET != (reg & interrupt)){
         return SET;
     }else{
         return RESET;
@@ -342,10 +337,10 @@ FlagStatus icache_interrupt_flag_get(uint32_t flag)
 
 /*!
     \brief      clear icache interrupt flag
-    \param[in]  interrupt_source: the interrupt flag to be cleared
+    \param[in]  interrupt: the interrupt flag to be cleared
                 only one parameter can be selected which is shown as below:
-      \arg        ICACHE_ENDC_FLAG: icache busy end clear interrupt
-      \arg        ICACHE_ERRC_FLAG: icache error clear interrupt 
+      \arg        ICACHE_ENDC_FLAG: icache busy end interrupt clear flag
+      \arg        ICACHE_ERRC_FLAG: icache error interrupt clear flag
     \param[out] none
     \retval     none
 */

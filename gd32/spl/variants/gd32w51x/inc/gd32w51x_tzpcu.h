@@ -2,7 +2,7 @@
     \file    gd32w51x_tzpcu.h
     \brief   definitions for the TZPCU
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -62,7 +62,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZSPC_TZMMPC1_NSM1              REG32((TZSPC) + 0x00000044U)      /*!< TZSPC external memory 1 non-secure mark register 1 */
 #define TZPCU_TZSPC_DBG_CFG                   REG32((TZSPC) + 0x00000200U)      /*!< TZSPC debug configuration register */
 
-/* TZSPC registers */
+/* TZBMPC registers */
 #define TZPCU_TZBMPC_CTL(tzbmpx)              REG32((tzbmpx) + 0x00000000U)     /*!< TZBMPC control register */
 #define TZPCU_TZBMPC_VEC(tzbmpx, y)           REG32((tzbmpx) + 0x00000100U\
                                                   + (0x00000004U * (y)))        /*!< TZBMPC vector register */
@@ -104,7 +104,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZSPC_SAM_CFG1_USART0SAM        BIT(1)                            /*!< USART0 secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG1_TIMER15SAM       BIT(3)                            /*!< TIMER15 secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG1_TIMER16SAM       BIT(4)                            /*!< TIMER16 secure access mode configuration bit */
-#define TZPCU_TZSPC_SAM_CFG1_HPDFSAM          BIT(7)                            /*!< HPDF secure access mode configuration bit */
+#define TZPCU_TZSPC_SAM_CFG1_HPDFSAM          BIT(7)                            /*!< HPDF secure access mode configuration bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZSPC_SAM_CFG1_CRCSAM           BIT(8)                            /*!< CRC secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG1_TSISAM           BIT(9)                            /*!< TSI secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG1_ICACHESAM        BIT(10)                           /*!< ICACHE secure access mode configuration bit */
@@ -121,7 +121,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZSPC_SAM_CFG2_QSPI_FLASHREGSAM BIT(27)                           /*!< QSPI FLASHREG secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG2_WIFI_RFSAM       BIT(28)                           /*!< WIFI RF secure access mode configuration bit */
 #define TZPCU_TZSPC_SAM_CFG2_I2S1_ADDSAM      BIT(29)                           /*!< I2S1_ADD secure access mode configuration bit */
-#define TZPCU_TZSPC_SAM_CFG2_DCISAM           BIT(30)                           /*!< DCI secure access mode configuration bit */
+#define TZPCU_TZSPC_SAM_CFG2_DCISAM           BIT(30)                           /*!< DCI secure access mode configuration bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZSPC_SAM_CFG2_WIFISAM          BIT(31)                           /*!< WIFI secure access mode configuration bit */
 
 /* TZPCU_TZSPC_PAM_CFG0 */
@@ -145,7 +145,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZSPC_PAM_CFG1_USART0PAM        BIT(1)                            /*!< USART0 privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG1_TIMER15PAM       BIT(3)                            /*!< TIMER15 privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG1_TIMER16PAM       BIT(4)                            /*!< TIMER16 privilege access mode configuration bit */
-#define TZPCU_TZSPC_PAM_CFG1_HPDFPAM          BIT(7)                            /*!< HPDF privilege access mode configuration bit */
+#define TZPCU_TZSPC_PAM_CFG1_HPDFPAM          BIT(7)                            /*!< HPDF privilege access mode configuration bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZSPC_PAM_CFG1_CRCPAM           BIT(8)                            /*!< CRC privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG1_TSIPAM           BIT(9)                            /*!< TSI privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG1_ICACHEPAM        BIT(10)                           /*!< ICACHE privilege access mode configuration bit */
@@ -163,7 +163,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZSPC_PAM_CFG2_QSPI_FLASHREGPAM BIT(27)                           /*!< QSPI FLASHREG privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG2_WIFI_RFPAM       BIT(28)                           /*!< WIFI RF privilege access mode configuration bit */
 #define TZPCU_TZSPC_PAM_CFG2_I2S1_ADDPAM      BIT(29)                           /*!< I2S1_ADD privilege access mode configuration bit */
-#define TZPCU_TZSPC_PAM_CFG2_DCIPAM           BIT(30)                           /*!< DCI privilege access mode configuration bit */
+#define TZPCU_TZSPC_PAM_CFG2_DCIPAM           BIT(30)                           /*!< DCI privilege access mode configuration bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZSPC_PAM_CFG2_WIFIPAM          BIT(31)                           /*!< WIFI privilege access mode configuration bit */
 
 /* TZPCU_TZSPC_TZMMPCx_NSM0, TZPCU_TZSPC_TZMMPCx_NSM1, TZPCU_TZSPC_TZMMPCx_NSM2 and TZPCU_TZSPC_TZMMPCx_NSM3 */
@@ -262,7 +262,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_INTEN1_USART0IE           BIT(1)                            /*!< USART0 illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN1_TIMER15IE          BIT(3)                            /*!< TIMER15 illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN1_TIMER16IE          BIT(4)                            /*!< TIMER16 illegal access interrupt enable bit */
-#define TZPCU_TZIAC_INTEN1_HPDFIE             BIT(7)                            /*!< HPDF illegal access interrupt enable bit */
+#define TZPCU_TZIAC_INTEN1_HPDFIE             BIT(7)                            /*!< HPDF illegal access interrupt enable bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_INTEN1_CRCIE              BIT(8)                            /*!< CRC illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN1_TSIIE              BIT(9)                            /*!< TSI illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN1_ICACHEIE           BIT(10)                           /*!< ICACHE illegal access interrupt enable bit */
@@ -300,7 +300,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_INTEN2_QSPI_FLASHREGIE    BIT(27)                           /*!< QSPI FLASHREG illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN2_WIFI_RFIE          BIT(28)                           /*!< WIFI RF illegal access interrupt enable bit */
 #define TZPCU_TZIAC_INTEN2_I2S1_ADDIE         BIT(29)                           /*!< I2S1_ADD illegal access interrupt enable bit */
-#define TZPCU_TZIAC_INTEN2_DCIIE              BIT(30)                           /*!< DCI illegal access interrupt enable bit */
+#define TZPCU_TZIAC_INTEN2_DCIIE              BIT(30)                           /*!< DCI illegal access interrupt enable bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_INTEN2_WIFIIE             BIT(31)                           /*!< WIFI illegal access interrupt enable bit */
 
 /* TZPCU_TZIAC_STAT0 */
@@ -324,7 +324,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_STAT1_USART0IAF           BIT(1)                            /*!< USART0 illegal access event flag bit */
 #define TZPCU_TZIAC_STAT1_TIMER15IAF          BIT(3)                            /*!< TIMER15 illegal access event flag bit */
 #define TZPCU_TZIAC_STAT1_TIMER16IAF          BIT(4)                            /*!< TIMER16 illegal access event flag bit */
-#define TZPCU_TZIAC_STAT1_HPDFIAF             BIT(7)                            /*!< HPDF illegal access event flag bit */
+#define TZPCU_TZIAC_STAT1_HPDFIAF             BIT(7)                            /*!< HPDF illegal access event flag bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_STAT1_CRCIAF              BIT(8)                            /*!< CRC illegal access event flag bit */
 #define TZPCU_TZIAC_STAT1_TSIIAF              BIT(9)                            /*!< TSI illegal access event flag bit */
 #define TZPCU_TZIAC_STAT1_ICACHEIAF           BIT(10)                           /*!< ICACHE illegal access event flag bit */
@@ -362,7 +362,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_STAT2_QSPI_FLASHREGIAF    BIT(27)                           /*!< QSPI FLASHREG illegal access event flag bit */
 #define TZPCU_TZIAC_STAT2_WIFI_RFIAF          BIT(28)                           /*!< WIFI RF illegal access event flag bit */
 #define TZPCU_TZIAC_STAT2_I2S1_ADDIAF         BIT(29)                           /*!< I2S1_ADD illegal access event flag bit */
-#define TZPCU_TZIAC_STAT2_DCIIAF              BIT(30)                           /*!< DCI illegal access event flag bit */
+#define TZPCU_TZIAC_STAT2_DCIIAF              BIT(30)                           /*!< DCI illegal access event flag bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_STAT2_WIFIIAF             BIT(31)                           /*!< WIFI illegal access event flag bit */
 
 /* TZPCU_TZIAC_STATC0 */
@@ -386,7 +386,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_STATC1_USART0IAFC         BIT(1)                            /*!< USART0 illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC1_TIMER15IAFC        BIT(3)                            /*!< TIMER15 illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC1_TIMER16IAFC        BIT(4)                            /*!< TIMER16 illegal access flag clear bit */
-#define TZPCU_TZIAC_STATC1_HPDFIAFC           BIT(7)                            /*!< HPDF illegal access flag clear bit */
+#define TZPCU_TZIAC_STATC1_HPDFIAFC           BIT(7)                            /*!< HPDF illegal access flag clear bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_STATC1_CRCIAFC            BIT(8)                            /*!< CRC illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC1_TSIIAFC            BIT(9)                            /*!< TSI illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC1_ICACHEIAFC         BIT(10)                           /*!< ICACHE illegal access flag clear bit */
@@ -424,7 +424,7 @@ OF SUCH DAMAGE.
 #define TZPCU_TZIAC_STATC2_QSPI_FLASHREGIAFC  BIT(27)                           /*!< QSPI FLASHREG illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC2_WIFI_RFIAFC        BIT(28)                           /*!< WIFI RF illegal access flag clear bit */
 #define TZPCU_TZIAC_STATC2_I2S1_ADDIAFC       BIT(29)                           /*!< I2S1_ADD illegal access flag clear bit */
-#define TZPCU_TZIAC_STATC2_DCIIAFC            BIT(30)                           /*!< DCI illegal access flag clear bit */
+#define TZPCU_TZIAC_STATC2_DCIIAFC            BIT(30)                           /*!< DCI illegal access flag clear bit(not support on GD32W515TX series devices) */
 #define TZPCU_TZIAC_STATC2_WIFIIAFC           BIT(31)                           /*!< WIFI illegal access flag clear bit */
 
 /* constants definitions */
@@ -447,7 +447,7 @@ OF SUCH DAMAGE.
 #define TZPCU_PERIPH_USART0                  (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_USART0IE)                                      /*!< USART0 peripheral definitions */
 #define TZPCU_PERIPH_TIMER15                 (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_TIMER15IE)                                     /*!< TIMER15 peripheral definitions */
 #define TZPCU_PERIPH_TIMER16                 (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_TIMER16IE)                                     /*!< TIMER16 peripheral definitions */
-#define TZPCU_PERIPH_HPDF                    (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_HPDFIE)                                        /*!< HPDF peripheral definitions */
+#define TZPCU_PERIPH_HPDF                    (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_HPDFIE)                                        /*!< HPDF peripheral definitions(not support on GD32W515TX series devices) */
 #define TZPCU_PERIPH_CRC                     (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_CRCIE)                                         /*!< CRC peripheral definitions */
 #define TZPCU_PERIPH_TSI                     (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_TSIIE)                                         /*!< TSI peripheral definitions */
 #define TZPCU_PERIPH_ICACHE                  (((uint32_t)0x10000000U) | TZPCU_TZIAC_INTEN1_ICACHEIE)                                      /*!< ICACHE peripheral definitions */
@@ -484,21 +484,80 @@ OF SUCH DAMAGE.
 #define TZPCU_PERIPH_QSPI_FLASHREG           (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_QSPI_FLASHREGIE >> 16))                       /*!< QSPI FLASHREG peripheral definitions */
 #define TZPCU_PERIPH_WIFI_RF                 (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_WIFI_RFIE >> 16))                             /*!< WIFI RF peripheral definitions */
 #define TZPCU_PERIPH_I2S1_ADD                (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_I2S1_ADDIE  >> 16))                           /*!< I2S1_ADD peripheral definitions */
-#define TZPCU_PERIPH_DCI                     (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_DCIIE >> 16))                                 /*!< DCI peripheral definitions */
+#define TZPCU_PERIPH_DCI                     (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_DCIIE >> 16))                                 /*!< DCI peripheral definitions(not support on GD32W515TX series devices) */
 #define TZPCU_PERIPH_WIFI                    (((uint32_t)0x20200000U) | (TZPCU_TZIAC_INTEN2_WIFIIE >> 16))                                /*!< WIFI peripheral definitions */
 #define TZPCU_PERIPH_ALL                     BIT(22)                                                                                      /*!< all peripheral definitions */
 
-/* peripherals attributes definitions */
-#define TZPCU_SEC                           (BIT(28) | (uint32_t)0x00000001U)              /*!< peripherals secure attribute */
-#define TZPCU_NSEC                          (BIT(28) | (uint32_t)0x00000000U)              /*!< peripherals non-secure attribute */
-#define TZPCU_PRIV                          (BIT(29) | (uint32_t)0x00000002U)              /*!< peripherals privilege attribute */
-#define TZPCU_NPRIV                         (BIT(29) | (uint32_t)0x00000000U)              /*!< peripherals non-privilege attribute */
+/* peripherals illegal access interrupt flag definitions, used for tzpcu_tziac_flag_get and tzpcu_tziac_flag_clear function */
+#define TZPCU_TZIAC_FLAG_TIMER1              TZPCU_TZIAC_FLAG_TIMER1                       /*!< TIMER1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER2              TZPCU_TZIAC_FLAG_TIMER2                       /*!< TIMER2 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER3              TZPCU_TZIAC_FLAG_TIMER3                       /*!< TIMER3 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER4              TZPCU_TZIAC_FLAG_TIMER4                       /*!< TIMER4 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER5              TZPCU_TZIAC_FLAG_TIMER5                       /*!< TIMER5 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_WWDGT               TZPCU_TZIAC_FLAG_WWDGT                        /*!< WWDGT peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_FWDGT               TZPCU_TZIAC_FLAG_FWDGT                        /*!< FWDGT peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SPI1                TZPCU_TZIAC_FLAG_SPI1                         /*!< SPI1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_USART1              TZPCU_TZIAC_FLAG_USART1                       /*!< USART1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_USART2              TZPCU_TZIAC_FLAG_USART2                       /*!< USART2 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_I2C0                TZPCU_TZIAC_FLAG_I2C0                         /*!< I2C0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_I2C1                TZPCU_TZIAC_FLAG_I2C1                         /*!< I2C1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_USBFS               TZPCU_TZIAC_FLAG_USBFS                        /*!< USBFS peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER0              TZPCU_TZIAC_FLAG_TIMER0                       /*!< TIMER0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SPI0                TZPCU_TZIAC_FLAG_SPI0                         /*!< SPI0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_USART0              TZPCU_TZIAC_FLAG_USART0                       /*!< USART0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER15             TZPCU_TZIAC_FLAG_TIMER15                      /*!< TIMER15 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TIMER16             TZPCU_TZIAC_FLAG_TIMER16                      /*!< TIMER16 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_HPDF                TZPCU_TZIAC_FLAG_HPDF                         /*!< HPDF peripheral llegal access interrupt flag definitions(not support on GD32W515TX series devices) */
+#define TZPCU_TZIAC_FLAG_CRC                 TZPCU_TZIAC_FLAG_CRC                          /*!< CRC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TSI                 TZPCU_TZIAC_FLAG_TSI                          /*!< TSI peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_ICACHE              TZPCU_TZIAC_FLAG_ICACHE                       /*!< ICACHE peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_ADC                 TZPCU_TZIAC_FLAG_ADC                          /*!< ADC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_CAU                 TZPCU_TZIAC_FLAG_CAU                          /*!< CAU peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_HAU                 TZPCU_TZIAC_FLAG_HAU                          /*!< HAU peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TRNG                TZPCU_TZIAC_FLAG_TRNG                         /*!< TRNG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_PKCAU               TZPCU_TZIAC_FLAG_PKCAU                        /*!< PKCAU peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SDIO                TZPCU_TZIAC_FLAG_SDIO                         /*!< SDIO peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_RTC                 TZPCU_TZIAC_FLAG_RTC                          /*!< RTC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_PMU                 TZPCU_TZIAC_FLAG_PMU                          /*!< PMU peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SYSCFG              TZPCU_TZIAC_FLAG_SYSCFG                       /*!< SYSCFG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_DMA0                TZPCU_TZIAC_FLAG_DMA0                         /*!< DMA0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_DMA1                TZPCU_TZIAC_FLAG_DMA1                         /*!< DMA1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_RCU                 TZPCU_TZIAC_FLAG_RCU                          /*!< RCU peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_FLASH               TZPCU_TZIAC_FLAG_FLASH                        /*!< FLASH peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_FMC                 TZPCU_TZIAC_FLAG_FMC                          /*!< FMC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_EXTI                TZPCU_TZIAC_FLAG_EXTI                         /*!< EXTI peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZSPC               TZPCU_TZIAC_FLAG_TZSPC                        /*!< TZSPC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZIAC               TZPCU_TZIAC_FLAG_TZIAC                        /*!< TZIAC peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SRAM0               TZPCU_TZIAC_FLAG_SRAM0                        /*!< SRAM0 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZBMPC0_REG         TZPCU_TZIAC_FLAG_TZBMPC0_REG                  /*!< TZBMPC0_REG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SRAM1               TZPCU_TZIAC_FLAG_SRAM1                        /*!< SRAM1 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZBMPC1_REG         TZPCU_TZIAC_FLAG_TZBMPC1_REG                  /*!< TZBMPC1_REG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SRAM2               TZPCU_TZIAC_FLAG_SRAM2                        /*!< SRAM2 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZBMPC2_REG         TZPCU_TZIAC_FLAG_TZBMPC2_REG                  /*!< TZBMPC2_REG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SRAM3               TZPCU_TZIAC_FLAG_SRAM3                        /*!< SRAM3 peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_TZBMPC3_REG         TZPCU_TZIAC_FLAG_TZBMPC3_REG                  /*!< TZBMPC3_REG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_EFUSE               TZPCU_TZIAC_FLAG_EFUSE                        /*!< EFUSE peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SQPI_PSRAM          TZPCU_TZIAC_FLAG_SQPI_PSRAM                   /*!< SQPI_PSRAM peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_QSPI_FLASH          TZPCU_TZIAC_FLAG_QSPI_FLASH                   /*!< QSPI_FLASH peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_SQPI_PSRAMREG       TZPCU_TZIAC_FLAG_SQPI_PSRAMREG                /*!< SQPI PSRAMREG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_QSPI_FLASHREG       TZPCU_TZIAC_FLAG_QSPI_FLASHREG                /*!< QSPI FLASHREG peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_WIFI_RF             TZPCU_TZIAC_FLAG_WIFI_RF                      /*!< WIFI RF peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_I2S1_ADD            TZPCU_TZIAC_FLAG_I2S1_ADD                     /*!< I2S1_ADD peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_DCI                 TZPCU_TZIAC_FLAG_DCI                          /*!< DCI peripheral llegal access interrupt flag definitions(not support on GD32W515TX series devices) */
+#define TZPCU_TZIAC_FLAG_WIFI                TZPCU_TZIAC_FLAG_WIFI                         /*!< WIFI peripheral llegal access interrupt flag definitions */
+#define TZPCU_TZIAC_FLAG_ALL                 BIT(22)                                       /*!< all peripheral llegal access interrupt flag definitions  */
+
+/* peripheral attributes definitions */
+#define TZPCU_SEC                            (BIT(28) | (uint32_t)0x00000001U)             /*!< peripheral secure attribute */
+#define TZPCU_NSEC                           (BIT(28) | (uint32_t)0x00000000U)             /*!< peripheral non-secure attribute */
+#define TZPCU_PRIV                           (BIT(29) | (uint32_t)0x00000002U)             /*!< peripheral privilege attribute */
+#define TZPCU_NPRIV                          (BIT(29) | (uint32_t)0x00000000U)             /*!< peripheral non-privilege attribute */
 
 /* QSPI flash and SQPI PSRAM configuration flag for non_secure_mark_struct member 'memory_type' */
 typedef enum
 {
-    QSPIFMEM = 0,                                                       /*!< QSPI flash memory */
-    SQPIPMEM                                                            /*!< SQPI PSRAM memory */
+    QSPI_FLASH_MEM = 0U,                                                /*!< QSPI flash memory */
+    SQPI_PSRAM_MEM                                                      /*!< SQPI PSRAM memory */
 }tzpcu_mem;
 
 /* QSPI flash and SQPI PSRAM non secure mark region flag for non_secure_mark_struct member 'region_number' */
@@ -539,33 +598,32 @@ typedef struct
 #define BLOCK_SECURE_ACCESS_MODE_NSEC     ((uint32_t)0x00000001U)     /*!< block secure access mode is non-secure */
 
 /* union block lock configure */
-#define UNION_BLOCK_LOCK                  ((uint32_t)0x00000001U)     /*!< lock UNION block */
-#define UNION_BLOCK_UNLOCK                ((uint32_t)0x00000000U)     /*!< unlock UNION block */
+#define UNION_BLOCK_LOCK                  ((uint32_t)0x00000001U)     /*!< lock union block */
+#define UNION_BLOCK_UNLOCK                ((uint32_t)0x00000000U)     /*!< unlock union block */
 
 /* illegal access event flag */
 #define NO_ILLEGAL_ACCESS_PENDING         ((uint32_t)0x00000000U)     /*!< no illegal access event pending */
 #define ILLEGAL_ACCESS_PENDING            ((uint32_t)0x00000001U)     /*!< illegal access event pending */
 
-/* tzspc */
-/* initialize the TZPCU non-secure mark struct with the default values */
-void tzpcu_non_secure_mark_struct_init(tzpcu_non_secure_mark_struct* init_struct);
+/* function declarations */
+/* TZSPC function */
 /* configure peripherals secure attributes */
 void tzpcu_tzspc_peripheral_attributes_config(uint32_t periph, uint32_t attributes);
 /* get peripherals secure attributes */
 uint32_t tzpcu_tzspc_peripheral_attributes_get(uint32_t periph);
 
 #if defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3)
+/* initialize the TZPCU non-secure mark struct with the default values */
+void tzpcu_non_secure_mark_struct_para_init(tzpcu_non_secure_mark_struct* init_struct);
 /* configure external memory non-secure mark */
 ErrStatus tzpcu_tzspc_emnsm_config(tzpcu_non_secure_mark_struct *p_non_secure_mark);
-/*! get configure external memory non-secure mark */
-void tzpcu_tzspc_emnsm_get(tzpcu_non_secure_mark_struct *p_non_secure_mark);
-/* lock tzspc items */
+/* lock TZSPC items */
 void tzpcu_tzspc_items_lock(void);
 /* configure debug type */
 void tzpcu_tzspc_dbg_config(uint32_t dbg_type, ControlStatus config_value);
 #endif /* defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3) */
 
-/* tzbmpc */
+/* TZBMPC function */
 /* lock the control register of the TZBMPC sub-block */
 void tzpcu_tzbmpc_lock(uint32_t tzbmpx);
 /* configure default security state */
@@ -575,16 +633,16 @@ void tzpcu_tzbmpc_secure_access_config(uint32_t tzbmpx, uint32_t sec_illaccess_s
 /* configure block secure access mode */
 void tzpcu_tzbmpc_block_secure_access_mode_config(uint32_t tzbmpx, uint32_t block_pos_num, uint32_t access_mode);
 /* lock configure union block secure access mode */
-void tzpcu_tzbmpc_unblock_lock(uint32_t tzbmpx, uint32_t union_block_postion_num);
+void tzpcu_tzbmpc_union_block_lock(uint32_t tzbmpx, uint32_t union_block_postion_num);
 
-/* TZIAC */
-/* enable lllegal access interrupt */
+/* TZIAC function */
+/* enable illegal access interrupt */
 void tzpcu_tziac_interrupt_enable(uint32_t periph);
-/* disable lllegal access interrupt */
+/* disable illegal access interrupt */
 void tzpcu_tziac_interrupt_disable(uint32_t periph);
-/* get lllegal access interrupt flag */
-uint32_t tzpcu_tziac_flag_get(uint32_t periph);
-/* clear lllegal access interrupt flag */
-void tzpcu_tziac_flag_clear(uint32_t periph);
+/* get illegal access interrupt flag */
+uint32_t tzpcu_tziac_flag_get(uint32_t periph_flag);
+/* clear illegal access interrupt flag */
+void tzpcu_tziac_flag_clear(uint32_t periph_flag);
 
 #endif /* GD32W51X_TZPCU_H */

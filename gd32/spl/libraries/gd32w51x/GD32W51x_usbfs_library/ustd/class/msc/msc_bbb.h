@@ -3,10 +3,11 @@
     \brief   definitions for the USB MSC BBB(bulk/bulk/bulk) protocol
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -42,7 +43,8 @@ OF SUCH DAMAGE.
 #define BBB_CBW_LENGTH                    31U
 #define BBB_CSW_LENGTH                    13U
 
-typedef struct {
+typedef struct 
+{
     uint32_t dCBWSignature;
     uint32_t dCBWTag;
     uint32_t dCBWDataTransferLength;
@@ -52,7 +54,8 @@ typedef struct {
     uint8_t  CBWCB[16];
 }msc_bbb_cbw;
 
-typedef struct {
+typedef struct 
+{
     uint32_t dCSWSignature;
     uint32_t dCSWTag;
     uint32_t dCSWDataResidue;
@@ -60,11 +63,11 @@ typedef struct {
 }msc_bbb_csw;
 
 /* CSW command status */
-enum msc_csw_status {
+enum msc_csw_status 
+{
     CSW_CMD_PASSED = 0,
     CSW_CMD_FAILED,
     CSW_PHASE_ERROR
 };
 
 #endif /* __MSC_BBB_H */
-

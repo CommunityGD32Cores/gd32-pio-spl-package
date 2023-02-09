@@ -3,10 +3,11 @@
     \brief   definitions for HID core
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
     
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -45,14 +46,16 @@ OF SUCH DAMAGE.
 
 #define MAX_PERIPH_NUM              4U
 
-typedef struct {
+typedef struct 
+{
     __ALIGN_BEGIN uint8_t data[2] __ALIGN_END;
     uint8_t reportID;
     uint8_t idlestate;
     uint8_t protocol;
 } custom_hid_handler;
 
-typedef struct {
+typedef struct
+{
     void (*periph_config[MAX_PERIPH_NUM])(void);
 } hid_fop_handler;
 

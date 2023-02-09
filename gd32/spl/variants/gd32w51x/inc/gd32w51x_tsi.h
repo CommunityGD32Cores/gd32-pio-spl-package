@@ -1,34 +1,34 @@
 /*!
     \file    gd32w51x_tsi.h
-    \brief definitions for the TSI
-    
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \brief   definitions for the TSI
+
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification, 
+    Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this 
+    1. Redistributions of source code must retain the above copyright notice, this
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice, 
-       this list of conditions and the following disclaimer in the documentation 
+    2. Redistributions in binary form must reproduce the above copyright notice,
+       this list of conditions and the following disclaimer in the documentation
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors 
-       may be used to endorse or promote products derived from this software without 
+    3. Neither the name of the copyright holder nor the names of its contributors
+       may be used to endorse or promote products derived from this software without
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 */
 
@@ -38,22 +38,22 @@ OF SUCH DAMAGE.
 #include "gd32w51x.h"
 
 /* TSI definitions */
-#define TSI                     TSI_BASE                /*!< TSI base address */
+#define TSI                     TSI_BASE                    /*!< TSI base address */
 
 /* registers definitions */
-#define TSI_CTL0                REG32(TSI + 0x00000000U)/*!< TSI control register0 */
-#define TSI_INTEN               REG32(TSI + 0x00000004U)/*!< TSI interrupt enable register */
-#define TSI_INTC                REG32(TSI + 0x00000008U)/*!< TSI interrupt flag clear register */
-#define TSI_INTF                REG32(TSI + 0x0000000CU)/*!< TSI interrupt flag register */
-#define TSI_PHM                 REG32(TSI + 0x00000010U)/*!< TSI pin hysteresis mode register */
-#define TSI_ASW                 REG32(TSI + 0x00000018U)/*!< TSI analog switch register */
-#define TSI_SAMPCFG             REG32(TSI + 0x00000020U)/*!< TSI sample configuration register */
-#define TSI_CHCFG               REG32(TSI + 0x00000028U)/*!< TSI channel configuration register */
-#define TSI_GCTL                REG32(TSI + 0x00000030U)/*!< TSI group control register */
-#define TSI_G0CYCN              REG32(TSI + 0x00000034U)/*!< TSI group 0 cycle number register */
-#define TSI_G1CYCN              REG32(TSI + 0x00000038U)/*!< TSI group 1 cycle number register */
-#define TSI_G2CYCN              REG32(TSI + 0x0000003CU)/*!< TSI group 2 cycle number register */
-#define TSI_CTL1                REG32(TSI + 0x00000300U)/*!< TSI control registers1 */
+#define TSI_CTL0                REG32(TSI + 0x00000000U)    /*!< TSI control register0 */
+#define TSI_INTEN               REG32(TSI + 0x00000004U)    /*!< TSI interrupt enable register */
+#define TSI_INTC                REG32(TSI + 0x00000008U)    /*!< TSI interrupt flag clear register */
+#define TSI_INTF                REG32(TSI + 0x0000000CU)    /*!< TSI interrupt flag register */
+#define TSI_PHM                 REG32(TSI + 0x00000010U)    /*!< TSI pin hysteresis mode register */
+#define TSI_ASW                 REG32(TSI + 0x00000018U)    /*!< TSI analog switch register */
+#define TSI_SAMPCFG             REG32(TSI + 0x00000020U)    /*!< TSI sample configuration register */
+#define TSI_CHCFG               REG32(TSI + 0x00000028U)    /*!< TSI channel configuration register */
+#define TSI_GCTL                REG32(TSI + 0x00000030U)    /*!< TSI group control register */
+#define TSI_G0CYCN              REG32(TSI + 0x00000034U)    /*!< TSI group 0 cycle number register */
+#define TSI_G1CYCN              REG32(TSI + 0x00000038U)    /*!< TSI group 1 cycle number register */
+#define TSI_G2CYCN              REG32(TSI + 0x0000003CU)    /*!< TSI group 2 cycle number register */
+#define TSI_CTL1                REG32(TSI + 0x00000300U)    /*!< TSI control registers1 */
 
 /* bits definitions */
 /* TSI_CTL0 */
@@ -269,7 +269,7 @@ void tsi_channel_pin_enable(uint32_t channel);
 void tsi_channel_pin_disable(uint32_t channel);
 
 /* configure TSI triggering by software */
-void tsi_sofeware_mode_config(void);
+void tsi_software_mode_config(void);
 /* start a charge-transfer sequence when TSI is in software trigger mode */
 void tsi_software_start(void);
 /* stop a charge-transfer sequence when TSI is in software trigger mode */
@@ -294,20 +294,6 @@ void tsi_analog_on(uint32_t group_pin);
 /* switch off analog pin */
 void tsi_analog_off(uint32_t group_pin);
 
-/* enable TSI interrupt */
-void tsi_interrupt_enable(uint32_t source);
-/* disable TSI interrupt */
-void tsi_interrupt_disable(uint32_t source);
-/* clear interrupt flag */
-void tsi_interrupt_flag_clear(uint32_t flag);
-/* get TSI interrupt flag */
-FlagStatus tsi_interrupt_flag_get(uint32_t flag);
-
-/* clear flag */
-void tsi_flag_clear(uint32_t flag);
-/* get flag */
-FlagStatus tsi_flag_get(uint32_t flag);
-
 /* enbale group */
 void tsi_group_enable(uint32_t group);
 /* disbale group */
@@ -320,5 +306,18 @@ uint16_t tsi_group0_cycle_get(void);
 uint16_t tsi_group1_cycle_get(void);
 /* get the cycle number for group2 as soon as a charge-transfer sequence completes */
 uint16_t tsi_group2_cycle_get(void);
+
+/* get TSI flag */
+FlagStatus tsi_flag_get(uint32_t flag);
+/* clear TSI flag */
+void tsi_flag_clear(uint32_t flag);
+/* enable TSI interrupt */
+void tsi_interrupt_enable(uint32_t source);
+/* disable TSI interrupt */
+void tsi_interrupt_disable(uint32_t source);
+/* get TSI interrupt flag */
+FlagStatus tsi_interrupt_flag_get(uint32_t flag);
+/* clear interrupt flag */
+void tsi_interrupt_flag_clear(uint32_t flag);
 
 #endif /* GD32W51X_TSI_H */

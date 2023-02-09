@@ -2,7 +2,7 @@
     \file    gd32w51x_usart.c
     \brief   USART driver
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -397,9 +397,9 @@ void usart_receiver_timeout_threshold_config(uint32_t usart_periph, uint32_t rti
     \param[out] none
     \retval     none
 */
-void usart_data_transmit(uint32_t usart_periph, uint32_t data)
+void usart_data_transmit(uint32_t usart_periph, uint16_t data)
 {
-    USART_TDATA(usart_periph) = (USART_TDATA_TDATA & data);
+    USART_TDATA(usart_periph) = USART_TDATA_TDATA & (uint32_t)data;
 }
 
 /*!
@@ -411,45 +411,6 @@ void usart_data_transmit(uint32_t usart_periph, uint32_t data)
 uint16_t usart_data_receive(uint32_t usart_periph)
 {
     return (uint16_t)(GET_BITS(USART_RDATA(usart_periph), 0U, 8U));
-}
-
-/*!
-    \brief      enable auto baud rate detection
-    \param[in]  usart_periph: USARTx(x=0,2)
-    \param[out] none
-    \retval     none
-*/
-void usart_autobaud_detection_enable(uint32_t usart_periph)
-{
-    USART_CTL1(usart_periph) |= USART_CTL1_ABDEN;
-}
-
-/*!
-    \brief      disable auto baud rate detection
-    \param[in]  usart_periph: USARTx(x=0,2)
-    \param[out] none
-    \retval     none
-*/
-void usart_autobaud_detection_disable(uint32_t usart_periph)
-{
-    USART_CTL1(usart_periph) &= ~(USART_CTL1_ABDEN);
-}
-
-/*!
-    \brief      configure auto baud rate detection mode
-    \param[in]  usart_periph: USARTx(x=0,2)
-    \param[in]  abdmod: auto baud rate detection mode
-                only one parameter can be selected which is shown as below:
-      \arg        USART_ABDM_FTOR: falling edge to rising edge measurement
-      \arg        USART_ABDM_FTOF: falling edge to falling edge measurement
-    \param[out] none
-    \retval     none
-*/
-void usart_autobaud_detection_mode_config(uint32_t usart_periph, uint32_t abdmod)
-{
-    /* reset ABDM bits */
-    USART_CTL1(usart_periph) &= ~(USART_CTL1_ABDM);
-    USART_CTL1(usart_periph) |= abdmod;
 }
 
 /*!
@@ -632,7 +593,7 @@ void usart_clock_disable(uint32_t usart_periph)
 
 /*!
     \brief      configure USART synchronous mode parameters
-    \param[in]  usart_periph: USARTx(x=0,1,2)
+    \param[in]  usart_periph: USARTx(x=0,2)
     \param[in]  clen: last bit clock pulse
                 only one parameter can be selected which is shown as below:
       \arg        USART_CLEN_NONE: clock pulse of the last data bit (MSB) is not output to the CK pin
@@ -757,7 +718,7 @@ void usart_smartcard_mode_early_nack_disable(uint32_t usart_periph)
 /*!
     \brief      configure smartcard auto-retry number
     \param[in]  usart_periph: USARTx(x=0,2)
-    \param[in]  scrtnum: 0x00000000-0x00000007, smartcard auto-retry number
+    \param[in]  scrtnum: 0x00-0x07, smartcard auto-retry number
     \param[out] none
     \retval     none
 */
@@ -928,7 +889,7 @@ void usart_rs485_driver_disable(uint32_t usart_periph)
 /*!
     \brief      configure driver enable assertion time
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  deatime: 0x00000000-0x0000001F
+    \param[in]  deatime: 0x00-0x1F
     \param[out] none
     \retval     none
 */
@@ -944,7 +905,7 @@ void usart_driver_assertime_config(uint32_t usart_periph, uint32_t deatime)
 /*!
     \brief      configure driver enable de-assertion time
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  dedtime: 0x00000000-0x0000001F
+    \param[in]  dedtime: 0x00-0x1F
     \param[out] none
     \retval     none
 */
@@ -977,41 +938,35 @@ void usart_depolarity_config(uint32_t usart_periph, uint32_t dep)
 }
 
 /*!
-    \brief      enable USART DMA send or receive
+    \brief      configure USART DMA reception
     \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  dmacmd: USART DMA mode
                 only one parameter can be selected which is shown as below:
-      \arg        USART_DMA_RECEIVE: USART receive data use DMA
-      \arg        USART_DMA_TRANSMIT: USART transmit data use DMA
+      \arg        USART_RECEIVE_DMA_ENABLE: enable USART DMA for reception
+      \arg        USART_RECEIVE_DMA_DISABLE: disable USART DMA for reception
     \param[out] none
     \retval     none
 */
-void usart_dma_enable(uint32_t usart_periph, uint8_t dmacmd)
+void usart_dma_receive_config(uint32_t usart_periph, uint8_t dmacmd)
 {
-    if(USART_DMA_RECEIVE == dmacmd){
-        USART_CTL2(usart_periph) |= USART_CTL2_DENR;
-    }else{
-        USART_CTL2(usart_periph) |= USART_CTL2_DENT;
-    }
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_DENR);
+    USART_CTL2(usart_periph) |= (USART_CTL2_DENR & dmacmd);
 }
 
 /*!
-    \brief      disable USART DMA send or receive
+    \brief      configure USART DMA transmission
     \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  dmacmd: USART DMA mode
                 only one parameter can be selected which is shown as below:
-      \arg        USART_DMA_RECEIVE: USART receive data use DMA
-      \arg        USART_DMA_TRANSMIT: USART transmit data use DMA
+      \arg        USART_TRANSMIT_DMA_ENABLE: enable USART DMA for transmission
+      \arg        USART_TRANSMIT_DMA_DISABLE: disable USART DMA for transmission
     \param[out] none
     \retval     none
 */
-void usart_dma_disable(uint32_t usart_periph, uint8_t dmacmd)
+void usart_dma_transmit_config(uint32_t usart_periph, uint8_t dmacmd)
 {
-    if(USART_DMA_RECEIVE == dmacmd){
-        USART_CTL2(usart_periph) &= ~USART_CTL2_DENR;
-    }else{
-        USART_CTL2(usart_periph) &= ~USART_CTL2_DENT;
-    }
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_DENT);
+    USART_CTL2(usart_periph) |= (USART_CTL2_DENT & dmacmd);
 }
 
 /*!
@@ -1118,6 +1073,23 @@ uint8_t usart_receive_fifo_counter_number(uint32_t usart_periph)
 }
 
 /*!
+    \brief      enable USART command
+    \param[in]  usart_periph: USARTx(x=0,1,2)
+    \param[in]  cmdtype: command type
+                only one parameter can be selected which is shown as below:
+      \arg        USART_CMD_SBKCMD: send break command
+      \arg        USART_CMD_MMCMD: mute mode command
+      \arg        USART_CMD_RXFCMD: receive data flush command
+      \arg        USART_CMD_TXFCMD: transmit data flush request
+    \param[out] none
+    \retval     none
+*/
+void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype)
+{
+    USART_CMD(usart_periph) |= (cmdtype);
+}
+
+/*!
     \brief      get flag in STAT/CHC/RFCS register
     \param[in]  usart_periph: USARTx(x=0,1,2)
     \param[in]  flag: flag type
@@ -1135,12 +1107,10 @@ uint8_t usart_receive_fifo_counter_number(uint32_t usart_periph)
       \arg        USART_FLAG_CTS: CTS level
       \arg        USART_FLAG_RT: receiver timeout flag
       \arg        USART_FLAG_EB: end of block flag
-      \arg        USART_FLAG_ABDE: auto baudrate detection error
-      \arg        USART_FLAG_ABD: auto baudrate detection flag
       \arg        USART_FLAG_BSY: busy flag
       \arg        USART_FLAG_AM: address match flag
       \arg        USART_FLAG_SB: send break flag
-      \arg        USART_FLAG_RWU: receiver wakeup from mute mode.
+      \arg        USART_FLAG_RWU: receiver wakeup from mute mode
       \arg        USART_FLAG_WU: wakeup from deep-sleep mode flag
       \arg        USART_FLAG_TEA: transmit enable acknowledge flag
       \arg        USART_FLAG_REA: receive enable acknowledge flag 
@@ -1183,7 +1153,13 @@ FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag)
 */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag)
 {
-    USART_INTC(usart_periph) |= BIT(USART_BIT_POS(flag));
+    if(flag == USART_FLAG_RBNE) {
+        USART_CMD(usart_periph) |= USART_CMD_RXFCMD;
+    } else if(flag == USART_FLAG_EPERR) {
+        USART_CHC(usart_periph) &= ~USART_CHC_EPERR;
+    }else{
+        USART_INTC(usart_periph) |= BIT(USART_BIT_POS(flag));
+    }
 }
 
 /*!
@@ -1238,24 +1214,6 @@ void usart_interrupt_enable(uint32_t usart_periph, usart_interrupt_enum interrup
 void usart_interrupt_disable(uint32_t usart_periph, usart_interrupt_enum interrupt)
 {
     USART_REG_VAL(usart_periph, interrupt) &= ~BIT(USART_BIT_POS(interrupt));
-}
-
-/*!
-    \brief      enable USART command
-    \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  cmdtype: command type
-                only one parameter can be selected which is shown as below:
-      \arg        USART_CMD_ABDCMD: auto baudrate detection command
-      \arg        USART_CMD_SBKCMD: send break command
-      \arg        USART_CMD_MMCMD: mute mode command
-      \arg        USART_CMD_RXFCMD: receive data flush command
-      \arg        USART_CMD_TXFCMD: transmit data flush request
-    \param[out] none
-    \retval     none
-*/
-void usart_command_enable(uint32_t usart_periph, uint32_t cmdtype)
-{
-    USART_CMD(usart_periph) |= (cmdtype);
 }
 
 /*!

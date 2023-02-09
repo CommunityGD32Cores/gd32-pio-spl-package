@@ -2,7 +2,7 @@
     \file    gd32w51x_icache.h
     \brief   definitions for the ICACHE
     
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -121,8 +121,6 @@ OF SUCH DAMAGE.
 
 #define ICACHE_CTL_DEFAULT            0x00000004U                    /*!< ICACHE control register default value */
 
-
-
 /* ICACHE REMAP TYPE */
 typedef struct
 {
@@ -160,16 +158,16 @@ void icache_monitor_enable(uint32_t monitor_source);
 void icache_monitor_disable(uint32_t monitor_source);
 /* reset the icache monitor */
 void icache_monitor_reset(uint32_t reset_monitor_source);
-/* select icache way (associativity mode) */
-ErrStatus icache_way_selection(uint32_t icache_way);
+/* configure icache way (associativity mode) */
+ErrStatus icache_way_configure(void);
 /* select icache burst type */
-ErrStatus icache_burst_type_sel(uint32_t burst_type);
-/* invalid icache*/
+ErrStatus icache_burst_type_select(uint32_t burst_type);
+/* invalidate icache*/
 ErrStatus icache_invalidation(void);
 /* get the hit monitor value */
 uint32_t icache_hitvalue_get(void);
 /* get the miss monitor value */
-uint32_t get_icache_missvalue_get(void);
+uint32_t icache_missvalue_get(void);
 /* enable the icache remap function */
 ErrStatus icache_remap_enable(icache_remap_struct * icache_remap_config);
 /* disable the icache remap function */

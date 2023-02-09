@@ -3,10 +3,11 @@
     \brief   USB device mode interrupt routines
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -54,7 +55,8 @@ static uint32_t usbd_emptytxfifo_write         (usb_core_driver *udev, uint32_t 
 void usbd_isr (usb_core_driver *udev)
 {
     if (HOST_MODE != (udev->regs.gr->GINTF & GINTF_COPM)) {
-        uint32_t intr = udev->regs.gr->GINTF & udev->regs.gr->GINTEN;
+        uint32_t intr = udev->regs.gr->GINTF;
+        intr &= udev->regs.gr->GINTEN;
 
         /* there are no interrupts, avoid spurious interrupt */
         if (!intr) {

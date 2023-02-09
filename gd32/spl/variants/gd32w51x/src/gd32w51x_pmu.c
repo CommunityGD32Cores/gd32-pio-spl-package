@@ -2,7 +2,7 @@
     \file    gd32w51x_pmu.c
     \brief   PMU driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -125,7 +125,7 @@ void pmu_ldo_output_select(uint32_t ldo_output)
 }
 
 /*!
-    \brief      PMU work at sleep mode
+    \brief      PMU work in sleep mode
     \param[in]  sleepmodecmd:
                 only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
@@ -147,7 +147,7 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 }
 
 /*!
-    \brief      PMU work at deep-sleep mode
+    \brief      PMU work in deep-sleep mode
     \param[in]  ldo:
                 only one parameter can be selected which is shown as below:
       \arg        PMU_LDO_NORMAL: LDO normal work when PMU enter deepsleep mode
@@ -196,24 +196,31 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint32_t lowdrive,uint8_t deepsleepmodecm
 }
 
 /*!
-    \brief      PMU work at standby mode
+    \brief      PMU work in standby mode
     \param[in]  none
     \param[out] none
     \retval     none
 */
 void pmu_to_standbymode(void)
 {
-    /* set sleepdeep bit of Cortex-M33 system control register */
-    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
     /* set stbmod bit */
     PMU_CTL0 |= PMU_CTL0_STBMOD;
         
     /* reset wakeup flag */
     PMU_CTL0 |= PMU_CTL0_WURST;
     
+    /* set sleepdeep bit of Cortex-M33 system control register */
+    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+    REG32( 0xE000E010U ) &= 0x00010004U;
+    REG32( 0xE000E180U )  = 0XFF8FFFF3U;
+    REG32( 0xE000E184U )  = 0XFFFFFDFFU;
+    REG32( 0xE000E188U )  = 0xFFFFFFFFU;
+    REG32( 0xE000E18CU )  = 0xFFFFFFFFU;
+
     /* enter standby mode */
     __WFI();
+
 }
 
 /*!
@@ -418,22 +425,8 @@ void pmu_privilege_disable(void)
 }
 
 /*!
-    \brief      reset flag bit
-    \param[in]  flag_reset:
-                only one parameter can be selected which is shown as below:
-      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
-      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
-    \param[out] none
-    \retval     none
-*/
-void pmu_flag_reset(uint32_t flag_reset)
-{
-    PMU_CTL0 |= flag_reset;
-}
-
-/*!
     \brief      get flag state
-    \param[in]  pmu_flag:
+    \param[in]  flag:
                 only one parameter can be selected which is shown as below:
       \arg        PMU_FLAG_WAKEUP: wakeup flag
       \arg        PMU_FLAG_STANDBY: standby flag
@@ -452,22 +445,36 @@ void pmu_flag_reset(uint32_t flag_reset)
     \param[out] none
     \retval     FlagStatus: SET or RESET
 */
-FlagStatus pmu_flag_get(uint32_t pmu_flag)
+FlagStatus pmu_flag_get(uint32_t flag)
 {
-    if(pmu_flag & BIT(31)){
-        pmu_flag &= ~BIT(31);
+    if(flag & BIT(31)){
+        flag &= ~BIT(31);
         /* get WIFI SRAM status */
-        if(PMU_CS1 & pmu_flag){
+        if(PMU_CS1 & flag){
             return SET;
         }else{
             return RESET;
         }        
     }else{
         /* get flag status in PMU_CS0 */
-        if(PMU_CS0 & pmu_flag){
+        if(PMU_CS0 & flag){
             return SET;
         }else{
             return RESET;
         }    
     }
+}
+
+/*!
+    \brief      clear flag bit
+    \param[in]  flag:
+                only one parameter can be selected which is shown as below:
+      \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
+      \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
+    \param[out] none
+    \retval     none
+*/
+void pmu_flag_clear(uint32_t flag)
+{
+    PMU_CTL0 |= flag;
 }

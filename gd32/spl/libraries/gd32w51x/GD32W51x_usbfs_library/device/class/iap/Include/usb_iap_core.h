@@ -3,10 +3,11 @@
     \brief   the header file of IAP driver
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -42,8 +43,6 @@ OF SUCH DAMAGE.
 
 #ifdef USE_USB_FS
     #define USB_DESC_LEN_IAP_REPORT             35U
-#elif defined(USE_USB_HS)
-    #define USB_DESC_LEN_IAP_REPORT             36U
 #else
     #error "please select 'USE_USB_FS' or 'USE_USB_HS'"
 #endif

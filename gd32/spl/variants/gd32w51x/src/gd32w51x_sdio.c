@@ -2,7 +2,7 @@
     \file    gd32w51x_sdio.c
     \brief   SDIO driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -193,6 +193,8 @@ void sdio_clock_disable(void)
 void sdio_command_response_config(uint32_t cmd_index, uint32_t cmd_argument, uint32_t response_type)
 {
     uint32_t cmd_config = 0U;
+    /* disable the CSM */
+    SDIO_CMDCTL &= ~SDIO_CMDCTL_CSMEN;    
     /* reset the command index, command argument and response type */
     SDIO_CMDAGMT &= ~SDIO_CMDAGMT_CMDAGMT;
     SDIO_CMDAGMT = cmd_argument;

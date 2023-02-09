@@ -2,7 +2,7 @@
     \file    gd32w51x_i2c.c
     \brief   I2C driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
@@ -135,7 +135,7 @@ void i2c_digital_noise_filter_config(uint32_t i2c_periph, uint32_t filter_length
 */
 void i2c_analog_noise_filter_enable(uint32_t i2c_periph)
 {
-    I2C_CTL0(i2c_periph) |= I2C_CTL0_ANOFF;
+    I2C_CTL0(i2c_periph) &= ~I2C_CTL0_ANOFF;
 }
 
 /*!
@@ -146,7 +146,7 @@ void i2c_analog_noise_filter_enable(uint32_t i2c_periph)
 */
 void i2c_analog_noise_filter_disable(uint32_t i2c_periph)
 {
-    I2C_CTL0(i2c_periph) &= ~I2C_CTL0_ANOFF;
+    I2C_CTL0(i2c_periph) |= I2C_CTL0_ANOFF;
 }
 
 /*!
@@ -164,13 +164,13 @@ void i2c_master_clock_config(uint32_t i2c_periph, uint32_t sclh, uint32_t scll)
     I2C_TIMING(i2c_periph) &= ~I2C_TIMING_SCLL;
     /* mask SCLH, SCLL bits in I2C_TIMING register */
     sclh = (uint32_t)(sclh << TIMING_SCLH_OFFSET) & I2C_TIMING_SCLH;
-    scll = (uint32_t)(scll<< TIMING_SCLL_OFFSET) & I2C_TIMING_SCLL;
+    scll = (uint32_t)(scll << TIMING_SCLL_OFFSET) & I2C_TIMING_SCLL;
     /* write SCLH, SCLL bits in I2C_TIMING register */
     I2C_TIMING(i2c_periph) |= (sclh | scll);
 }
 
 /*!
-    \brief      configure i2c slave address and transfer direction in master mode
+    \brief      configure I2C slave address and transfer direction in master mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
     \param[in]  address: 0-0x3FF except reserved address, I2C slave address to be sent
     \param[in]  trans_direction: I2C transfer direction in master mode
@@ -259,7 +259,6 @@ void i2c_automatic_end_disable(uint32_t i2c_periph)
 /*!
     \brief      enable the response to a general call 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -271,7 +270,6 @@ void i2c_slave_response_to_gcall_enable(uint32_t i2c_periph)
 /*!
     \brief      disable the response to a general call 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -283,7 +281,6 @@ void i2c_slave_response_to_gcall_disable(uint32_t i2c_periph)
 /*!
     \brief      enable to stretch SCL low when data is not ready in slave mode 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -295,7 +292,6 @@ void i2c_stretch_scl_low_enable(uint32_t i2c_periph)
 /*!
     \brief      disable to stretch SCL low when data is not ready in slave mode 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -305,13 +301,13 @@ void i2c_stretch_scl_low_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief      configure i2c slave address
+    \brief      configure I2C slave address
     \param[in]  i2c_periph: I2Cx(x=0,1)
     \param[in]  address: I2C address
     \param[in]  addr_format: 7bits or 10bits
                 only one parameter can be selected which is shown as below:
-      \arg        I2C_ADDFORMAT_7BITS: 7bits
-      \arg        I2C_ADDFORMAT_10BITS: 10bits
+      \arg        I2C_ADDFORMAT_7BITS: address format is 7 bits
+      \arg        I2C_ADDFORMAT_10BITS: address format is 10 bits
     \param[out] none
     \retval     none
 */
@@ -320,7 +316,7 @@ void i2c_address_config(uint32_t i2c_periph, uint32_t address, uint32_t addr_for
     /* configure ADDRESS[7:1] and address format */
     address = address & I2C_ADDRESS_MASK;
     I2C_SADDR0(i2c_periph) = (addr_format | address);
-    /* enable i2c address in slave mode */
+    /* enable I2C address in slave mode */
     I2C_SADDR0(i2c_periph) |= I2C_SADDR0_ADDRESSEN;
 }
 
@@ -346,7 +342,7 @@ void i2c_address_bit_compare_config(uint32_t i2c_periph, uint32_t compare_bits)
 }
 
 /*!
-    \brief      disable i2c address in slave mode
+    \brief      disable I2C address in slave mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
     \param[out] none
     \retval     none
@@ -357,7 +353,7 @@ void i2c_address_disable(uint32_t i2c_periph)
 }
 
 /*!
-    \brief      configure i2c second slave address
+    \brief      configure I2C second slave address
     \param[in]  i2c_periph: I2Cx(x=0,1)
     \param[in]  address: I2C address
     \param[in]  addr_mask: the bits not need to compare
@@ -386,7 +382,7 @@ void i2c_second_address_config(uint32_t i2c_periph, uint32_t address, uint32_t a
 }
 
 /*!
-    \brief      disable i2c second address in slave mode
+    \brief      disable I2C second address in slave mode
     \param[in]  i2c_periph: I2Cx(x=0,1)
     \param[out] none
     \retval     none
@@ -410,7 +406,6 @@ uint32_t i2c_recevied_address_get(uint32_t i2c_periph)
 /*!
     \brief      enable slave byte control 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -422,7 +417,6 @@ void i2c_slave_byte_control_enable(uint32_t i2c_periph)
 /*!
     \brief      disable slave byte control 
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -629,7 +623,6 @@ void i2c_pec_transfer(uint32_t i2c_periph)
 /*!
     \brief      enable I2C PEC calculation
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -641,7 +634,6 @@ void i2c_pec_enable(uint32_t i2c_periph)
 /*!
     \brief      disable I2C PEC calculation
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -664,7 +656,6 @@ uint32_t i2c_pec_value_get(uint32_t i2c_periph)
 /*!
     \brief      enable SMBus alert
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -676,7 +667,6 @@ void i2c_smbus_alert_enable(uint32_t i2c_periph)
 /*!
     \brief      disable SMBus alert
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -688,7 +678,6 @@ void i2c_smbus_alert_disable(uint32_t i2c_periph)
 /*!
     \brief      enable SMBus device default address
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -700,7 +689,6 @@ void i2c_smbus_default_addr_enable(uint32_t i2c_periph)
 /*!
     \brief      disable SMBus device default address
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -712,7 +700,6 @@ void i2c_smbus_default_addr_disable(uint32_t i2c_periph)
 /*!
     \brief      enable SMBus Host address
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -724,7 +711,6 @@ void i2c_smbus_host_addr_enable(uint32_t i2c_periph)
 /*!
     \brief      disable SMBus Host address
     \param[in]  i2c_periph: I2Cx(x=0,1)
-    \param[in]  none
     \param[out] none
     \retval     none
 */
@@ -836,7 +822,7 @@ void i2c_idle_clock_timeout_config(uint32_t i2c_periph, uint32_t timeout)
       \arg        I2C_FLAG_OUERR: overrun/underrun error in slave mode
       \arg        I2C_FLAG_PECERR: PEC error
       \arg        I2C_FLAG_TIMEOUT: timeout flag
-      \arg        I2C_FLAG_SMBALT: SMBus Alert
+      \arg        I2C_FLAG_SMBALT: SMBus alert
       \arg        I2C_FLAG_I2CBSY: busy flag
       \arg        I2C_FLAG_TR: whether the I2C is a transmitter or a receiver in slave mode
     \param[out] none
@@ -864,7 +850,7 @@ FlagStatus i2c_flag_get(uint32_t i2c_periph, uint32_t flag)
       \arg        I2C_FLAG_OUERR: overrun/underrun error in slave mode
       \arg        I2C_FLAG_PECERR: PEC error
       \arg        I2C_FLAG_TIMEOUT: timeout flag
-      \arg        I2C_FLAG_SMBALT: SMBus Alert
+      \arg        I2C_FLAG_SMBALT: SMBus alert
     \param[out] none
     \retval     none
 */

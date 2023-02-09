@@ -50,15 +50,6 @@ extern uint32_t SystemCoreClock;
 extern void SystemInit (void);
 /* update the SystemCoreClock with current core clock retrieved from cpu registers */
 extern void SystemCoreClockUpdate (void);
-
-#ifdef CONFIG_TZ_ENABLED
-extern int system_clock_config_nsc(void);
-#define system_clock_config_nspe()	system_clock_config_nsc()
-#else
-void system_clock_config(void);
-#define system_clock_config_nspe()	system_clock_config()
-#endif
-
 #ifdef __cplusplus
 }
 #endif

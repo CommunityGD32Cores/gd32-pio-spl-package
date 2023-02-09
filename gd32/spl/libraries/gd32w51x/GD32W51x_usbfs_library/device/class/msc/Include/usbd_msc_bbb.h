@@ -3,10 +3,11 @@
     \brief   the header file of the usbd_msc_bot.c file
 
     \version 2021-03-25, V1.0.0, firmware for GD32 USBFS
+    \version 2022-06-10, V1.1.0, firmware for GD32 USBFS
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2022, GigaDevice Semiconductor Inc.
     
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -41,7 +42,8 @@ OF SUCH DAMAGE.
 #include "usbd_msc_scsi.h"
 
 /* MSC BBB state */
-enum msc_bbb_state {
+enum msc_bbb_state
+{
     BBB_IDLE = 0U,          /*!< idle state  */
     BBB_DATA_OUT,           /*!< data OUT state */
     BBB_DATA_IN,            /*!< data IN state */
@@ -50,7 +52,8 @@ enum msc_bbb_state {
 };
 
 /* MSC BBB status */
-enum msc_bbb_status {
+enum msc_bbb_status 
+{
     BBB_STATUS_NORMAL = 0U, /*!< normal status */
     BBB_STATUS_RECOVERY,    /*!< recovery status*/
     BBB_STATUS_ERROR        /*!< error status */

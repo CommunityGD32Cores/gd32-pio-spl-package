@@ -2,33 +2,33 @@
     \file    gd32w51x_qspi.h
     \brief   QSPI driver
 
-    \version 2021-10-30, V1.0.0, firmware for GD32W51x
+    \version 2021-03-25, V1.0.0, firmware for GD32W51x
 */
 
 /*
     Copyright (c) 2021, GigaDevice Semiconductor Inc.
 
-    Redistribution and use in source and binary forms, with or without modification,
+    Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
 
-    1. Redistributions of source code must retain the above copyright notice, this
+    1. Redistributions of source code must retain the above copyright notice, this 
        list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright notice,
-       this list of conditions and the following disclaimer in the documentation
+    2. Redistributions in binary form must reproduce the above copyright notice, 
+       this list of conditions and the following disclaimer in the documentation 
        and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holder nor the names of its contributors
-       may be used to endorse or promote products derived from this software without
+    3. Neither the name of the copyright holder nor the names of its contributors 
+       may be used to endorse or promote products derived from this software without 
        specific prior written permission.
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
 
@@ -65,13 +65,13 @@ OF SUCH DAMAGE.
 #define QSPI_PRIVCFG                      REG32(QSPI + 0x00000090U)            /*!< QSPI privilege configuration register */
 
 /* QSPI in FMC mode secure register */
-#define QSPI_STAT_FMC_S                   REG32(QSPI + 0x00000108U)            /*!< QSPI status register */
-#define QSPI_STATC_FMC_S                  REG32(QSPI + 0x0000010CU)            /*!< QSPI status clear register */
-#define QSPI_DTLEN_FMC_S                  REG32(QSPI + 0x00000110U)            /*!< QSPI data length register */
-#define QSPI_TCFG_FMC_S                   REG32(QSPI + 0x00000114U)            /*!< QSPI transfer configuration register */
-#define QSPI_ADDR_FMC_S                   REG32(QSPI + 0x00000118U)            /*!< QSPI address register */
-#define QSPI_ALTE_FMC_S                   REG32(QSPI + 0x0000011CU)            /*!< QSPI alternate bytes register */
-#define QSPI_DATA_FMC_S                   REG32(QSPI + 0x00000120U)            /*!< QSPI data register */
+#define QSPI_STAT_SEC                     REG32(QSPI + 0x00000108U)            /*!< QSPI secure status register */
+#define QSPI_STATC_SEC                    REG32(QSPI + 0x0000010CU)            /*!< QSPI secure status clear register */
+#define QSPI_DTLEN_SEC                    REG32(QSPI + 0x00000110U)            /*!< QSPI secure data length register */
+#define QSPI_TCFG_SEC                     REG32(QSPI + 0x00000114U)            /*!< QSPI secure transfer configuration register */
+#define QSPI_ADDR_SEC                     REG32(QSPI + 0x00000118U)            /*!< QSPI secure address register */
+#define QSPI_ALTE_SEC                     REG32(QSPI + 0x0000011CU)            /*!< QSPI secure alternate bytes register */
+#define QSPI_DATA_SEC                     REG32(QSPI + 0x00000120U)            /*!< QSPI secure data register */
 
 /* bits definitions */
 /* QSPI_CTL */
@@ -196,58 +196,58 @@ OF SUCH DAMAGE.
 /* qspi init struct definitions */
 typedef struct
 {
-    uint32_t prescaler;          /* Specifies the prescaler factor for generating clock based on the AHB clock.
-                                  This parameter can be a number between 0 and 255 */
-    uint32_t fifothreshold;      /* Specifies the threshold number of bytes in the FIFO (used only in indirect mode)
-                                  This parameter can be a value between 1 and 16 */
-    uint32_t sampleshift;        /* Specifies the Sample Shift. The data is sampled 1/2 clock cycle delay later to
-                                  take in account external signal delays. (It should be QSPI_SAMPLE_SHIFTING_NONE in DDR mode) */
-    uint32_t flashsize;          /* Specifies the Flash Size. FlashSize+1 is effectively the number of address bits
-                                  required to address the flash memory. The flash capacity can be up to 4GB
-                                  (addressed using 32 bits) in indirect mode, but the addressable space in
+    uint32_t prescaler;           /* specifies the prescaler factor for generating clock based on the AHB clock.
+                                  this parameter can be a number between 0 and 255 */ 
+    uint32_t fifo_threshold;      /* specifies the threshold number of bytes in the FIFO (used only in indirect mode)
+                                  this parameter can be a value between 1 and 16 */
+    uint32_t sample_shift;        /* specifies the Sample Shift. the data is sampled 1/2 clock cycle delay later to 
+                                  take in account external signal delays */
+    uint32_t flash_size;          /* specifies the Flash Size. FlashSize+1 is effectively the number of address bits 
+                                  required to address the flash memory. The flash capacity can be up to 4GB 
+                                  (addressed using 32 bits) in indirect mode, but the addressable space in 
                                   memory-mapped mode is limited to 256MB
-                                  This parameter can be a number between 0 and 31 */
-    uint32_t chipselecthightime; /* Specifies the Chip Select High Time. ChipSelectHighTime+1 defines the minimum number
-                                  of clock cycles which the chip select must remain high between commands. */
-    uint32_t clockmode;          /* Specifies the Clock Mode. It indicates the level that clock takes between commands. */
+                                  this parameter can be a number between 0 and 31 */
+    uint32_t cs_high_time;       /* specifies the chip select high time. cs_high_time+1 defines the minimum number 
+                                  of clock cycles which the chip select must remain high between commands */   
+    uint32_t clock_mode;           /* specifies the clock mode. it indicates the level that clock takes between commands */
 }qspi_init_struct;
 
 /* qspi command struct definitions */
 typedef struct
 {
-    uint32_t instruction;        /* Specifies the Instruction to be sent
-                                  This parameter can be a value (8-bit) between 0x00 and 0xFF */
-    uint32_t address;            /* Specifies the Address to be sent (Size from 1 to 4 bytes according AddressSize)
-                                  This parameter can be a value (32-bits) between 0x0 and 0xFFFFFFFF */
-    uint32_t alternatebytes;     /* Specifies the Alternate Bytes to be sent (Size from 1 to 4 bytes according AlternateBytesSize)
-                                  This parameter can be a value (32-bits) between 0x0 and 0xFFFFFFFF */
-    uint32_t addresssize;        /* Specifies the Address Size */
-    uint32_t alternatebytessize; /* Specifies the Alternate Bytes Size */
-    uint32_t dummycycles;        /* Specifies the Number of Dummy Cycles.
-                                  This parameter can be a number between 0 and 31 */
-    uint32_t instructionmode;    /* Specifies the Instruction Mode */
-    uint32_t addressmode;        /* Specifies the Address Mode */
-    uint32_t alternatebytemode;  /* Specifies the Alternate Bytes Mode */
-    uint32_t datamode;           /* Specifies the Data Mode (used for dummy cycles and data phases) */
-    uint32_t nbdata;             /* Specifies the number of data to transfer. (This is the number of bytes)
-                                  This parameter can be any value between 0 and 0xFFFFFFFF (0 means undefined length
+    uint32_t instruction_mode;   /* specifies the instruction mode */
+    uint32_t instruction;        /* specifies the instruction to be sent
+                                  this parameter can be a value (8-bit) between 0x00 and 0xFF */
+    uint32_t addr_mode;          /* specifies the address mode */
+    uint32_t addr_size;          /* specifies the address size */
+    uint32_t addr;               /* specifies the address to be sent (Size from 1 to 4 bytes according addressSize)
+                                  this parameter can be a value (32-bits) between 0x0 and 0xFFFFFFFF */
+    uint32_t altebytes_mode;     /* specifies the alternate bytes mode */
+    uint32_t altebytes_size;     /* specifies the alternate bytes size */
+    uint32_t altebytes;          /* specifies the alternate Bytes to be sent (size from 1 to 4 bytes according alternatebytessize)
+                                  this parameter can be a value (32-bits) between 0x0 and 0xFFFFFFFF */
+    uint32_t dummycycles;        /* specifies the number of dummy cycles.
+                                  this parameter can be a number between 0 and 31 */
+    uint32_t data_mode;          /* specifies the data mode (used for dummy cycles and data phases) */
+    uint32_t data_length;        /* specifies the number of data to transfer. (this is the number of bytes)
+                                  this parameter can be any value between 0 and 0xFFFFFFFF (0 means undefined length 
                                   until end of memory)*/
-    uint32_t sioomode;           /* Specifies the send instruction only once mode */
+    uint32_t sioo_mode;          /* specifies the send instruction only once mode */
 }qspi_command_struct;
 
 /* qspi autopolling struct definitions */
 typedef struct
 {
-    uint32_t match;              /* Specifies the value to be compared with the masked status register to get a match.
-                                  This parameter can be any value between 0 and 0xFFFFFFFF */
-    uint32_t mask;               /* Specifies the mask to be applied to the status bytes received.
-                                  This parameter can be any value between 0 and 0xFFFFFFFF */
-    uint32_t interval;           /* Specifies the number of clock cycles between two read during automatic polling phases.
-                                  This parameter can be any value between 0 and 0xFFFF */
-    uint32_t statusbytessize;    /* Specifies the size of the status bytes received.
-                                  This parameter can be any value between 1 and 4 */
-    uint32_t matchmode;          /* Specifies the method used for determining a match. */
-    uint32_t automaticstop;      /* Specifies if automatic polling is stopped after a match. */
+    uint32_t match;              /* specifies the value to be compared with the masked status register to get a match.
+                                  this parameter can be any value between 0 and 0xFFFFFFFF */
+    uint32_t mask;               /* specifies the mask to be applied to the status bytes received. 
+                                  this parameter can be any value between 0 and 0xFFFFFFFF */
+    uint32_t interval;           /* specifies the number of clock cycles between two read during automatic polling phases.
+                                  this parameter can be any value between 0 and 0xFFFF */
+    uint32_t statusbytes_size;   /* specifies the size of the status bytes received.
+                                  this parameter can be any value between 1 and 4 */
+    uint32_t match_mode;         /* specifies the method used for determining a match. */
+    uint32_t auto_stop;          /* specifies if automatic polling is stopped after a match. */
 }qspi_autopolling_struct;
 
 /* QSPI flag definitions */
@@ -298,31 +298,31 @@ typedef struct
 
 /* QSPI address mode */
 #define TCFG_ADDRMOD(regval)              (BITS(10,11) & ((uint32_t)(regval) << 10))
-#define QSPI_ADDRESS_NONE                 TCFG_ADDRMOD(0)                            /*!< no address */
-#define QSPI_ADDRESS_1_LINE               TCFG_ADDRMOD(1)                            /*!< address on a single line */
-#define QSPI_ADDRESS_2_LINES              TCFG_ADDRMOD(2)                            /*!< address on two lines */
-#define QSPI_ADDRESS_4_LINES              TCFG_ADDRMOD(3)                            /*!< address on four lines */
+#define QSPI_ADDR_NONE                    TCFG_ADDRMOD(0)                            /*!< no address */
+#define QSPI_ADDR_1_LINE                  TCFG_ADDRMOD(1)                            /*!< address on a single line */
+#define QSPI_ADDR_2_LINES                 TCFG_ADDRMOD(2)                            /*!< address on two lines */
+#define QSPI_ADDR_4_LINES                 TCFG_ADDRMOD(3)                            /*!< address on four lines */
 
 /* QSPI address size */
 #define TCFG_ADDRSZ(regval)               (BITS(12,13) & ((uint32_t)(regval) << 12))
-#define QSPI_ADDRESS_8_BITS               TCFG_ADDRSZ(0)                             /*!< 8 bits address */
-#define QSPI_ADDRESS_16_BITS              TCFG_ADDRSZ(1)                             /*!< 16 bits address */
-#define QSPI_ADDRESS_24_BITS              TCFG_ADDRSZ(2)                             /*!< 24 bits address */
-#define QSPI_ADDRESS_32_BITS              TCFG_ADDRSZ(3)                             /*!< 32 bits address */
+#define QSPI_ADDR_8_BITS                  TCFG_ADDRSZ(0)                             /*!< 8 bits address */
+#define QSPI_ADDR_16_BITS                 TCFG_ADDRSZ(1)                             /*!< 16 bits address */
+#define QSPI_ADDR_24_BITS                 TCFG_ADDRSZ(2)                             /*!< 24 bits address */
+#define QSPI_ADDR_32_BITS                 TCFG_ADDRSZ(3)                             /*!< 32 bits address */
 
 /* QSPI alternate bytes mode */
 #define TCFG_ALTEMOD(regval)              (BITS(14,15) & ((uint32_t)(regval) << 14))
-#define QSPI_ALTERNATE_BYTES_NONE         TCFG_ALTEMOD(0)                            /*!< no alternate bytes */
-#define QSPI_ALTERNATE_BYTES_1_LINE       TCFG_ALTEMOD(1)                            /*!< alternate bytes on a single line */
-#define QSPI_ALTERNATE_BYTES_2_LINES      TCFG_ALTEMOD(2)                            /*!< alternate bytes on two lines */
-#define QSPI_ALTERNATE_BYTES_4_LINES      TCFG_ALTEMOD(3)                            /*!< alternate bytes on four lines */
+#define QSPI_ALTE_BYTES_NONE              TCFG_ALTEMOD(0)                            /*!< no alternate bytes */
+#define QSPI_ALTE_BYTES_1_LINE            TCFG_ALTEMOD(1)                            /*!< alternate bytes on a single line */
+#define QSPI_ALTE_BYTES_2_LINES           TCFG_ALTEMOD(2)                            /*!< alternate bytes on two lines */
+#define QSPI_ALTE_BYTES_4_LINES           TCFG_ALTEMOD(3)                            /*!< alternate bytes on four lines */
 
 /* QSPI alternate bytes size */
 #define TCFG_ALTESZ(regval)               (BITS(16,17) & ((uint32_t)(regval) << 16))
-#define QSPI_ALTERNATE_BYTES_8_BITS       TCFG_ALTESZ(0)                             /*!< 8 bits alternate byte */
-#define QSPI_ALTERNATE_BYTES_16_BITS      TCFG_ALTESZ(1)                             /*!< 16 bits alternate bytes */
-#define QSPI_ALTERNATE_BYTES_24_BITS      TCFG_ALTESZ(2)                             /*!< 24 bits alternate bytes */
-#define QSPI_ALTERNATE_BYTES_32_BITS      TCFG_ALTESZ(3)                             /*!< 32 bits alternate bytes */
+#define QSPI_ALTE_BYTES_8_BITS           TCFG_ALTESZ(0)                             /*!< 8 bits alternate byte */
+#define QSPI_ALTE_BYTES_16_BITS          TCFG_ALTESZ(1)                             /*!< 16 bits alternate bytes */
+#define QSPI_ALTE_BYTES_24_BITS          TCFG_ALTESZ(2)                             /*!< 24 bits alternate bytes */
+#define QSPI_ALTE_BYTES_32_BITS          TCFG_ALTESZ(3)                             /*!< 32 bits alternate bytes */
 
 /* QSPI data mode */
 #define TCFG_DATAMOD(regval)              (BITS(24,25) & ((uint32_t)(regval) << 24))
@@ -343,16 +343,16 @@ typedef struct
 #define QSPI_SIOO_INST_ONLY_FIRST_CMD     QSPI_TCFG_SIOO                             /*!< send instruction only for the first command sequence */
 
 /* QSPI timeout count */
-#define QSPI_TMOUTEN_DISABLE              0x00000000                                 /*!< disable timeout counter */
-#define QSPI_TMOUTEN_ENABLE               QSPI_CTL_TMOUTEN                           /*!< enable timeout counter */
+#define QSPI_TMOUT_DISABLE                0x00000000                                 /*!< disable timeout counter */
+#define QSPI_TMOUT_ENABLE                 QSPI_CTL_TMOUTEN                           /*!< enable timeout counter */
 
 /* QSPI match mode */
 #define QSPI_MATCH_MODE_AND               0x00000000                                 /*!< and match mode */
 #define QSPI_MATCH_MODE_OR                QSPI_CTL_SPMOD                             /*!< or match mode */
 
 /* QSPI automatic stop */
-#define QSPI_AUTOMATIC_STOP_DISABLE       0x00000000                                 /*!< disable automatic stop */
-#define QSPI_AUTOMATIC_STOP_ENABLE        QSPI_CTL_SPS                               /*!< enable automatic stop */
+#define QSPI_AUTO_STOP_DISABLE       0x00000000                                 /*!< disable automatic stop */
+#define QSPI_AUTO_STOP_ENABLE        QSPI_CTL_SPS                               /*!< enable automatic stop */
 
 /* QSPI in FMC mode definitions */
 /* QSPI chip select high cycle in FMC mode */
@@ -366,30 +366,30 @@ typedef struct
 #define QSPI_CS_HIGH_TIME_7_CYCLE_FMC     CTLF_CSHCF(6)                              /*!< QSPI CS stays high for at least 7 cycle in fmc mode */
 #define QSPI_CS_HIGH_TIME_8_CYCLE_FMC     CTLF_CSHCF(7)                              /*!< QSPI CS stays high for at least 8 cycle in fmc mode */
 
-
-/* QSPI send instruction only once mode in FMC mode */
-#define TCFGF_SIOOF(regval)               (BIT(28) & ((uint32_t)(regval) << 28))
-/* QSPI data phase’s mode of operation in FMC mode */
-#define TCFGF_DATAMODF(regval)            (BITS(24,25) & ((uint32_t)(regval) << 24))
-/* QSPI number of dummy cycles in FMC mode */
-#define TCFGF_DUMYCF(regval)              (BITS(18,22) & ((uint32_t)(regval) << 18))
-/* QSPI alternate bytes size in FMC mode */
-#define TCFGF_ALTESZF(regval)             (BITS(16,17) & ((uint32_t)(regval) << 16))
-/* QSPI alternate bytes mode in FMC mode */
-#define TCFGF_ALTEMODF(regval)            (BITS(14,15) & ((uint32_t)(regval) << 14))
-/* QSPI address size in FMC mode */
-#define TCFGF_ADDRSZF(regval)             (BITS(12,13) & ((uint32_t)(regval) << 12))
-/* QSPI address phase mode of operation in FMC mode */
-#define TCFGF_ADDRMODF(regval)            (BITS(10,11) & ((uint32_t)(regval) << 10))
-/* QSPI instruction phase mode of operation in FMC mode */
-#define TCFGF_IMODF(regval)               (BITS(8,9) & ((uint32_t)(regval) << 8))
-/* QSPI command information to be send to the flash memory in FMC mode */
-#define TCFGF_INSTRUCTIONF(regval)        (BITS(0,7) & (uint32_t)(regval))
+/* QSPI interrupt enable/disable constants definitions */
+#define QSPI_INT_TC                      ((uint8_t)0x00U)                            /*!< transfer complete interrupt */
+#define QSPI_INT_FT                      ((uint8_t)0x01U)                            /*!< FIFO threshold interrupt */
+#define QSPI_INT_TERR                    ((uint8_t)0x02U)                            /*!< transfer error interrupt */
+#define QSPI_INT_SM                      ((uint8_t)0x03U)                            /*!< status match interrupt */
+#define QSPI_INT_TMOUT                   ((uint8_t)0x04U)                            /*!< timeout interrupt */
+#define QSPI_INT_WS                      ((uint8_t)0x05U)                            /*!< wrong start sequence interrupt */
 
 /* function declarations */
 /* QSPI deinitialization and initialization functions */
+/* reset QSPI */
+void qspi_deinit(void);
+/* initialize the parameters of QSPI init struct with the default values */
+void qspi_init_struct_para_init(qspi_init_struct* qspi_struct);
 /* initialize QSPI parameter */
 void qspi_init(qspi_init_struct* qspi_struct);
+/* enable QSPI */
+void qspi_enable(void);
+/* disable QSPI */
+void qspi_disable(void);
+/* enable QSPI DMA */
+void qspi_dma_enable(void);
+/* disable QSPI DMA */
+void qspi_dma_disable(void);
 /* QSPI command parameter configure*/
 void qspi_command(qspi_command_struct* cmd);
 /* QSPI transmit data */
@@ -403,15 +403,25 @@ void qspi_memorymapped(qspi_command_struct *cmd, uint16_t timeout, uint32_t toen
 /* abort the current transmission */
 void qspi_abort(void);
 
-/* QSPI command parameter configure*/
+/* QSPI command parameter configure in FMC mode use secure register*/
 void qspi_command_fmc_s(qspi_command_struct* cmd);
-/* QSPI transmit data */
+/* QSPI transmit data in FMC mode use secure register*/
 void qspi_transmit_fmc_s(uint8_t *tdata);
-/* QSPI receive data */
+/* QSPI receive data in FMC mode use secure register*/
 void qspi_receive_fmc_s(uint8_t *rdata);
-/* configure QSPI autopolling mode */
+/* configure QSPI autopolling mode in FMC mode use secure register*/
 void qspi_autopolling_fmc_s(qspi_command_struct *cmd, qspi_autopolling_struct *cfg);
-/* configure QSPI memorymapped mode */
+/* configure QSPI memorymapped mode in FMC mode use secure register*/
 void qspi_memorymapped_fmc_s(qspi_command_struct *cmd, uint16_t timeout, uint32_t toen);
+
+/* flag and interrupt functions */
+/* enable QSPI interrupt */
+void qspi_interrupt_enable(uint8_t interrupt);
+/* disable QSPI interrupt */
+void qspi_interrupt_disable(uint8_t interrupt);
+/* get QSPI flag status */
+FlagStatus qspi_flag_get(uint32_t flag);
+/* clear QSPI flag status */
+void qspi_flag_clear(uint32_t flag);
 
 #endif /* GD32W51X_QSPI_H */
