@@ -1,15 +1,16 @@
 /*!
     \file    gd32f10x_gpio.c
     \brief   GPIO driver
-    
+
     \version 2014-12-26, V1.0.0, firmware for GD32F10x
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -340,10 +341,8 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_CAN0_FULL_REMAP: CAN0 full remapping(only for GD32F10X_CL devices)
       \arg        GPIO_PD01_REMAP: PD01 remapping
       \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping(only for GD32F10X_CL devices and GD32F10X_HD devices)
-      \arg        GPIO_ADC0_ETRGINS_REMAP: ADC0 external trigger inserted conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
-      \arg        GPIO_ADC0_ETRGREG_REMAP: ADC0 external trigger regular conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
-      \arg        GPIO_ADC1_ETRGINS_REMAP: ADC1 external trigger inserted conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
-      \arg        GPIO_ADC1_ETRGREG_REMAP: ADC1 external trigger regular conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
+      \arg        GPIO_ADC0_ETRGRT_REMAP: ADC0 external trigger routine conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
+      \arg        GPIO_ADC1_ETRGRT_REMAP: ADC1 external trigger routine conversion remapping(only for GD32F10X_MD, GD32F10X_HD devices and GD32F10X_XD devices)
       \arg        GPIO_ENET_REMAP: ENET remapping(only for GD32F10X_CL devices) 
       \arg        GPIO_CAN1_REMAP: CAN1 remapping(only for GD32F10X_CL devices)
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST

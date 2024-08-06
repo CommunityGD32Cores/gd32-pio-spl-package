@@ -8,10 +8,11 @@
     \version 2019-11-27, V2.1.1, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
     \version 2021-07-21, V2.2.1, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -409,7 +410,7 @@ typedef struct
     ControlStatus time_triggered;                                       /*!< time triggered communication mode */
     ControlStatus auto_bus_off_recovery;                                /*!< automatic bus-off recovery */
     ControlStatus auto_wake_up;                                         /*!< automatic wake-up mode */
-    ControlStatus no_auto_retrans;                                      /*!< automatic retransmission mode disable */
+    ControlStatus auto_retrans;                                      /*!< automatic retransmission mode */
     ControlStatus rec_fifo_overwrite;                                   /*!< receive FIFO overwrite mode */
     ControlStatus trans_fifo_order;                                     /*!< transmit FIFO order */
     uint16_t prescaler;                                                 /*!< baudrate prescaler */
@@ -423,7 +424,7 @@ typedef struct
     uint8_t tx_ff;                                                      /*!< format of frame, standard or extended format */
     uint8_t tx_ft;                                                      /*!< type of frame, data or remote */
     uint8_t tx_dlen;                                                    /*!< data length */
-    uint8_t tx_data[8];                                                 /*!< transmit data */
+    uint8_t tx_data[64];                                                 /*!< transmit data */
 }can_trasnmit_message_struct;
 
 /* CAN receive message structure */
@@ -434,7 +435,7 @@ typedef struct
     uint8_t rx_ff;                                                      /*!< format of frame, standard or extended format */
     uint8_t rx_ft;                                                      /*!< type of frame, data or remote */
     uint8_t rx_dlen;                                                    /*!< data length */
-    uint8_t rx_data[8];                                                 /*!< receive data */
+    uint8_t rx_data[64];                                                 /*!< receive data */
     uint8_t rx_fi;                                                      /*!< filtering index */
 } can_receive_message_struct;
 

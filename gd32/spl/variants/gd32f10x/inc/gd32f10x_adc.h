@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -295,7 +296,7 @@ void adc_data_alignment_config(uint32_t adc_periph, uint32_t data_alignment);
 void adc_enable(uint32_t adc_periph);
 /* disable ADC interface */
 void adc_disable(uint32_t adc_periph);
-/* ADC calibration and reset calibration */
+/* ADC calibration and reset calibration(GD32F10x_MD series without this function) */
 void adc_calibration_enable(uint32_t adc_periph);
 /* enable the temperature sensor and Vrefint channel */
 void adc_tempsensor_vrefint_enable(void);

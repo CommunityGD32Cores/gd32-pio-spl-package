@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +40,7 @@ OF SUCH DAMAGE.
 
 /*!
     \brief      set the wait state counter value
-    \param[in]  wscnt£ºwait state counter value
+    \param[in]  wscntï¿½ï¿½wait state counter value
       \arg        WS_WSCNT_0: FMC 0 wait state
       \arg        WS_WSCNT_1: FMC 1 wait state
       \arg        WS_WSCNT_2: FMC 2 wait state
@@ -176,6 +177,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
                 FMC_CTL0 |= FMC_CTL0_PER;
                 FMC_ADDR0 = page_address;
                 FMC_CTL0 |= FMC_CTL0_START;
+                __nop();
+                __nop();
                 /* wait for the FMC ready */
                 fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
                 /* reset the PER bit */
@@ -192,6 +195,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
                     FMC_ADDR0 = page_address;
                 }
                 FMC_CTL1 |= FMC_CTL1_START;
+                __nop();
+                __nop();
                 /* wait for the FMC ready */
                 fmc_state = fmc_bank1_ready_wait(FMC_TIMEOUT_COUNT);
                 /* reset the PER bit */
@@ -205,6 +210,8 @@ fmc_state_enum fmc_page_erase(uint32_t page_address)
             FMC_CTL0 |= FMC_CTL0_PER;
             FMC_ADDR0 = page_address;
             FMC_CTL0 |= FMC_CTL0_START;
+            __nop();
+            __nop();
             /* wait for the FMC ready */
             fmc_state = fmc_bank0_ready_wait(FMC_TIMEOUT_COUNT);
             /* reset the PER bit */
