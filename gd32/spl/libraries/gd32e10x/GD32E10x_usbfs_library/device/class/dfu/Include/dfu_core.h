@@ -2,12 +2,11 @@
     \file    dfu_core.h
     \brief   the header file of USB DFU device class core functions
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -77,14 +76,11 @@ OF SUCH DAMAGE.
 /* bit detach capable = bit 3 in bmAttributes field */
 #define DFU_DETACH_MASK               (uint8_t)(0x10U)
 
-#define USB_SERIAL_STR_LEN            0x06U
-
-#define USB_DFU_CONFIG_DESC_SIZE      27U
-
 #define DFU_DESC_TYPE                 0x21U
 
 /* DFU device state defines */
-typedef enum {
+typedef enum
+{
     STATE_APP_IDLE = 0x00U,
     STATE_APP_DETACH,
     STATE_DFU_IDLE,
@@ -99,7 +95,8 @@ typedef enum {
 } dfu_state;
 
 /* DFU device status defines */
-typedef enum {
+typedef enum 
+{
     STATUS_OK = 0x00U,
     STATUS_ERR_TARGET,
     STATUS_ERR_FILE,
@@ -119,7 +116,8 @@ typedef enum {
 } dfu_status;
 
 /* DFU class-specific requests */
-typedef enum {
+typedef enum 
+{
     DFU_DETACH = 0U,
     DFU_DNLOAD,
     DFU_UPLOAD,
@@ -139,7 +137,7 @@ typedef struct
     uint8_t bmAttributes;                 /*!< DFU attributes */
     uint16_t wDetachTimeOut;              /*!< time, in milliseconds, that the device will wait after receipt of the DFU_DETACH request. If */ 
     uint16_t wTransferSize;               /*!< maximum number of bytes that the device can accept per control-write transaction */
-    uint16_t bcdDFUVersion;               /*!< numeric expression identifying the version of the DFU Specification release. */
+    uint16_t bcdDFUVersion;               /*!< numeric expression identifying the version of the DFU specification release. */
 } usb_desc_dfu_func;
 
 #pragma pack()
@@ -148,10 +146,12 @@ typedef struct
 typedef struct
 {
     usb_desc_config           config;
-    usb_desc_itf              dfu_itf;
+    usb_desc_itf              dfu_itf0;
+    usb_desc_itf              dfu_itf1;
     usb_desc_dfu_func         dfu_func;
 } usb_dfu_desc_config_set;
 
+/* USB DFU handler structure */
 typedef struct
 {
     uint8_t bStatus;
@@ -169,9 +169,9 @@ typedef struct
     uint8_t buf[TRANSFER_SIZE];
 } usbd_dfu_handler;
 
-typedef  void  (*app_func) (void);
+typedef void (*app_func) (void);
 
 extern usb_desc dfu_desc;
 extern usb_class_core dfu_class;
 
-#endif  /* DFU_CORE_H */
+#endif /* DFU_CORE_H */

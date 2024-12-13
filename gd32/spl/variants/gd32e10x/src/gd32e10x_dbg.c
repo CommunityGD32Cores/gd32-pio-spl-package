@@ -2,13 +2,11 @@
     \file    gd32e10x_dbg.c
     \brief   DBG driver
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -133,19 +131,3 @@ void dbg_trace_pin_disable(void)
     DBG_CTL &= ~DBG_CTL_TRACE_IOEN;
 }
 
-/*!
-    \brief      trace pin mode selection 
-    \param[in]  trace_mode:
-                only one parameter can be selected which is shown as below:
-      \arg        TRACE_MODE_ASYNC: trace pin used for async mode 
-      \arg        TRACE_MODE_SYNC_DATASIZE_1: trace pin used for sync mode and data size is 1
-      \arg        TRACE_MODE_SYNC_DATASIZE_2: trace pin used for sync mode and data size is 2
-      \arg        TRACE_MODE_SYNC_DATASIZE_4: trace pin used for sync mode and data size is 4
-    \param[out] none
-    \retval     none
-*/
-void dbg_trace_pin_mode_set(uint32_t trace_mode)
-{
-    DBG_CTL &= ~DBG_CTL_TRACE_MODE;
-    DBG_CTL |= trace_mode;
-}

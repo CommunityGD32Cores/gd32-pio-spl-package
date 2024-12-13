@@ -2,12 +2,11 @@
     \file    drv_usbh_int.h.h
     \brief   USB host mode interrupt management header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,16 +38,14 @@ OF SUCH DAMAGE.
 #include "drv_usb_host.h"
 #include "usbh_core.h"
 
-typedef struct _usbh_int_cb
+typedef struct _usbh_ev_cb
 {
     uint8_t (*connect)          (usbh_host *uhost);
     uint8_t (*disconnect)       (usbh_host *uhost);
-    uint8_t (*port_enabled)     (usbh_host *uhost);
-    uint8_t (*port_disabled)    (usbh_host *uhost);
     uint8_t (*SOF)              (usbh_host *uhost);
-} usbh_int_cb;
+} usbh_ev_cb;
 
-extern usbh_int_cb *usbh_int_fop;
+extern usbh_ev_cb *usbh_int_fop;
 
 /* function declarations */
 /* handle global host interrupt */

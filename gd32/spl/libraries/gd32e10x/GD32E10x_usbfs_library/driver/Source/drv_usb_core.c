@@ -2,12 +2,11 @@
     \file    drv_usb_core.c
     \brief   USB core driver which can operate in host and device mode
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,19 +36,19 @@ OF SUCH DAMAGE.
 #include "drv_usb_hw.h"
 
 /* local function prototypes ('static') */
-static void usb_core_reset (usb_core_regs *usb_regs);
+static void usb_core_reset(usb_core_regs *usb_regs);
 
 /*!
-    \brief      configure USB core basic 
+    \brief      configure USB core basic
     \param[in]  usb_basic: pointer to USB capabilities
     \param[in]  usb_regs: USB core registers
     \param[in]  usb_core: USB core
     \param[out] none
     \retval     operation status
 */
-usb_status usb_basic_init (usb_core_basic *usb_basic, 
-                           usb_core_regs  *usb_regs, 
-                           usb_core_enum   usb_core)
+usb_status usb_basic_init(usb_core_basic *usb_basic,
+                          usb_core_regs  *usb_regs,
+                          usb_core_enum   usb_core)
 {
     /* configure USB default transfer mode as FIFO mode */
     usb_basic->transfer_mode = (uint8_t)USB_USE_FIFO;
@@ -59,7 +58,7 @@ usb_status usb_basic_init (usb_core_basic *usb_basic,
 
     usb_basic->core_enum = (uint8_t)usb_core;
 
-    switch (usb_core) {
+    switch(usb_core) {
     case USB_CORE_ENUM_FS:
         usb_basic->base_reg = (uint32_t)USBFS_REG_BASE;
 
@@ -162,11 +161,6 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
         usb_mdelay(20U);
     }
 
-    if ((uint8_t)USB_USE_DMA == usb_basic.transfer_mode) {
-        usb_regs->gr->GAHBCS &= ~GAHBCS_BURST;
-        usb_regs->gr->GAHBCS |= DMA_INCR8 | GAHBCS_DMAEN;
-    }
-
 #ifdef USE_OTG_MODE
 
     /* enable USB OTG features */
@@ -176,7 +170,7 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
     usb_regs->gr->GINTF = 0xBFFFFFFFU;
 
     usb_regs->gr->GINTEN = GINTEN_WKUPIE | GINTEN_SPIE | \
-                                     GINTEN_OTGIE | GINTEN_SESIE | GINTEN_CIDPSCIE;
+                           GINTEN_OTGIE | GINTEN_SESIE | GINTEN_CIDPSCIE;
 
 #endif /* USE_OTG_MODE */
 
@@ -184,7 +178,7 @@ usb_status usb_core_init (usb_core_basic usb_basic, usb_core_regs *usb_regs)
 }
 
 /*!
-    \brief      write a packet into the TX FIFO associated with the endpoint
+    \brief      write a packet into the Tx FIFO associated with the endpoint
     \param[in]  usb_regs: pointer to USB core registers
     \param[in]  src_buf: pointer to source buffer
     \param[in]  fifo_num: FIFO number which is in (0..3)
@@ -234,7 +228,7 @@ void *usb_rxfifo_read (usb_core_regs *usb_regs, uint8_t *dest_buf, uint16_t byte
 }
 
 /*!
-    \brief      flush a TX FIFO or all TX FIFOs
+    \brief      flush a Tx FIFO or all Tx FIFOs
     \param[in]  usb_regs: pointer to USB core registers
     \param[in]  fifo_num: FIFO number which is in (0..3)
     \param[out] none
@@ -244,7 +238,7 @@ usb_status usb_txfifo_flush (usb_core_regs *usb_regs, uint8_t fifo_num)
 {
     usb_regs->gr->GRSTCTL = ((uint32_t)fifo_num << 6U) | GRSTCTL_TXFF;
 
-    /* wait for TX FIFO flush bit is set */
+    /* wait for Tx FIFO flush bit is set */
     while (usb_regs->gr->GRSTCTL & GRSTCTL_TXFF) {
         /* no operation */
     }
@@ -265,7 +259,7 @@ usb_status usb_rxfifo_flush (usb_core_regs *usb_regs)
 {
     usb_regs->gr->GRSTCTL = GRSTCTL_RXFF;
 
-    /* wait for RX FIFO flush bit is set */
+    /* wait for Rx FIFO flush bit is set */
     while (usb_regs->gr->GRSTCTL & GRSTCTL_RXFF) {
         /* no operation */
     }
@@ -290,7 +284,7 @@ void usb_set_txfifo(usb_core_regs *usb_regs, uint8_t fifo, uint16_t size)
 
     tx_offset = usb_regs->gr->GRFLEN;
 
-    if (fifo == 0U) {
+    if(0U == fifo) {
         usb_regs->gr->DIEP0TFLEN_HNPTFLEN = ((uint32_t)size << 16) | tx_offset;
     } else {
         tx_offset += (usb_regs->gr->DIEP0TFLEN_HNPTFLEN) >> 16;
@@ -342,4 +336,3 @@ static void usb_core_reset (usb_core_regs *usb_regs)
     /* wait for additional 3 PHY clocks */
     usb_udelay(3U);
 }
-

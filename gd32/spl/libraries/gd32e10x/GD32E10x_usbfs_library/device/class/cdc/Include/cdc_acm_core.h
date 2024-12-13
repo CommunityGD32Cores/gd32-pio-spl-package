@@ -2,12 +2,11 @@
     \file    cdc_acm_core.h
     \brief   the header file of cdc acm driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -39,7 +38,7 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usb_cdc.h"
 
-#define USB_CDC_RX_LEN      64
+#define USB_CDC_RX_LEN      USB_CDC_DATA_PACKET_SIZE
 
 typedef struct {
     uint8_t packet_sent;

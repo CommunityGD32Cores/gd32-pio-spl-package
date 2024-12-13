@@ -1,12 +1,12 @@
 /*!
-    \file       ff_gen_drv.h
-    \brief     header for ff_gen_drv.c module
+    \file    ff_gen_drv.h
+    \brief   header for ff_gen_drv.c module
 
-    \version 2020-08-05, V2.0.0, firmware for GD32 USBFS
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -31,7 +31,6 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
 OF SUCH DAMAGE.
 */
-
 
 #ifndef __FF_GEN_DRV_H
 #define __FF_GEN_DRV_H
@@ -81,4 +80,3 @@ uint8_t FATFS_GetAttachedDriversNbr(void);
 #endif
 
 #endif /* __FF_GEN_DRV_H */
-

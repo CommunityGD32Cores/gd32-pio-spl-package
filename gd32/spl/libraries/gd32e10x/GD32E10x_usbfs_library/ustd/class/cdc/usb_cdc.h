@@ -2,12 +2,11 @@
     \file    usb_cdc.h
     \brief   the header file of communication device class standard
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -114,7 +113,7 @@ enum usb_cdc_subclass {
     USB_CDC_SUBCLASS_TCM,            /*!< telephone control mode */
     USB_CDC_SUBCLASS_MCM,            /*!< multichannel control model */
     USB_CDC_SUBCLASS_CCM,            /*!< CAPI control model */
-    USB_CDC_SUBCLASS_ENCM,           /*!< ethernet networking control model */
+    USB_CDC_SUBCLASS_ENCM,           /*!< Ethernet networking control model */
     USB_CDC_SUBCLASS_ANCM            /*!< ATM networking control model */
 };
 

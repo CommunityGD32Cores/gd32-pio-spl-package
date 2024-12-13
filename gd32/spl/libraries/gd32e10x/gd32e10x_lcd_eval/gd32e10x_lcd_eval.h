@@ -2,13 +2,11 @@
     \file    gd32e10x_lcd_eval.h
     \brief   LCD driver header file
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -200,7 +198,7 @@ typedef struct
 void gd_eval_lcd_init(void);
 /* lcd peripheral initialize */
 void exmc_lcd_init(void);
-/* initize the LCD */
+/* initialize the LCD */
 void lcd_init(void);
 /* write data to the selected LCD register */
 void lcd_register_write(uint16_t register_id,uint16_t value);
@@ -214,7 +212,7 @@ void lcd_gram_write_prepare(void);
 void lcd_gram_write(uint16_t rgb_code);
 /* read data from GRAM */
 uint16_t lcd_gram_read(void);
-/* set the curson of LCD */
+/* set the cursor of LCD */
 void lcd_cursor_set(uint16_t x,uint16_t y);
 /* clear the LCD screen to the specified color */
 void lcd_clear(uint16_t color);

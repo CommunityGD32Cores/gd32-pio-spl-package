@@ -2,12 +2,11 @@
     \file    usbh_pipe.c
     \brief   USB host mode pipe operation driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -60,11 +59,14 @@ uint8_t usbh_pipe_create (usb_core_driver *udev,
     pp->dev_speed = dev->speed;
     pp->ep.type = ep_type;
     pp->ep.mps = ep_mpl;
-    pp->ping = (uint8_t)(dev->speed == PORT_SPEED_HIGH);
+
+    if ((USB_EPTYPE_BULK == pp->ep.type) || (USB_EPTYPE_CTRL == pp->ep.type)) {
+        pp->supp_ping = (uint8_t)(pp->dev_speed == PORT_SPEED_HIGH);
+    }
 
     usb_pipe_init (udev, pp_num);
 
-    return HC_OK;
+    return HP_OK;
 }
 
 /*!
@@ -91,6 +93,10 @@ uint8_t usbh_pipe_update (usb_core_driver *udev,
 
     if ((pp->dev_speed != dev_speed) && (dev_speed)) {
         pp->dev_speed = dev_speed;
+
+        if ((USB_EPTYPE_BULK == pp->ep.type) || (USB_EPTYPE_CTRL == pp->ep.type)) {
+            pp->supp_ping = (uint8_t)(pp->dev_speed == PORT_SPEED_HIGH);
+        }
     }
 
     if ((pp->ep.mps != ep_mpl) && (ep_mpl)) {
@@ -99,7 +105,7 @@ uint8_t usbh_pipe_update (usb_core_driver *udev,
 
     usb_pipe_init (udev, pp_num);
 
-    return HC_OK;
+    return HP_OK;
 }
 
 /*!
@@ -113,7 +119,7 @@ uint8_t usbh_pipe_allocate (usb_core_driver *udev, uint8_t ep_addr)
 {
     uint16_t pp_num = usbh_freepipe_get (udev);
 
-    if (HC_ERROR != pp_num) {
+    if (HP_ERROR != pp_num) {
         udev->host.pipe[pp_num].in_used = 1U;
         udev->host.pipe[pp_num].ep.dir = EP_DIR(ep_addr);
         udev->host.pipe[pp_num].ep.num = EP_ID(ep_addr);
@@ -131,7 +137,7 @@ uint8_t usbh_pipe_allocate (usb_core_driver *udev, uint8_t ep_addr)
 */
 uint8_t usbh_pipe_free (usb_core_driver *udev, uint8_t pp_num)
 {
-    if (pp_num < HC_MAX) {
+    if (pp_num < HP_MAX) {
         udev->host.pipe[pp_num].in_used = 0U;
     }
 
@@ -148,7 +154,7 @@ uint8_t usbh_pipe_delete (usb_core_driver *udev)
 {
     uint8_t pp_num = 0U;
 
-    for (pp_num = 2U; pp_num < HC_MAX; pp_num++) {
+    for (pp_num = 2U; pp_num < HP_MAX; pp_num++) {
         udev->host.pipe[pp_num] = (usb_pipe) {0};
     }
 
@@ -165,11 +171,11 @@ static uint16_t usbh_freepipe_get (usb_core_driver *udev)
 {
     uint8_t pp_num = 0U;
 
-    for (pp_num = 0U; pp_num < HC_MAX; pp_num++) {
+    for (pp_num = 0U; pp_num < HP_MAX; pp_num++) {
         if (0U == udev->host.pipe[pp_num].in_used) {
             return (uint16_t)pp_num;
         }
     }
 
-    return HC_ERROR;
+    return HP_ERROR;
 }

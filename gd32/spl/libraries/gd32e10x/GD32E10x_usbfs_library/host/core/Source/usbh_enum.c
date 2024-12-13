@@ -1,13 +1,12 @@
 /*!
     \file    usbh_enum.c
-    \brief   USB host mode enumberation driver
+    \brief   USB host mode enumeration driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -112,11 +111,11 @@ usbh_status usbh_cfgdesc_get (usbh_host *uhost, uint16_t len)
 
     usbh_control *usb_ctl = &uhost->control;
 
-#if (USBH_KEEP_CFG_DESCRIPTOR == 1U)
+#if (USBH_CFG_DESC_KEEP == 1U)
     pdata = uhost->dev_prop.cfgdesc_rawdata;
 #else
     pdata = uhost->dev_prop.data;
-#endif
+#endif /* USBH_CFG_DESC_KEEP */
 
     if (CTL_IDLE == usb_ctl->ctl_state) {
         usb_ctl->setup.req = (usb_req) {
@@ -669,8 +668,8 @@ static void usbh_strdesc_parse (uint8_t *psrc, uint8_t *pdest, uint16_t len)
 {
     uint16_t str_len = 0U, index = 0U;
 
-    /* the unicode string descriptor is not NULL-terminated. The string length is
-     * computed by substracting two from the value of the first byte of the descriptor.
+    /* the Unicode string descriptor is not NULL-terminated. The string length is
+     * computed by subtracting two from the value of the first byte of the descriptor.
      */
 
     /* check which is lower size, the size of string or the length of bytes read from the device */
@@ -683,12 +682,12 @@ static void usbh_strdesc_parse (uint8_t *psrc, uint8_t *pdest, uint16_t len)
         psrc += 2U; /* adjust the offset ignoring the string len and descriptor type */
 
         for (index = 0U; index < str_len; index += 2U) {
-            /* copy only the string and ignore the unicode id, hence add the src */
+            /* copy only the string and ignore the Unicode id, hence add the src */
             *pdest = psrc[index];
 
             pdest++;
         }
 
-        *pdest = 0U; /* mark end of string */  
+        *pdest = 0U; /* mark end of string */
     }
 }

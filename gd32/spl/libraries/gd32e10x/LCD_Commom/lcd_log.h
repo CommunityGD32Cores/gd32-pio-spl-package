@@ -1,14 +1,12 @@
 /*!
     \file    lcd_log.h
-    \brief   the header file of LCD log
-
-    \version 2018-03-26, V1.0.0, demo for GD32E103
-    \version 2020-09-30, V1.1.0, demo for GD32E103
-    \version 2020-12-31, V1.2.0, demo for GD32E103
+    \brief   header for the lcd_log.c file
+    
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -34,21 +32,31 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#include "stdint.h"
-#include "lcd_font.h"
+#ifndef  LCD_LOG_H
+#define  LCD_LOG_H
 
-/* initialize the LCD log module */
+#include "gd32e10x_lcd_eval.h"
+#include <string.h>
+
+/* initialize the LCD Log module */
 void lcd_log_init (void);
-/* de-initialize the LCD log module */
+/* de-initialize the LCD Log module */
 void lcd_log_deinit (void);
-/* display the application header (title) on the LCD screen */
-void lcd_log_header_set (uint8_t *p_title, uint16_t start_x);
+/* display the application header (title) on the LCD screen  */
+void lcd_log_header_set (uint8_t *ptitle, uint16_t start_x);
 /* display the application footer (status) on the LCD screen */
-void lcd_log_footer_set (uint8_t *p_status, uint16_t start_x);
-/* redirect the printf to the lcd */
-void lcd_log_print (uint8_t *p_str, uint16_t offset, uint16_t char_color);
+void lcd_log_footer_set (uint8_t *pstatus, uint16_t start_x);
+/* redirect the printf to the LCD */
+void lcd_log_print (uint8_t *pstr, 
+                    uint16_t len, 
+                    uint16_t char_color, 
+                    uint16_t back_color);
 /* clear the text zone */
-void lcd_log_text_zone_clear (uint16_t start_x,
-                              uint16_t start_y,
-                              uint16_t width,
-                              uint16_t height);
+void lcd_log_textzone_clear (uint16_t start_x, 
+                             uint16_t start_y, 
+                             uint16_t end_x, 
+                             uint16_t end_y);
+
+
+#endif /* LCD_LOG_H */ 
+

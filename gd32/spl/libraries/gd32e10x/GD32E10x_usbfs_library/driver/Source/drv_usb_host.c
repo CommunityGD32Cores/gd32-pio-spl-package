@@ -2,12 +2,11 @@
     \file    drv_usb_host.c
     \brief   USB host mode low level driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -58,6 +57,9 @@ usb_status usb_host_init (usb_core_driver *udev)
     /* restart the PHY Clock */
     *udev->regs.PWRCLKCTL = 0U;
 
+    /* configure USB clock of PHY */
+    usb_phyclock_config (udev, HCTL_48MHZ);
+
     /* support FS/LS only */
     udev->regs.hr->HCTL &= ~HCTL_SPDFSLS;
 
@@ -67,12 +69,12 @@ usb_status usb_host_init (usb_core_driver *udev)
         /* set Rx FIFO size */
         udev->regs.gr->GRFLEN = USB_RX_FIFO_FS_SIZE;
 
-        /* set non-periodic TX FIFO size and address */
+        /* set non-periodic Tx FIFO size and address */
         nptxfifolen |= USB_RX_FIFO_FS_SIZE;
         nptxfifolen |= USB_HTX_NPFIFO_FS_SIZE << 16U;
         udev->regs.gr->DIEP0TFLEN_HNPTFLEN = nptxfifolen;
 
-        /* set periodic TX FIFO size and address */
+        /* set periodic Tx FIFO size and address */
         ptxfifolen |= USB_RX_FIFO_FS_SIZE + USB_HTX_NPFIFO_FS_SIZE;
         ptxfifolen |= USB_HTX_PFIFO_FS_SIZE << 16U;
         udev->regs.gr->HPTFLEN = ptxfifolen;
@@ -88,7 +90,7 @@ usb_status usb_host_init (usb_core_driver *udev)
 
     /* make sure the FIFOs are flushed */
 
-    /* flush all TX FIFOs in device or host mode */
+    /* flush all Tx FIFOs in device or host mode */
     usb_txfifo_flush (&udev->regs, 0x10U);
 
     /* flush the entire Rx FIFO */
@@ -201,10 +203,6 @@ usb_status usb_pipe_init (usb_core_driver *udev, uint8_t pipe_num)
     /* clear old interrupt conditions for this host channel */
     udev->regs.pr[pipe_num]->HCHINTF = 0xFFFFFFFFU;
 
-    if (USB_USE_DMA == udev->bp.transfer_mode) {
-        pp_inten |= HCHINTEN_DMAERIE;
-    }
-
     if (pp->ep.dir) {
         pp_inten |= HCHINTEN_BBERIE;
     }
@@ -217,9 +215,8 @@ usb_status usb_pipe_init (usb_core_driver *udev, uint8_t pipe_num)
                     | HCHINTEN_DTERIE | HCHINTEN_NAKIE;
 
         if (!pp->ep.dir) {
-            pp_inten |= HCHINTEN_NYETIE;
-
-            if (pp->ping) {
+            if (PORT_SPEED_HIGH == pp->dev_speed) {
+                pp_inten |= HCHINTEN_NYETIE;
                 pp_inten |= HCHINTEN_ACKIE;
             }
         }
@@ -304,10 +301,6 @@ usb_status usb_pipe_xfer (usb_core_driver *udev, uint8_t pipe_num)
     /* initialize the host channel transfer information */
     udev->regs.pr[pipe_num]->HCHLEN = pp->xfer_len | pp->DPID | PIPE_XFER_PCNT(packet_count);
 
-    if (USB_USE_DMA == udev->bp.transfer_mode) {
-        udev->regs.pr[pipe_num]->HCHDMAADDR = (unsigned int)pp->xfer_buf;
-    }
-
     pp_ctl = udev->regs.pr[pipe_num]->HCHCTL;
 
     if (usb_frame_even(udev)) {
@@ -353,7 +346,7 @@ usb_status usb_pipe_xfer (usb_core_driver *udev, uint8_t pipe_num)
                 break;
             }
 
-            /* write packet into the TX fifo. */
+            /* write packet into the Tx fifo. */
             usb_txfifo_write (&udev->regs, pp->xfer_buf, pipe_num, (uint16_t)pp->xfer_len);
         }
     }
@@ -414,7 +407,7 @@ usb_status usb_pipe_ping (usb_core_driver *udev, uint8_t pipe_num)
     udev->regs.pr[pipe_num]->HCHLEN = HCHLEN_PING | (HCHLEN_PCNT & (1U << 19U));
 
     pp_ctl = udev->regs.pr[pipe_num]->HCHCTL;
- 
+
     pp_ctl |= HCHCTL_CEN;
     pp_ctl &= ~HCHCTL_CDIS;
 

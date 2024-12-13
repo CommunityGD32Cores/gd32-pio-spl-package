@@ -1,13 +1,12 @@
 /*!
-    \file    usbh_core.h
-    \brief   header file for the usbh_core.c
+    \file    usbh_msc_core.h
+    \brief   header file for the usbh_msc_core.c
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -71,7 +70,7 @@ typedef enum
     MSC_REQ_ERROR,
 } msc_req_state;
 
-/* Structure for LUN */
+/* structure for LUN */
 typedef struct
 {
     msc_state               state;
@@ -83,7 +82,7 @@ typedef struct
     uint8_t                 state_changed;
 } msc_lun;
 
-/* structure for MSC process */
+/* structure for msc process */
 typedef struct _msc_process
 {
     uint8_t         pipe_in;
@@ -99,7 +98,7 @@ typedef struct _msc_process
     msc_error       error;
     msc_req_state   req_state;
     msc_req_state   prev_req_state;
-    bot_handle      bot;
+    bbb_handle      bbb;
     msc_lun         unit[MSC_MAX_SUPPORTED_LUN];
     uint32_t        timer;
 } usbh_msc_handler;
@@ -122,4 +121,4 @@ usbh_status usbh_msc_write (usbh_host *uhost,
                             uint8_t *pbuf,
                             uint32_t length);
 
-#endif  /* __USBH_MSC_CORE_H */
+#endif /* __USBH_MSC_CORE_H */

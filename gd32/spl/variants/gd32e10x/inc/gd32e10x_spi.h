@@ -2,13 +2,11 @@
     \file    gd32e10x_spi.h
     \brief   definitions for the SPI
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -293,11 +291,13 @@ void spi_nss_internal_high(uint32_t spi_periph);
 /* SPI NSS pin low level in software mode */
 void spi_nss_internal_low(uint32_t spi_periph);
 
+/* SPI DMA functions */
 /* enable SPI DMA */
 void spi_dma_enable(uint32_t spi_periph, uint8_t dma);
 /* disable SPI DMA */
 void spi_dma_disable(uint32_t spi_periph, uint8_t dma);
 
+/* SPI/I2S transfer functions */
 /* configure SPI/I2S data frame format */
 void spi_i2s_data_frame_format_config(uint32_t spi_periph, uint16_t frame_format);
 /* SPI transmit data */
@@ -306,6 +306,8 @@ void spi_i2s_data_transmit(uint32_t spi_periph, uint16_t data);
 uint16_t spi_i2s_data_receive(uint32_t spi_periph);
 /* configure SPI bidirectional transfer direction */
 void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_direction);
+/* clear TI mode format error flag status */
+void spi_i2s_format_error_clear(uint32_t spi_periph, uint32_t flag);
 
 /* SPI CRC functions */
 /* set SPI CRC polynomial */
@@ -320,6 +322,8 @@ void spi_crc_off(uint32_t spi_periph);
 void spi_crc_next(uint32_t spi_periph);
 /* get SPI CRC send value or receive value */
 uint16_t spi_crc_get(uint32_t spi_periph, uint8_t crc);
+/* clear SPI CRC error flag status */
+void spi_crc_error_clear(uint32_t spi_periph);
 
 /* SPI TI mode functions */
 /* enable SPI TI mode */
@@ -334,18 +338,18 @@ void spi_nssp_mode_enable(uint32_t spi_periph);
 void spi_nssp_mode_disable(uint32_t spi_periph);
 
 /* quad wire SPI functions */
-/* enable quad wire SPI */
-void qspi_enable(uint32_t spi_periph);
-/* disable quad wire SPI */
-void qspi_disable(uint32_t spi_periph);
-/* enable quad wire SPI write */
-void qspi_write_enable(uint32_t spi_periph);
-/* enable quad wire SPI read */
-void qspi_read_enable(uint32_t spi_periph);
-/* enable quad wire SPI_IO2 and SPI_IO3 pin output */
-void qspi_io23_output_enable(uint32_t spi_periph);
-/* disable quad wire SPI_IO2 and SPI_IO3 pin output */
-void qspi_io23_output_disable(uint32_t spi_periph);
+/* enable SPI quad wire mode */
+void spi_quad_enable(uint32_t spi_periph);
+/* disable SPI quad wire mode */
+void spi_quad_disable(uint32_t spi_periph);
+/* enable SPI quad wire mode write */
+void spi_quad_write_enable(uint32_t spi_periph);
+/* enable SPI quad wire mode read */
+void spi_quad_read_enable(uint32_t spi_periph);
+/* enable SPI quad wire mode SPI_IO2 and SPI_IO3 pin output */
+void spi_quad_io23_output_enable(uint32_t spi_periph);
+/* disable SPI quad wire mode SPI_IO2 and SPI_IO3 pin output */
+void spi_quad_io23_output_disable(uint32_t spi_periph);
 
 /* flag and interrupt functions */
 /* enable SPI and I2S interrupt */
@@ -356,7 +360,5 @@ void spi_i2s_interrupt_disable(uint32_t spi_periph, uint8_t interrupt);
 FlagStatus spi_i2s_interrupt_flag_get(uint32_t spi_periph, uint8_t interrupt);
 /* get SPI and I2S flag status */
 FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag);
-/* clear SPI CRC error flag status */
-void spi_crc_error_clear(uint32_t spi_periph);
 
 #endif /* GD32E10X_SPI_H */

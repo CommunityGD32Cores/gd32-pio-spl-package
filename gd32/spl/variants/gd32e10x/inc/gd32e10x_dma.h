@@ -2,13 +2,11 @@
     \file    gd32e10x_dma.h
     \brief   definitions for the DMA
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -244,13 +242,13 @@ void dma_priority_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_
 void dma_memory_width_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t mwidth);
 /* configure transfer data size of peripheral */
 void dma_periph_width_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t pwidth);
-/* enable next address increasement algorithm of memory */
+/* enable next address increment algorithm of memory */
 void dma_memory_increase_enable(uint32_t dma_periph, dma_channel_enum channelx);
-/* disable next address increasement algorithm of memory */
+/* disable next address increment algorithm of memory */
 void dma_memory_increase_disable(uint32_t dma_periph, dma_channel_enum channelx);
-/* enable next address increasement algorithm of peripheral */
+/* enable next address increment algorithm of peripheral */
 void dma_periph_increase_enable(uint32_t dma_periph, dma_channel_enum channelx);
-/* disable next address increasement algorithm of peripheral */
+/* disable next address increment algorithm of peripheral */
 void dma_periph_increase_disable(uint32_t dma_periph, dma_channel_enum channelx);
 /* configure the direction of data transfer on the channel */
 void dma_transfer_direction_config(uint32_t dma_periph, dma_channel_enum channelx, uint32_t direction);

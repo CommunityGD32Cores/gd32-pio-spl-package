@@ -4,8 +4,9 @@
            GD32E10x Device Series
 */
 
-/* Copyright (c) 2012 ARM LIMITED
-
+/* Copyright (c) 2009 - 2014 ARM LIMITED
+   Copyright (c) 2023, GigaDevice Semiconductor Inc.
+   
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are met:

@@ -1,14 +1,12 @@
 /*!
     \file    lcd_font.h
     \brief   the header file of LCD font
-
-    \version 2018-03-26, V1.0.0, demo for GD32E103
-    \version 2020-09-30, V1.1.0, demo for GD32E103
-    \version 2020-12-31, V1.2.0, demo for GD32E103
+    
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -34,8 +32,8 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSI
 OF SUCH DAMAGE.
 */
 
-#ifndef LCD_FONTS_H
-#define LCD_FONTS_H
+#ifndef LCD_FONT_H
+#define LCD_FONT_H
 
 #include <stdint.h>
 
@@ -43,5 +41,5 @@ extern unsigned char const ascii_8x16[1536];
 
 extern const uint16_t ASCII_Table_16x24[];
 
-#endif /* LCD_FONTS_H */
+#endif /* LCD_FONT_H */
 

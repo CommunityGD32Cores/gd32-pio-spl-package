@@ -1,14 +1,12 @@
 /*!
     \file    lcd_log.c
-    \brief   LCD log driver
-
-    \version 2018-03-26, V1.0.0, demo for GD32E103
-    \version 2020-09-30, V1.1.0, demo for GD32E103
-    \version 2020-12-31, V1.2.0, demo for GD32E103
+    \brief   this file provides all the LCD Log firmware functions
+    
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -35,20 +33,15 @@ OF SUCH DAMAGE.
 */
 
 #include "lcd_log.h"
-#include "string.h"
-#include "gd32e103v_lcd_eval.h"
+#if __has_include("usb_conf.h")
+#include "usb_conf.h"
+#include "usb_delay.h"
+#endif
 
-uint16_t LINE;
-
-char_format_struct charform = {
-    .font = CHAR_FONT_8_16,
-    .direction = CHAR_DIRECTION_HORIZONTAL,
-    .char_color = RED,
-    .bk_color = BLACK
-};
+extern uint16_t LINE;
 
 /*!
-    \brief      initialize the LCD log module
+    \brief      initialize the LCD Log module
     \param[in]  none
     \param[out] none
     \retval     none
@@ -59,110 +52,134 @@ void lcd_log_init (void)
 }
 
 /*!
-    \brief      de-initialize the LCD log module
+    \brief      de-initialize the LCD Log module
     \param[in]  none
     \param[out] none
     \retval     none
 */
 void lcd_log_deinit (void)
 {
+    /* no operation */
 }
 
 /*!
     \brief      display the application header (title) on the LCD screen 
-    \param[in]  p_title: pointer to the string to be displayed
-    \param[in]  start_x: the start x position
+    \param[in]  ptitle: pointer to the string to be displayed
+    \param[in]  start_x: x location
     \param[out] none
     \retval     none
 */
-void lcd_log_header_set (uint8_t *p_title, uint16_t start_x)
+void lcd_log_header_set (uint8_t *ptitle, uint16_t start_x)
 {
-    uint16_t i = 0;
-    uint16_t str_len = strlen((const char *)p_title);
+    int i = 0;
+    int len = strlen((const char *)ptitle);
+
+    char_format_struct chara_format =
+    {
+        .font = CHAR_FONT_8_16,
+        .direction = CHAR_DIRECTION_HORIZONTAL,
+        .char_color = RED,
+        .bk_color = BLUE
+    };
 
     lcd_rectangle_fill(210, 0, 240, 320, BLUE);
 
-    charform.bk_color = BLUE;
-
-    for (i = 0; i < str_len; i++) {
-        lcd_char_display (230, (start_x + 8 * i), p_title[i], charform);
+    for(i = 0; i < len; i++) {
+        lcd_char_display(230, (start_x + 8 * i), ptitle[i], chara_format);
     }
-
 }
 
 /*!
-    \brief      display the application footer (status) on the LCD screen 
-    \param[in]  p_status: pointer to the string to be displayed
-    \param[in]  start_x: the start x position
+    \brief      display the application footer (status) on the LCD screen
+    \param[in]  pstatus: pointer to the string to be displayed
+    \param[in]  start_x: x location
     \param[out] none
     \retval     none
 */
-void lcd_log_footer_set (uint8_t *p_status, uint16_t start_x)
+void lcd_log_footer_set (uint8_t *pstatus, uint16_t start_x)
 {
-    uint16_t i = 0;
-    uint16_t str_len = strlen((const char *)p_status);
+    int i = 0;
+    int Len = strlen((const char *)pstatus);
+
+    char_format_struct chara_format =
+    {
+        .font = CHAR_FONT_8_16,
+        .direction = CHAR_DIRECTION_HORIZONTAL,
+        .char_color = RED,
+        .bk_color = BLUE
+    };
 
     lcd_rectangle_fill(0, 0, 30, 320, BLUE);
 
-
-    charform.bk_color = BLUE;
-
-    for (i = 0; i < str_len; i++) {
-        lcd_char_display (20, (start_x + 8 * i), p_status[i], charform);
+    for (i = 0; i < Len; i++) {
+        lcd_char_display(20, (start_x + 8 * i), pstatus[i], chara_format);
     }
-
 }
 
 /*!
-    \brief      clear the text zone 
-    \param[in]  start_x: the start x position
-    \param[in]  start_y: the start y position
-    \param[in]  width: the width to clear text zone
-    \param[in]  height: the heitht to clear text zone
+    \brief      clear the text zone
+    \param[in]  start_x, start_y, end_x, end_y: zone location
     \param[out] none
     \retval     none
 */
-void lcd_log_text_zone_clear(uint16_t start_x,
+void lcd_log_textzone_clear (uint16_t start_x,
                              uint16_t start_y,
-                             uint16_t width,
-                             uint16_t height)
+                             uint16_t end_x,
+                             uint16_t end_y)
 {
-    lcd_rectangle_fill(start_x, start_y, width, height, BLACK);
+    lcd_rectangle_fill(start_x, start_y, end_x, end_y, BLACK);
 }
 
 /*!
-    \brief      redirect the printf to the lcd 
-    \param[in]  p_str: pointer to string to be displayed
-    \param[in]  offset: the offset to set
-    \param[in]  char_color: the clar color to set
+    \brief      redirect the printf to the LCD
+    \param[in]  pstr: pointer to string to be displayed
+    \param[in]  len: string length
+    \param[in]  char_color: string color
+    \param[in]  back_color: back color
     \param[out] none
     \retval     none
 */
-void lcd_log_print (uint8_t *p_str, uint16_t offset, uint16_t char_color)
+void lcd_log_print (uint8_t *pstr, 
+                    uint16_t len, 
+                    uint16_t char_color, 
+                    uint16_t back_color)
 {
     uint16_t i;
 
-#if defined(USE_HOST_MODE) && defined(USE_DEVICE_MODE)
-    if(LINE <= 60)
+    char_format_struct chara_format =
     {
-        LINE = 190;
+        .font = CHAR_FONT_8_16,
+        .direction = CHAR_DIRECTION_HORIZONTAL,
+        .char_color = char_color,
+        .bk_color = back_color
+    };
 
+#if defined(USE_HOST_MODE) && defined(USE_DEVICE_MODE)
+    if (LINE <= 60) {
+        LINE = 190;
         lcd_rectangle_fill(60, 0, 210, 320, BLACK);
     }
 #else
-    if(LINE <= 30)
-    {
-        LINE = 190;
-
-        lcd_rectangle_fill(30, 0, 210, 320, BLACK);
-    }
+    #if defined USBH_CDC
+        if (LINE <= 60) {
+            LINE = 190;
+            lcd_rectangle_fill(60, 0, 210, 320, BLACK);
+        }
+    #elif defined USBD_CDC
+        if (LINE <= 40) {
+            LINE = 190;
+            lcd_rectangle_fill(40, 0, 210, 320, BLACK);
+        }
+    #else
+        if (LINE <= 30) {
+            LINE = 190;
+            lcd_rectangle_fill(30, 0, 210, 320, BLACK);
+        }
+    #endif
 #endif
 
-    charform.bk_color = BLACK;
-    charform.char_color = char_color;
-
-    for (i = 0; i < offset; i++) {
-        lcd_char_display(LINE, (10 + 8 * i), *p_str++, charform);
+    for (i = 0; i < len; i ++) {
+        lcd_char_display(LINE, (10 + 8 * i), *pstr++, chara_format);
     }
 
     LINE -= 20;

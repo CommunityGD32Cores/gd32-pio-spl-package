@@ -2,12 +2,11 @@
     \file    audio_out_itf.h
     \brief   audio OUT (playback) interface header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -43,10 +42,6 @@ typedef struct {
     uint8_t  (*audio_init)        (uint32_t audio_freq, uint32_t volume);
     uint8_t  (*audio_deinit)      (void);
     uint8_t  (*audio_cmd)         (uint8_t* pbuf, uint32_t size, uint8_t cmd);
-    uint8_t  (*audio_volume_ctl)  (uint8_t vol);
-    uint8_t  (*audio_mute_ctl)    (uint8_t cmd);
-    uint8_t  (*audio_periodic_tc) (uint8_t cmd);
-    uint8_t  (*audio_state_get)   (void);
 } audio_fops_struct;
 
 extern audio_fops_struct audio_out_fops;

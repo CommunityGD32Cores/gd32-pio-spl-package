@@ -2,14 +2,11 @@
     \file    cdc_acm_core.c
     \brief   CDC ACM driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-10, V2.0.1, firmware for GD32E10x
-    \version 2020-12-14, V2.0.2, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -259,12 +256,12 @@ usb_desc cdc_desc =
 };
 
 /* local function prototypes ('static') */
-static uint8_t cdc_acm_init   (usb_dev *udev, uint8_t config_index);
-static uint8_t cdc_acm_deinit (usb_dev *udev, uint8_t config_index);
-static uint8_t cdc_acm_req    (usb_dev *udev, usb_req *req);
-static uint8_t cdc_ctlx_out   (usb_dev *udev);
-static uint8_t cdc_acm_in     (usb_dev *udev, uint8_t ep_num);
-static uint8_t cdc_acm_out    (usb_dev *udev, uint8_t ep_num);
+static uint8_t cdc_acm_init     (usb_dev *udev, uint8_t config_index);
+static uint8_t cdc_acm_deinit   (usb_dev *udev, uint8_t config_index);
+static uint8_t cdc_acm_req      (usb_dev *udev, usb_req *req);
+static uint8_t cdc_acm_ctlx_out (usb_dev *udev);
+static uint8_t cdc_acm_in       (usb_dev *udev, uint8_t ep_num);
+static uint8_t cdc_acm_out      (usb_dev *udev, uint8_t ep_num);
 
 /* USB CDC device class callbacks structure */
 usb_class_core cdc_class =
@@ -274,9 +271,8 @@ usb_class_core cdc_class =
 
     .init      = cdc_acm_init,
     .deinit    = cdc_acm_deinit,
-
     .req_proc  = cdc_acm_req,
-    .ctlx_out  = cdc_ctlx_out,
+    .ctlx_out  = cdc_acm_ctlx_out,
     .data_in   = cdc_acm_in,
     .data_out  = cdc_acm_out
 };
@@ -332,7 +328,7 @@ void cdc_acm_data_receive (usb_dev *udev)
     cdc->packet_receive = 0U;
     cdc->packet_sent = 0U;
 
-    usbd_ep_recev(udev, CDC_DATA_OUT_EP, (uint8_t*)(cdc->data), USB_CDC_DATA_PACKET_SIZE);
+    usbd_ep_recev (udev, CDC_DATA_OUT_EP, (uint8_t*)(cdc->data), USB_CDC_DATA_PACKET_SIZE);
 }
 
 /*!
@@ -346,13 +342,13 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
 {
     static usb_cdc_handler cdc_handler;
 
-    /* initialize the data TX endpoint */
+    /* initialize the data Tx endpoint */
     usbd_ep_setup (udev, &(cdc_config_desc.cdc_in_endpoint));
 
-    /* initialize the data RX endpoint */
+    /* initialize the data Rx endpoint */
     usbd_ep_setup (udev, &(cdc_config_desc.cdc_out_endpoint));
 
-    /* initialize the command TX endpoint */
+    /* initialize the command Tx endpoint */
     usbd_ep_setup (udev, &(cdc_config_desc.cdc_cmd_endpoint));
 
     /* initialize CDC handler structure */
@@ -361,10 +357,10 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
     cdc_handler.receive_length = 0U;
 
     cdc_handler.line_coding = (acm_line){
-        .dwDTERate   = 115200,
-        .bCharFormat = 0,
-        .bParityType = 0,
-        .bDataBits   = 0x08
+        .dwDTERate   = 115200U,
+        .bCharFormat = 0U,
+        .bParityType = 0U,
+        .bDataBits   = 0x08U
     };
 
     udev->dev.class_data[CDC_COM_INTERFACE] = (void *)&cdc_handler;
@@ -373,7 +369,7 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the CDC ACM device
+    \brief      deinitialize the CDC ACM device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -381,11 +377,11 @@ static uint8_t cdc_acm_init (usb_dev *udev, uint8_t config_index)
 */
 static uint8_t cdc_acm_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* deinitialize the data TX/RX endpoint */
+    /* deinitialize the data Tx/Rx endpoint */
     usbd_ep_clear (udev, CDC_DATA_IN_EP);
     usbd_ep_clear (udev, CDC_DATA_OUT_EP);
 
-    /* deinitialize the command TX endpoint */
+    /* deinitialize the command Tx endpoint */
     usbd_ep_clear (udev, CDC_CMD_EP);
 
     return USBD_OK;
@@ -427,7 +423,7 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 
     case SET_LINE_CODING:
         transc = &udev->dev.transc_out[0];
-        
+
         /* set the value of the current command to be processed */
         udev->dev.class_core->alter_set = req->bRequest;
 
@@ -438,7 +434,7 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 
     case GET_LINE_CODING:
         transc = &udev->dev.transc_in[0];
-        
+
         cdc->cmd[0] = (uint8_t)(cdc->line_coding.dwDTERate);
         cdc->cmd[1] = (uint8_t)(cdc->line_coding.dwDTERate >> 8);
         cdc->cmd[2] = (uint8_t)(cdc->line_coding.dwDTERate >> 16);
@@ -467,12 +463,12 @@ static uint8_t cdc_acm_req (usb_dev *udev, usb_req *req)
 }
 
 /*!
-    \brief      handle CDC ACM setup data
+    \brief      command data received on control endpoint
     \param[in]  udev: pointer to USB device instance
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t cdc_ctlx_out (usb_dev *udev)
+static uint8_t cdc_acm_ctlx_out (usb_dev *udev)
 {
     usb_cdc_handler *cdc = (usb_cdc_handler *)udev->dev.class_data[CDC_COM_INTERFACE];
 
@@ -494,7 +490,7 @@ static uint8_t cdc_ctlx_out (usb_dev *udev)
 }
 
 /*!
-    \brief      handle CDC ACM data
+    \brief      handle CDC ACM data in
     \param[in]  udev: pointer to USB device instance
     \param[in]  ep_num: endpoint identifier
     \param[out] none
@@ -516,7 +512,7 @@ static uint8_t cdc_acm_in (usb_dev *udev, uint8_t ep_num)
 }
 
 /*!
-    \brief      handle CDC ACM data
+    \brief      handle CDC ACM data out
     \param[in]  udev: pointer to USB device instance
     \param[in]  ep_num: endpoint identifier
     \param[out] none

@@ -2,13 +2,11 @@
     \file    drv_usb_dev.c
     \brief   USB device mode low level driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
-    \version 2021-05-31, V2.1.1, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -86,8 +84,8 @@ usb_status usb_devcore_init (usb_core_driver *udev)
         /* set Rx FIFO size */
         usb_set_rxfifo(&udev->regs, RX_FIFO_FS_SIZE);
 
-        /* set endpoint 1 to 3's TX FIFO length and RAM address */
-        for (i = 0U; i < USBFS_MAX_EP_COUNT; i++) {
+        /* set endpoint 0 to 3's Tx FIFO length and RAM address */
+        for(i = 0U; i < USBFS_MAX_EP_COUNT; i++) {
             usb_set_txfifo(&udev->regs, i, USBFS_TX_FIFO_SIZE[i]);
         }
     }
@@ -95,10 +93,10 @@ usb_status usb_devcore_init (usb_core_driver *udev)
 
     /* make sure all FIFOs are flushed */
 
-    /* flush all TX FIFOs */
+    /* flush all Tx FIFOs */
     (void)usb_txfifo_flush (&udev->regs, 0x10U);
 
-    /* flush entire RX FIFO */
+    /* flush entire Rx FIFO */
     (void)usb_rxfifo_flush (&udev->regs);
 
     /* clear all pending device interrupts */
@@ -163,7 +161,7 @@ usb_status usb_devint_enable (usb_core_driver *udev)
         udev->regs.gr->GINTEN |= GINTEN_RXFNEIE;
     }
 
-    udev->regs.gr->GINTEN |= GINTEN_RSTIE | GINTEN_ENUMFIE | GINTEN_IEPIE |\
+    udev->regs.gr->GINTEN |= GINTEN_RSTIE | GINTEN_ENUMFIE | GINTEN_IEPIE | \
                              GINTEN_OEPIE | GINTEN_SOFIE | GINTEN_ISOONCIE | GINTEN_ISOINCIE;
 
 #ifdef VBUS_SENSING_ENABLED
@@ -183,6 +181,8 @@ usb_status usb_devint_enable (usb_core_driver *udev)
 usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc)
 {
     __IO uint32_t *reg_addr = NULL;
+    
+    uint32_t enum_speed = udev->regs.dr->DSTAT & DSTAT_ES;
 
     /* get the endpoint number */
     uint8_t ep_num = transc->ep_addr.num;
@@ -199,11 +199,10 @@ usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc)
     }
 
     /* endpoint 0 is activated after USB clock is enabled */
-
     *reg_addr &= ~(DEPCTL_MPL | DEPCTL_EPTYPE | DIEPCTL_TXFNUM);
 
     /* set endpoint 0 maximum packet length */
-    *reg_addr |= EP0_MAXLEN[udev->regs.dr->DSTAT & DSTAT_ES];
+    *reg_addr |= EP0_MAXLEN[enum_speed];
 
     /* activate endpoint */
     *reg_addr |= ((uint32_t)transc->ep_type << 18U) | ((uint32_t)ep_num << 22U) | DEPCTL_SD0PID | DEPCTL_EPACT;
@@ -221,7 +220,8 @@ usb_status usb_transc0_active (usb_core_driver *udev, usb_transc *transc)
 usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc)
 {
     __IO uint32_t *reg_addr = NULL;
-    __IO uint32_t epinten = 0U;
+    uint32_t epinten = 0U;
+    uint32_t enum_speed = udev->regs.dr->DSTAT & DSTAT_ES;
 
     /* get the endpoint number */
     uint8_t ep_num = transc->ep_addr.num;
@@ -243,7 +243,7 @@ usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc)
 
         /* set endpoint maximum packet length */
         if (0U == ep_num) {
-            *reg_addr |= EP0_MAXLEN[udev->regs.dr->DSTAT & DSTAT_ES];
+            *reg_addr |= EP0_MAXLEN[enum_speed];
         } else {
             *reg_addr |= transc->max_len;
         }
@@ -252,10 +252,9 @@ usb_status usb_transc_active (usb_core_driver *udev, usb_transc *transc)
         *reg_addr |= ((uint32_t)transc->ep_type << 18U) | ((uint32_t)ep_num << 22U) | DEPCTL_SD0PID | DEPCTL_EPACT;
     }
 
-    
     /* enable the interrupts for this endpoint */
     udev->regs.dr->DAEPINTEN |= epinten;
-    
+
     return USB_OK;
 }
 
@@ -282,7 +281,6 @@ usb_status usb_transc_deactivate(usb_core_driver *udev, usb_transc *transc)
 
         udev->regs.er_out[ep_num]->DOEPCTL &= ~DEPCTL_EPACT;
     }
-
 
     /* disable the interrupts for this endpoint */
     udev->regs.dr->DAEPINTEN &= ~epinten;
@@ -340,10 +338,6 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
         }
     }
 
-    if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-        udev->regs.er_in[ep_num]->DIEPDMAADDR = transc->dma_addr;
-    }
-
     /* enable the endpoint and clear the NAK */
     epctl |= DEPCTL_CNAK | DEPCTL_EPEN;
 
@@ -351,7 +345,7 @@ usb_status usb_transc_inxfer (usb_core_driver *udev, usb_transc *transc)
 
     if ((uint8_t)USB_USE_FIFO == udev->bp.transfer_mode) {
         if (transc->ep_type != (uint8_t)USB_EPTYPE_ISOC) {
-            /* enable the TX FIFO empty interrupt for this endpoint */
+            /* enable the Tx FIFO empty interrupt for this endpoint */
             if (transc->xfer_len > 0U) {
                 udev->regs.dr->DIEPFEINTEN |= 1U << ep_num;
             }
@@ -390,7 +384,7 @@ usb_status usb_transc_outxfer (usb_core_driver *udev, usb_transc *transc)
         eplen |= 1U << 19U;
     } else {
         /* configure the transfer size and packet count as follows:
-         * packet_count = N
+         * pktcnt = N
          * xfersize = N * maxpacket
          */
         uint32_t packet_count = (transc->xfer_len + transc->max_len - 1U) / transc->max_len;
@@ -400,10 +394,6 @@ usb_status usb_transc_outxfer (usb_core_driver *udev, usb_transc *transc)
     }
 
     udev->regs.er_out[ep_num]->DOEPLEN = eplen;
-
-    if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-        udev->regs.er_out[ep_num]->DOEPDMAADDR = transc->dma_addr;
-    }
 
     if (transc->ep_type == (uint8_t)USB_EPTYPE_ISOC) {
         if (transc->frame_num) {
@@ -514,13 +504,6 @@ void usb_ctlep_startout (usb_core_driver *udev)
 {
     /* set OUT endpoint 0 receive length to 24 bytes, 1 packet and 3 setup packets */
     udev->regs.er_out[0]->DOEPLEN = DOEP0_TLEN(8U * 3U) | DOEP0_PCNT(1U) | DOEP0_STPCNT(3U);
-
-    if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-        udev->regs.er_out[0]->DOEPDMAADDR = (uint32_t)&udev->dev.control.req;
-
-        /* endpoint enable */
-        udev->regs.er_out[0]->DOEPCTL |= DEPCTL_EPACT | DEPCTL_EPEN;
-    }
 }
 
 /*!
@@ -579,7 +562,7 @@ void usb_dev_suspend (usb_core_driver *udev)
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SHCLK;
 
         /* enter DEEP_SLEEP mode with LDO in low power mode */
-        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+        pmu_to_deepsleepmode (PMU_LDO_LOWPOWER, WFI_CMD);
     }
 }
 

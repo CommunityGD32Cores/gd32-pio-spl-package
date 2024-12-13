@@ -2,13 +2,11 @@
     \file    usbd_enum.c
     \brief   USB enumeration function
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
-    \version 2021-09-27, V2.1.1, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -80,9 +78,9 @@ static usb_reqsta (*_std_dev_req[])(usb_core_driver *udev, usb_req *req) =
 
 /* get standard descriptor handler */
 static uint8_t* (*std_desc_get[])(usb_core_driver *udev, uint8_t index, uint16_t *len) = {
-    [(uint8_t)USB_DESCTYPE_DEV - 1U]    = _usb_dev_desc_get,
-    [(uint8_t)USB_DESCTYPE_CONFIG - 1U] = _usb_config_desc_get,
-    [(uint8_t)USB_DESCTYPE_STR - 1U]    = _usb_str_desc_get
+    [(uint8_t)USB_DESCTYPE_DEV - 1U]              = _usb_dev_desc_get,
+    [(uint8_t)USB_DESCTYPE_CONFIG - 1U]           = _usb_config_desc_get,
+    [(uint8_t)USB_DESCTYPE_STR - 1U]              = _usb_str_desc_get,
 };
 
 /*!
@@ -131,7 +129,7 @@ usb_reqsta usbd_vendor_request (usb_core_driver *udev, usb_req *req)
     /* added by user... */
 #ifdef WINUSB_EXEMPT_DRIVER
    usbd_OEM_req(udev, req);
-#endif
+#endif /* WINUSB_EXEMPT_DRIVER */
 
     return REQ_SUPP;
 }
@@ -254,7 +252,7 @@ static uint8_t* _usb_config_desc_get (usb_core_driver *udev, uint8_t index, uint
 {
     (void)index;
 
-    *len = udev->dev.desc->config_desc[2] | (udev->dev.desc->config_desc[3]<< 8);
+    *len = udev->dev.desc->config_desc[2] | (udev->dev.desc->config_desc[3]<< 8U);
 
     return udev->dev.desc->config_desc;
 }
@@ -495,7 +493,7 @@ static usb_reqsta _usb_std_getdescriptor (usb_core_driver *udev, usb_req *req)
 {
     uint8_t desc_type = 0U;
     uint8_t desc_index = 0U;
-    
+
     usb_reqsta status = REQ_NOTSUPP;
 
     usb_transc *transc = &udev->dev.transc_in[0];

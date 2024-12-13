@@ -2,13 +2,11 @@
     \file    gd32e10x_gpio.c
     \brief   GPIO driver
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -335,10 +333,8 @@ uint16_t gpio_output_port_get(uint32_t gpio_periph)
       \arg        GPIO_CAN0_FULL_REMAP: CAN0 full remapping
       \arg        GPIO_PD01_REMAP: PD01 remapping
       \arg        GPIO_TIMER4CH3_IREMAP: TIMER4 channel3 internal remapping
-      \arg        GPIO_ADC0_ETRGINS_REMAP: ADC0 external trigger inserted conversion remapping
-      \arg        GPIO_ADC0_ETRGREG_REMAP: ADC0 external trigger regular conversion remapping
-      \arg        GPIO_ADC1_ETRGINS_REMAP: ADC1 external trigger inserted conversion remapping
-      \arg        GPIO_ADC1_ETRGREG_REMAP: ADC1 external trigger regular conversion remapping
+      \arg        GPIO_ADC0_ETRGRT_REMAP: ADC0 external trigger routine conversion remapping
+      \arg        GPIO_ADC1_ETRGRT_REMAP: ADC1 external trigger routine conversion remapping
       \arg        GPIO_CAN1_REMAP: CAN1 remapping
       \arg        GPIO_SWJ_NONJTRST_REMAP: full SWJ(JTAG-DP + SW-DP),but without NJTRST
       \arg        GPIO_SWJ_SWDPENABLE_REMAP: JTAG-DP disabled and SW-DP enabled
@@ -357,10 +353,10 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue)
     uint32_t remap1 = 0U, remap2 = 0U, temp_reg = 0U, temp_mask = 0U;
 
     if(((uint32_t)0x80000000U) == (remap & 0x80000000U)){
-        /* get AFIO_PCF1 regiter value */
+        /* get AFIO_PCF1 register value */
         temp_reg = AFIO_PCF1;
     }else{
-        /* get AFIO_PCF0 regiter value */
+        /* get AFIO_PCF0 register value */
         temp_reg = AFIO_PCF0;
     }
 
@@ -386,10 +382,10 @@ void gpio_pin_remap_config(uint32_t remap, ControlStatus newvalue)
     }
     
     if(AFIO_PCF1_FIELDS == (remap & AFIO_PCF1_FIELDS)){
-        /* set AFIO_PCF1 regiter value */
+        /* set AFIO_PCF1 register value */
         AFIO_PCF1 = temp_reg;
     }else{
-        /* set AFIO_PCF0 regiter value */
+        /* set AFIO_PCF0 register value */
         AFIO_PCF0 = temp_reg;
     }
 }

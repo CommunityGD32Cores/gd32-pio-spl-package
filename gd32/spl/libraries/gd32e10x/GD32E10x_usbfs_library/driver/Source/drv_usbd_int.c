@@ -2,12 +2,11 @@
     \file    drv_usbd_int.c
     \brief   USB device mode interrupt routines
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -37,13 +36,13 @@ OF SUCH DAMAGE.
 #include "drv_usbd_int.h"
 #include "usbd_transc.h"
 
+/* local function prototypes ('static') */
 static uint32_t usbd_int_epout                 (usb_core_driver *udev);
 static uint32_t usbd_int_epin                  (usb_core_driver *udev);
 static uint32_t usbd_int_rxfifo                (usb_core_driver *udev);
 static uint32_t usbd_int_reset                 (usb_core_driver *udev);
 static uint32_t usbd_int_enumfinish            (usb_core_driver *udev);
 static uint32_t usbd_int_suspend               (usb_core_driver *udev);
-
 static uint32_t usbd_emptytxfifo_write         (usb_core_driver *udev, uint32_t ep_num);
 
 static const uint8_t USB_SPEED[4] = {
@@ -62,7 +61,8 @@ static const uint8_t USB_SPEED[4] = {
 void usbd_isr (usb_core_driver *udev)
 {
     if (HOST_MODE != (udev->regs.gr->GINTF & GINTF_COPM)) {
-        uint32_t intr = udev->regs.gr->GINTF & udev->regs.gr->GINTEN;
+        uint32_t intr = udev->regs.gr->GINTF;
+        intr &= udev->regs.gr->GINTEN;
 
         /* there are no interrupts, avoid spurious interrupt */
         if (!intr) {
@@ -86,8 +86,10 @@ void usbd_isr (usb_core_driver *udev)
 
         /* wakeup interrupt */
         if (intr & GINTF_WKUPIF) {
-            /* inform upper layer by the resume event */
-            udev->dev.cur_status = USBD_CONFIGURED;
+            if(USBD_SUSPENDED == udev->dev.cur_status){
+                /* inform upper layer by the resume event */
+                udev->dev.cur_status = udev->dev.backup_status;
+            }
 
             /* clear interrupt */
             udev->regs.gr->GINTF = GINTF_WKUPIF;
@@ -178,21 +180,8 @@ static uint32_t usbd_int_epout (usb_core_driver *udev)
                 /* clear the bit in DOEPINTF for this interrupt */
                 udev->regs.er_out[ep_num]->DOEPINTF = DOEPINTF_TF;
 
-                if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-                    __IO uint32_t eplen = udev->regs.er_out[ep_num]->DOEPLEN;
-
-                    udev->dev.transc_out[ep_num].xfer_count = udev->dev.transc_out[ep_num].max_len - \
-                                                                (eplen & DEPLEN_TLEN);
-                }
-
                 /* inform upper layer: data ready */
                 (void)usbd_out_transc (udev, ep_num);
-
-                if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-                    if ((0U == ep_num) && ((uint8_t)USB_CTL_STATUS_OUT == udev->dev.control.ctl_state)) {
-                        usb_ctlep_startout (udev);
-                    }
-                }
             }
 
             /* setup phase finished interrupt (control endpoints) */
@@ -228,12 +217,6 @@ static uint32_t usbd_int_epin (usb_core_driver *udev)
 
                 /* data transmission is completed */
                 (void)usbd_in_transc (udev, ep_num);
-
-                if ((uint8_t)USB_USE_DMA == udev->bp.transfer_mode) {
-                    if ((0U == ep_num) && ((uint8_t)USB_CTL_STATUS_IN == udev->dev.control.ctl_state)) {
-                        usb_ctlep_startout (udev);
-                    }
-                }
             }
 
             if (iepintr & DIEPINTF_TXFE) {
@@ -328,7 +311,7 @@ static uint32_t usbd_int_reset (usb_core_driver *udev)
     /* clear the remote wakeup signaling */
     udev->regs.dr->DCTL &= ~DCTL_RWKUP;
 
-    /* flush the TX FIFO */
+    /* flush the Tx FIFO */
     (void)usb_txfifo_flush (&udev->regs, 0U);
 
     for (i = 0U; i < udev->bp.num_ep; i++) {
@@ -423,17 +406,17 @@ static uint32_t usbd_int_suspend (usb_core_driver *udev)
 {
     __IO uint8_t low_power = udev->bp.low_power;
     __IO uint8_t suspend = (uint8_t)(udev->regs.dr->DSTAT & DSTAT_SPST);
-    __IO uint8_t is_configured = (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED)? 1U : 0U;
+    __IO uint8_t is_configured = (udev->dev.cur_status == (uint8_t)USBD_CONFIGURED) ? 1U : 0U;
 
     udev->dev.backup_status = udev->dev.cur_status;
     udev->dev.cur_status = (uint8_t)USBD_SUSPENDED;
 
     if (low_power && suspend && is_configured) {
-        /* switch-off the OTG clocks */
+        /* switch-off the USB clocks */
         *udev->regs.PWRCLKCTL |= PWRCLKCTL_SUCLK | PWRCLKCTL_SHCLK;
 
         /* enter DEEP_SLEEP mode with LDO in low power mode */
-        pmu_to_deepsleepmode(PMU_LDO_LOWPOWER, WFI_CMD);
+        pmu_to_deepsleepmode (PMU_LDO_LOWPOWER, WFI_CMD);
     }
 
     /* clear interrupt */

@@ -2,12 +2,11 @@
     \file    usbd_enum.h
     \brief   USB enumeration definitions
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -44,7 +43,8 @@ OF SUCH DAMAGE.
     #define NULL                0U
 #endif
 
-typedef enum _usb_reqsta {
+typedef enum _usb_reqsta 
+{
     REQ_SUPP     = 0x0U,                   /* request support */
     REQ_NOTSUPP  = 0x1U,                   /* request not support */
 } usb_reqsta;
@@ -52,16 +52,16 @@ typedef enum _usb_reqsta {
 /* string descriptor index */
 enum _str_index
 {
-    STR_IDX_LANGID                = 0x0U,  /* language ID string index */
-    STR_IDX_MFC                   = 0x1U,  /* manufacturer string index */
-    STR_IDX_PRODUCT               = 0x2U,  /* product string index */
-    STR_IDX_SERIAL                = 0x3U,  /* serial string index */
-    STR_IDX_CONFIG                = 0x4U,  /* configuration string index */
-    STR_IDX_ITF                   = 0x5U,  /* interface string index */
+    STR_IDX_LANGID                = 0x00U,  /* language ID string index */
+    STR_IDX_MFC                   = 0x01U,  /* manufacturer string index */
+    STR_IDX_PRODUCT               = 0x02U,  /* product string index */
+    STR_IDX_SERIAL                = 0x03U,  /* serial string index */
+    STR_IDX_CONFIG                = 0x04U,  /* configuration string index */
+    STR_IDX_ITF                   = 0x05U,  /* interface string index */
 #ifndef WINUSB_EXEMPT_DRIVER
-    STR_IDX_MAX                   = 0x6U,  /* string maximum index */
+    STR_IDX_MAX                   = 0x0AU,  /* string maximum index */
 #else
-    STR_IDX_MAX                   = 0xEFU, /* string maximum index */
+    STR_IDX_MAX                   = 0xEFU,  /* string maximum index */
 #endif /* WINUSB_EXEMPT_DRIVER */
 };
 

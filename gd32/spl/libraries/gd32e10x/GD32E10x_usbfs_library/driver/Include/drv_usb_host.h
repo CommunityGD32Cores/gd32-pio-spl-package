@@ -2,12 +2,11 @@
     \file    drv_usb_host.h
     \brief   USB host mode low level driver header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,81 +39,11 @@ OF SUCH DAMAGE.
 #include "usb_ch9_std.h"
 #include "drv_usb_core.h"
 
-typedef enum _usb_pipe_status
-{
-    PIPE_IDLE = 0U,
-    PIPE_XF,
-    PIPE_HALTED,
-    PIPE_NAK,
-    PIPE_NYET,
-    PIPE_STALL,
-    PIPE_TRACERR,
-    PIPE_BBERR,
-    PIPE_REQOVR,
-    PIPE_DTGERR,
-} usb_pipe_staus;
-
 typedef enum _usb_pipe_mode
 {
     PIPE_PERIOD     = 0U,
     PIPE_NON_PERIOD = 1U
 } usb_pipe_mode;
-
-typedef enum _usb_urb_state
-{
-    URB_IDLE = 0U,
-    URB_DONE,
-    URB_NOTREADY,
-    URB_ERROR,
-    URB_STALL,
-    URB_PING
-} usb_urb_state;
-
-typedef struct _usb_pipe
-{
-    uint8_t              in_used;
-    uint8_t              dev_addr;
-    uint32_t             dev_speed;
-
-    struct {
-        uint8_t          num;
-        uint8_t          dir;
-        uint8_t          type;
-        uint16_t         mps;
-    } ep;
-
-    uint8_t              ping;
-    uint32_t             DPID;
-
-    uint8_t             *xfer_buf;
-    uint32_t             xfer_len;
-    uint32_t             xfer_count;
-
-    uint8_t              data_toggle_in;
-    uint8_t              data_toggle_out;
-
-    __IO uint32_t        err_count;
-    __IO usb_pipe_staus  pp_status;
-    __IO usb_urb_state   urb_state;
-} usb_pipe;
-
-
-typedef struct _usb_host_drv
-{
-    __IO uint32_t            connect_status;
-    __IO uint32_t            port_enabled;
-    __IO uint32_t            backup_xfercount[USBFS_MAX_TX_FIFOS];
-
-    usb_pipe                 pipe[USBFS_MAX_TX_FIFOS];
-    void                    *data;
-} usb_host_drv;
-
-typedef struct _usb_core_driver
-{
-    usb_core_basic       bp;
-    usb_core_regs        regs;
-    usb_host_drv         host;
-} usb_core_driver;
 
 /*!
     \brief      get USB even frame
@@ -191,4 +120,4 @@ usb_status usb_pipe_ping (usb_core_driver *udev, uint8_t pipe_num);
 /* stop the USB host and clean up FIFO */
 void usb_host_stop (usb_core_driver *udev);
 
-#endif  /* __DRV_USB_HOST_H */
+#endif /* __DRV_USB_HOST_H */

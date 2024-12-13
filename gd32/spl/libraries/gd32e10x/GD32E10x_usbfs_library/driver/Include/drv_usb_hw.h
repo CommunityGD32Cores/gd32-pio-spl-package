@@ -2,12 +2,11 @@
     \file    drv_usb_hw.h
     \brief   usb hardware configuration header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -52,19 +51,13 @@ void usb_mdelay (const uint32_t msec);
 /* configures system clock after wakeup from STOP mode */
 void system_clk_config_stop(void);
 
-/* configure the CTC peripheral */
-#ifdef USE_IRC48M
-    void ctc_config(void);
-#endif /* USE_IRC48M */
-
 #ifdef USE_HOST_MODE
-    void systick_config(void);
-
-    /* configure USB VBus */
-    void usb_vbus_config (void);
-
-    /* drive USB VBus */
-    void usb_vbus_drive (uint8_t State);
+/* configure systick */
+void systick_config(void);
+/* configure USB VBus */
+void usb_vbus_config (void);
+/* drive USB VBus */
+void usb_vbus_drive (uint8_t State);
 #endif /* USE_HOST_MODE */
 
 #endif /* __DRV_USB_HW_H */

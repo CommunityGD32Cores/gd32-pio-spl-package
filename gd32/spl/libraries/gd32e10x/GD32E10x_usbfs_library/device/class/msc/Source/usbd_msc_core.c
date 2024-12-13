@@ -2,13 +2,11 @@
     \file    usbd_msc_core.c
     \brief   USB MSC device class core functions
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-10, V2.0.1, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -48,6 +46,8 @@ static uint8_t msc_core_deinit (usb_dev *udev, uint8_t config_index);
 static uint8_t msc_core_req    (usb_dev *udev, usb_req *req);
 static uint8_t msc_core_in     (usb_dev *udev, uint8_t ep_num);
 static uint8_t msc_core_out    (usb_dev *udev, uint8_t ep_num);
+
+static __ALIGN_BEGIN uint8_t usbd_msc_maxlun = 0U __ALIGN_END;
 
 usb_class_core msc_class = 
 {
@@ -140,7 +140,7 @@ __ALIGN_BEGIN const usb_desc_config_set msc_config_desc __ALIGN_END =
 };
 
 /* USB language ID descriptor */
-__ALIGN_BEGIN const usb_desc_LANGID usbd_language_id_desc __ALIGN_END = 
+static __ALIGN_BEGIN const usb_desc_LANGID usbd_language_id_desc __ALIGN_END = 
 {
     .header = 
      {
@@ -183,7 +183,7 @@ static __ALIGN_BEGIN usb_desc_str serial_string __ALIGN_END =
 };
 
 /* USB string descriptor */
-void *const usbd_msc_strings[] = 
+static void *const usbd_msc_strings[] = 
 {
     [STR_IDX_LANGID]  = (uint8_t *)&usbd_language_id_desc,
     [STR_IDX_MFC]     = (uint8_t *)&manufacturer_string,
@@ -196,8 +196,6 @@ usb_desc msc_desc = {
     .config_desc = (uint8_t *)&msc_config_desc,
     .strings     = usbd_msc_strings
 };
-
-static __ALIGN_BEGIN uint8_t usbd_msc_maxlun = 0U __ALIGN_END;
 
 /*!
     \brief      initialize the MSC device
@@ -214,10 +212,10 @@ static uint8_t msc_core_init (usb_dev *udev, uint8_t config_index)
 
     udev->dev.class_data[USBD_MSC_INTERFACE] = (void *)&msc_handler;
 
-    /* configure MSC TX endpoint */
+    /* configure MSC Tx endpoint */
     usbd_ep_setup (udev, &(msc_config_desc.msc_epin));
 
-    /* configure MSC RX endpoint */
+    /* configure MSC Rx endpoint */
     usbd_ep_setup (udev, &(msc_config_desc.msc_epout));
 
     /* initialize the BBB layer */
@@ -227,7 +225,7 @@ static uint8_t msc_core_init (usb_dev *udev, uint8_t config_index)
 }
 
 /*!
-    \brief      de-initialize the MSC device
+    \brief      deinitialize the MSC device
     \param[in]  udev: pointer to USB device instance
     \param[in]  config_index: configuration index
     \param[out] none
@@ -266,7 +264,7 @@ static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
             transc->xfer_buf = &usbd_msc_maxlun;
             transc->remain_len = 1U;
         } else {
-            return USBD_FAIL; 
+            return USBD_FAIL;
         }
         break;
 
@@ -276,7 +274,7 @@ static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
              (0x80U != (req->bmRequestType & 0x80U))) {
             msc_bbb_reset(udev);
         } else {
-            return USBD_FAIL; 
+            return USBD_FAIL;
         }
         break;
 
@@ -300,7 +298,7 @@ static uint8_t msc_core_req (usb_dev *udev, usb_req *req)
 */
 static uint8_t msc_core_in (usb_dev *udev, uint8_t ep_num)
 {
-    msc_bbb_data_in(udev, ep_num);
+    msc_bbb_data_in (udev, ep_num);
 
     return USBD_OK;
 }

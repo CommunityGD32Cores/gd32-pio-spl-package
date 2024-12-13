@@ -2,12 +2,11 @@
     \file    usb_iap_core.h
     \brief   the header file of IAP driver
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -43,7 +42,8 @@ OF SUCH DAMAGE.
 
 #ifdef USE_USB_FS
     #define USB_DESC_LEN_IAP_REPORT         35U
-#endif
+#endif /* USE_USB_FS */
+
 #define USB_DESC_LEN_IAP_CONFIG_SET         41U
 
 /* special commands with download request */
@@ -56,12 +56,13 @@ OF SUCH DAMAGE.
 
 typedef struct
 {
-    uint8_t report_buf[IAP_OUT_PACKET + 1U];
     uint8_t option_byte[IAP_IN_PACKET];
 
     /* state machine variables */
     uint8_t dev_status[IAP_IN_PACKET];
     uint8_t bin_addr[IAP_IN_PACKET];
+
+    uint8_t report_buf[IAP_OUT_PACKET + 1U];
 
     uint8_t reportID;
     uint8_t flag;
@@ -76,7 +77,7 @@ typedef struct
     uint32_t base_address;
 } usbd_iap_handler;
 
-typedef  void  (*app_func) (void);
+typedef  void (*app_func)(void);
 
 extern usb_desc iap_desc;
 extern usb_class_core iap_class;

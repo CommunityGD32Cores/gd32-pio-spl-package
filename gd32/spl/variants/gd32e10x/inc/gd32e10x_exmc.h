@@ -2,13 +2,11 @@
     \file    gd32e10x_exmc.h
     \brief   definitions for the EXMC
     
-    \version 2017-12-26, V1.0.0, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -192,7 +190,7 @@ typedef struct
 #define EXMC_NWAIT_POLARITY_HIGH          EXMC_SNCTL_NRWTPOL            /*!< high level is active of NWAIT */
 
 /* function declarations */
-/* NOR/SRAM initializtion */
+/* NOR/SRAM initialization */
 /* deinitialize EXMC NOR/SRAM bank */
 void exmc_norsram_deinit(void);
 /* exmc_norsram_parameter_struct parameter initialize */

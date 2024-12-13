@@ -2,12 +2,11 @@
     \file    printer_core.c
     \brief   USB printer device class core functions
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,7 +35,7 @@ OF SUCH DAMAGE.
 #include "printer_core.h"
 
 #define USBD_VID                     0x28E9U
-#define USBD_PID                     0x028DU
+#define USBD_PID                     0x0003U
 
 /* printer port status: paper not empty/selected/no error */
 static uint8_t g_port_status = 0x18U;
@@ -79,6 +78,7 @@ const usb_desc_dev printer_dev_desc =
     .iSerialNumber         = STR_IDX_SERIAL,
     .bNumberConfigurations = USBD_CFG_MAX_NUM,
 };
+
 /* USB device configuration descriptor */
 const usb_printer_desc_config_set printer_config_desc = 
 {
@@ -217,17 +217,17 @@ usb_class_core usbd_printer_cb = {
 
 /*!
     \brief      initialize the printer device
-    \param[in]  udev: pointer to USB device instance
+    \param[in]  udev: pointer to usb device instance
     \param[in]  config_index: configuration index
     \param[out] none
-    \retval     USB device operation status
+    \retval     usb device operation status
 */
 static uint8_t printer_init (usb_dev *udev, uint8_t config_index)
 {
-    /* initialize the data TX endpoint */
+    /* initialize the data Tx endpoint */
     usbd_ep_setup (udev, &(printer_config_desc.printer_epin));
 
-    /* initialize the data RX endpoint */
+    /* initialize the data Rx endpoint */
     usbd_ep_setup (udev, &(printer_config_desc.printer_epout));
 
     /* prepare to receive data */
@@ -238,14 +238,14 @@ static uint8_t printer_init (usb_dev *udev, uint8_t config_index)
 
 /*!
     \brief      deinitialize the printer device
-    \param[in]  udev: pointer to USB device instance
+    \param[in]  udev: pointer to usb device instance
     \param[in]  config_index: configuration index
     \param[out] none
-    \retval     USB device operation status
+    \retval     usb device operation status
 */
 static uint8_t printer_deinit (usb_dev *udev, uint8_t config_index)
 {
-    /* deinitialize the data TX/RX endpoint */
+    /* deinitialize the data Tx/Rx endpoint */
     usbd_ep_clear (udev, PRINTER_IN_EP);
     usbd_ep_clear (udev, PRINTER_OUT_EP);
 
@@ -254,10 +254,10 @@ static uint8_t printer_deinit (usb_dev *udev, uint8_t config_index)
 
 /*!
     \brief      handle the printer class-specific requests
-    \param[in]  udev: pointer to USB device instance
+    \param[in]  udev: pointer to usb device instance
     \param[in]  req: device class-specific request
     \param[out] none
-    \retval     USB device operation status
+    \retval     usb device operation status
 */
 static uint8_t printer_req(usb_dev *udev, usb_req *req)
 {
@@ -279,7 +279,7 @@ static uint8_t printer_req(usb_dev *udev, usb_req *req)
         break;
 
     default:
-        return USBD_FAIL; 
+        return USBD_FAIL;
     }
 
     return USBD_OK;
@@ -292,9 +292,9 @@ static uint8_t printer_req(usb_dev *udev, usb_req *req)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t  printer_in (usb_dev *udev, uint8_t ep_num)
+static uint8_t printer_in (usb_dev *udev, uint8_t ep_num)
 {
-     return USBD_OK;
+    return USBD_OK;
 }
 
 /*!
@@ -304,7 +304,7 @@ static uint8_t  printer_in (usb_dev *udev, uint8_t ep_num)
     \param[out] none
     \retval     USB device operation status
 */
-static uint8_t  printer_out (usb_dev *udev, uint8_t ep_num)
+static uint8_t printer_out (usb_dev *udev, uint8_t ep_num)
 {
-     return USBD_OK;
+    return USBD_OK;
 }

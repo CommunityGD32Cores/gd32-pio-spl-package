@@ -2,13 +2,11 @@
     \file    drv_usb_dev.h
     \brief   USB device low level driver header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-10, V2.0.1, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,6 +38,9 @@ OF SUCH DAMAGE.
 #include "usbd_conf.h"
 #include "drv_usb_core.h"
 
+#define EP_IN(x)                            ((uint8_t)(0x80U | (x)))    /*!< device IN endpoint */
+#define EP_OUT(x)                           ((uint8_t)(x))              /*!< device OUT endpoint */
+
 enum usb_ctl_status {
     USB_CTL_IDLE = 0U,                                                  /*!< USB control transfer idle state */
     USB_CTL_DATA_IN,                                                    /*!< USB control transfer data in state */
@@ -49,111 +50,6 @@ enum usb_ctl_status {
     USB_CTL_STATUS_IN,                                                  /*!< USB control transfer status in state*/
     USB_CTL_STATUS_OUT                                                  /*!< USB control transfer status out state */
 };
-
-#define EP_IN(x)                            ((uint8_t)(0x80U | (x)))    /*!< device IN endpoint */
-#define EP_OUT(x)                           ((uint8_t)(x))              /*!< device OUT endpoint */
-
-/* USB descriptor */
-typedef struct _usb_desc {
-    uint8_t *dev_desc;                                                  /*!< device descriptor */
-    uint8_t *config_desc;                                               /*!< configure descriptor */
-    uint8_t *bos_desc;                                                  /*!< BOS descriptor */
-
-    void* const *strings;                                               /*!< string descriptor */
-} usb_desc;
-
-/* USB power management */
-typedef struct _usb_pm {
-    uint8_t  power_mode;                                                /*!< power mode */
-    uint8_t  power_low;                                                 /*!< power low */
-    uint8_t  dev_remote_wakeup;                                         /*!< remote wakeup */
-    uint8_t  remote_wakeup_on;                                          /*!< remote wakeup on */
-} usb_pm;
-
-/* USB control information */
-typedef struct _usb_control {
-    usb_req    req;                                                     /*!< USB standard device request */
-
-    uint8_t    ctl_state;                                               /*!< USB control transfer state */
-    uint8_t    ctl_zlp;                                                 /*!< zero length package */
-} usb_control;
-
-typedef struct
-{
-    struct {
-        uint8_t num: 4;                                                 /*!< the endpoint number.it can be from 0 to 6 */
-        uint8_t pad: 3;                                                 /*!< padding between number and direction */
-        uint8_t dir: 1;                                                 /*!< the endpoint direction */
-    } ep_addr;
-
-    uint8_t        ep_type;                                             /*!< USB endpoint type */
-    uint8_t        ep_stall;                                            /*!< USB endpoint stall status */
-
-    uint8_t        frame_num;                                           /*!< number of frame */
-    uint16_t       max_len;                                             /*!< Maximum packet length */
-
-    /* transaction level variables */
-    uint8_t       *xfer_buf;                                            /*!< transmit buffer */
-    uint32_t       xfer_len;                                            /*!< transmit buffer length */
-    uint32_t       xfer_count;                                          /*!< transmit buffer count */
-
-    uint32_t       remain_len;                                          /*!< remain packet length */
-
-    uint32_t       dma_addr;                                            /*!< DMA address */
-} usb_transc;
-
-typedef struct _usb_core_driver usb_dev;
-
-typedef struct _usb_class_core
-{
-    uint8_t  command;                                                           /*!< device class request command */
-    uint8_t  alter_set;                                                         /*!< alternative set */
-
-    uint8_t  (*init)                  (usb_dev *udev, uint8_t config_index);    /*!< initialize handler */
-    uint8_t  (*deinit)                (usb_dev *udev, uint8_t config_index);    /*!< de-initialize handler */
-
-    uint8_t  (*req_proc)              (usb_dev *udev, usb_req *req);            /*!< device request handler */
-
-    uint8_t  (*set_intf)              (usb_dev *udev, usb_req *req);            /*!< device set interface callback */
-
-    uint8_t  (*ctlx_in)               (usb_dev *udev);                          /*!< device contrl in callback */
-    uint8_t  (*ctlx_out)              (usb_dev *udev);                          /*!< device contrl out callback */
-
-    uint8_t  (*data_in)               (usb_dev *udev, uint8_t ep_num);          /*!< device data in handler */
-    uint8_t  (*data_out)              (usb_dev *udev, uint8_t ep_num);          /*!< device data out handler */
-
-    uint8_t  (*SOF)                   (usb_dev *udev);                          /*!< Start of frame handler */
-
-    uint8_t  (*incomplete_isoc_in)    (usb_dev *udev);                          /*!< Incomplete synchronization IN transfer handler */
-    uint8_t  (*incomplete_isoc_out)   (usb_dev *udev);                          /*!< Incomplete synchronization OUT transfer handler */
-} usb_class_core;
-
-typedef struct _usb_perp_dev
-{
-    uint8_t            config;                                  /*!< configuration */
-    uint8_t            dev_addr;                                /*!< device address */
-
-    __IO uint8_t       cur_status;                              /*!< current status */
-    __IO uint8_t       backup_status;                           /*!< backup status */
-
-    usb_transc         transc_in[USBFS_MAX_TX_FIFOS];           /*!< endpoint IN transaction */
-    usb_transc         transc_out[USBFS_MAX_TX_FIFOS];          /*!< endpoint OUT transaction */
-
-    usb_pm             pm;                                      /*!< power management */
-    usb_control        control;                                 /*!< USB control information */
-    usb_desc          *desc;                                    /*!< USB descriptors pointer */
-    usb_class_core    *class_core;                              /*!< class driver */
-    void              *class_data[USBD_ITF_MAX_NUM];                              /*!< class data pointer */
-    void              *user_data;                               /*!< user data pointer */
-    void              *pdata;                                   /*!< reserved data pointer */
-} usb_perp_dev;
-
-typedef struct _usb_core_driver
-{
-    usb_core_basic     bp;                                      /*!< USB basic parameters */
-    usb_core_regs      regs;                                    /*!< USB registers */
-    usb_perp_dev       dev;                                     /*!< USB peripheral device */
-} usb_core_driver;
 
 /* static inline function definitions */
 
@@ -234,7 +130,7 @@ __STATIC_INLINE uint32_t usb_iepintnum_read (usb_core_driver *udev)
     uint32_t value = udev->regs.dr->DAEPINT;
 
     value &= udev->regs.dr->DAEPINTEN;
-    
+
     return value & DAEPINT_IEPITB;
 }
 

@@ -2,12 +2,11 @@
     \file    usb_ch9_std.h
     \brief   USB 2.0 standard defines
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -238,7 +237,7 @@ typedef struct _usb_desc_LANGID {
 
 typedef struct _usb_desc_str {
     usb_desc_header header;               /*!< descriptor header, including type and size. */
-    uint16_t unicode_string[64];          /*!< unicode string data */
+    uint16_t unicode_string[128];         /*!< unicode string data */
 } usb_desc_str;
 
 #pragma pack()

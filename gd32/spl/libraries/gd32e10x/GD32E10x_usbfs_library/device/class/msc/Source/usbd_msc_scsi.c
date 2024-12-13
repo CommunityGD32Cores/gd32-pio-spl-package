@@ -2,12 +2,11 @@
     \file    usbd_msc_scsi.c
     \brief   USB SCSI layer functions
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,7 +35,44 @@ OF SUCH DAMAGE.
 #include "usbd_enum.h"
 #include "usbd_msc_bbb.h"
 #include "usbd_msc_scsi.h"
-#include "usbd_msc_data.h"
+
+/* USB mass storage page 0 inquiry data */
+const uint8_t msc_page00_inquiry_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    (INQUIRY_PAGE00_LENGTH - 4U),
+    0x80U,
+    0x83U,
+};
+
+/* USB mass storage sense 6 data */
+const uint8_t msc_mode_sense6_data[] = 
+{
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
+
+/* USB mass storage sense 10 data */
+const uint8_t msc_mode_sense10_data[] = 
+{
+    0x00U,
+    0x06U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U,
+    0x00U
+};
 
 /* local function prototypes ('static') */
 static int8_t scsi_test_unit_ready      (usb_core_driver *udev, uint8_t lun, uint8_t *params);
@@ -140,7 +176,7 @@ void scsi_sense_code (usb_core_driver *udev, uint8_t lun, uint8_t skey, uint8_t 
     usbd_msc_handler *msc = (usbd_msc_handler *)udev->dev.class_data[USBD_MSC_INTERFACE];
 
     msc->scsi_sense[msc->scsi_sense_tail].SenseKey = skey;
-    msc->scsi_sense[msc->scsi_sense_tail].ASC = asc << 8U;
+    msc->scsi_sense[msc->scsi_sense_tail].ASC = asc;
     msc->scsi_sense_tail++;
 
     if (SENSE_LIST_DEEPTH == msc->scsi_sense_tail) {
@@ -172,7 +208,6 @@ static int8_t scsi_test_unit_ready (usb_core_driver *udev, uint8_t lun, uint8_t 
 
         return -1;
     }
-    
 
     msc->bbb_datalen = 0U;
 
@@ -388,8 +423,8 @@ static int8_t scsi_request_sense (usb_core_driver *udev, uint8_t lun, uint8_t *p
 
     if ((msc->scsi_sense_head != msc->scsi_sense_tail)) {
         msc->bbb_data[2] = msc->scsi_sense[msc->scsi_sense_head].SenseKey;
-        msc->bbb_data[12] = msc->scsi_sense[msc->scsi_sense_head].ASCQ;
-        msc->bbb_data[13] = msc->scsi_sense[msc->scsi_sense_head].ASC;
+        msc->bbb_data[12] = msc->scsi_sense[msc->scsi_sense_head].ASC;
+        msc->bbb_data[13] = msc->scsi_sense[msc->scsi_sense_head].ASCQ;
         msc->scsi_sense_head++;
 
         if (msc->scsi_sense_head == SENSE_LIST_DEEPTH) {
@@ -626,7 +661,7 @@ static int8_t scsi_process_read (usb_core_driver *udev, uint8_t lun)
                                 (uint16_t)(len / msc->scsi_blk_size[lun])) < 0) {
         scsi_sense_code(udev, lun, HARDWARE_ERROR, UNRECOVERED_READ_ERROR);
 
-        return -1; 
+        return -1;
     }
 
     usbd_ep_send (udev, MSC_IN_EP, msc->bbb_data, len);

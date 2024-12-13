@@ -35,7 +35,7 @@ OF SUCH DAMAGE.
 #ifndef GD32F303E_EVAL_H
 #define GD32F303E_EVAL_H
 
-#ifdef cplusplus
+#ifdef __cplusplus
  extern "C" {
 #endif
 
@@ -153,7 +153,7 @@ uint8_t gd_eval_key_state_get(key_typedef_enum key);
 /* configure COM port */
 void gd_eval_com_init(uint32_t com);
 
-#ifdef cplusplus
+#ifdef __cplusplus
 }
 #endif
 

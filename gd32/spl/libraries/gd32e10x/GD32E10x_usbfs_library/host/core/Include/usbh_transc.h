@@ -2,12 +2,11 @@
     \file    usbh_transc.h
     \brief   USB host mode transactions header file
 
-    \version 2020-08-05, V2.0.0, firmware for GD32E10x
-    \version 2020-12-31, V2.1.0, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,7 +35,6 @@ OF SUCH DAMAGE.
 #ifndef __USBH_TRANSC_H
 #define __USBH_TRANSC_H
 
-#include "usb_conf.h"
 #include "usbh_core.h"
 
 /* function declarations */

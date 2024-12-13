@@ -2,14 +2,11 @@
     \file    gd32e10x_spi.c
     \brief   SPI driver
     
-    \version 2017-12-26, V1.0.1, firmware for GD32E10x
-    \version 2020-09-30, V1.1.0, firmware for GD32E10x
-    \version 2020-12-31, V1.2.0, firmware for GD32E10x
-    \version 2021-05-31, V1.2.1, firmware for GD32E10x
+    \version 2023-12-31, V1.5.0, firmware for GD32E10x
 */
 
 /*
-    Copyright (c) 2021, GigaDevice Semiconductor Inc.
+    Copyright (c) 2023, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -40,8 +37,8 @@ OF SUCH DAMAGE.
 #define SPI_ERROR_HANDLE(s)             do{}while(1)
 
 /* SPI/I2S parameter initialization mask */
-#define SPI_INIT_MASK                   ((uint32_t)0x00003040U)  /*!< SPI parameter initialization mask */
-#define I2S_INIT_MASK                   ((uint32_t)0x0000F047U)  /*!< I2S parameter initialization mask */
+#define SPI_INIT_MASK                   ((uint32_t)0x00003040U)  /* SPI parameter initialization mask */
+#define I2S_INIT_MASK                   ((uint32_t)0x0000F047U)  /* I2S parameter initialization mask */
 
 /* I2S clock source selection, multiplication and division mask */
 #define I2S1_CLOCK_SEL                  ((uint32_t)0x00020000U)  /* I2S1 clock source selection */
@@ -96,6 +93,7 @@ void spi_struct_para_init(spi_parameter_struct* spi_struct)
     spi_struct->trans_mode = SPI_TRANSMODE_FULLDUPLEX;
     spi_struct->frame_size = SPI_FRAMESIZE_8BIT;
     spi_struct->nss = SPI_NSS_HARD;
+    spi_struct->endian = SPI_ENDIAN_MSB;
     spi_struct->clock_polarity_phase = SPI_CK_PL_LOW_PH_1EDGE;
     spi_struct->prescale = SPI_PSC_2;
 }
@@ -177,7 +175,7 @@ void spi_disable(uint32_t spi_periph)
       \arg        I2S_MODE_MASTERRX: I2S master receive mode
     \param[in]  standard: I2S standard
                 only one parameter can be selected which is shown as below:
-      \arg        I2S_STD_PHILLIPS: I2S phillips standard
+      \arg        I2S_STD_PHILLIPS: I2S Phillips standard
       \arg        I2S_STD_MSB: I2S MSB standard
       \arg        I2S_STD_LSB: I2S LSB standard
       \arg        I2S_STD_PCMSHORT: I2S PCM short standard
@@ -484,6 +482,20 @@ void spi_bidirectional_transfer_config(uint32_t spi_periph, uint32_t transfer_di
 }
 
 /*!
+    \brief      clear SPI/I2S format error flag status
+    \param[in]  spi_periph: SPIx(x=0,1,2)
+    \param[in]  flag: SPI/I2S frame format error flag 
+      \arg        SPI_FLAG_FERR: only for SPI work in TI mode
+      \arg        I2S_FLAG_FERR: for I2S
+    \param[out] none
+    \retval     none
+*/
+void spi_i2s_format_error_clear(uint32_t spi_periph, uint32_t flag)
+{
+    SPI_STAT(spi_periph) = (uint32_t)(~flag);
+}
+
+/*!
     \brief      set SPI CRC polynomial 
     \param[in]  spi_periph: SPIx(x=0,1,2)
     \param[in]  crc_poly: CRC polynomial value
@@ -560,6 +572,17 @@ uint16_t spi_crc_get(uint32_t spi_periph,uint8_t crc)
 }
 
 /*!
+    \brief      clear SPI CRC error flag status
+    \param[in]  spi_periph: SPIx(x=0,1,2)
+    \param[out] none
+    \retval     none
+*/
+void spi_crc_error_clear(uint32_t spi_periph)
+{
+    SPI_STAT(spi_periph) = (uint32_t)(~SPI_FLAG_CRCERR);
+}
+
+/*!
     \brief      enable SPI TI mode
     \param[in]  spi_periph: SPIx(x=0,1,2)
     \param[out] none
@@ -604,67 +627,67 @@ void spi_nssp_mode_disable(uint32_t spi_periph)
 }
 
 /*!
-    \brief      enable quad wire SPI
+    \brief      enable SPI quad wire mode 
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_enable(uint32_t spi_periph)
+void spi_quad_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QMOD;
 }
 
 /*!
-    \brief      disable quad wire SPI 
+    \brief      disable SPI quad wire mode 
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_disable(uint32_t spi_periph)
+void spi_quad_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QMOD);
 }
 
 /*!
-    \brief      enable quad wire SPI write 
+    \brief      enable SPI quad wire mode write 
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_write_enable(uint32_t spi_periph)
+void spi_quad_write_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_QRD);
 }
 
 /*!
-    \brief      enable quad wire SPI read 
+    \brief      enable SPI quad wire mode read 
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_read_enable(uint32_t spi_periph)
+void spi_quad_read_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_QRD;
 }
 
 /*!
-    \brief      enable SPI_IO2 and SPI_IO3 pin output 
+    \brief      enable SPI quad wire mode SPI_IO2 and SPI_IO3 pin output
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_io23_output_enable(uint32_t spi_periph)
+void spi_quad_io23_output_enable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) |= (uint32_t)SPI_QCTL_IO23_DRV;
 }
 
  /*!
-    \brief      disable SPI_IO2 and SPI_IO3 pin output 
+    \brief      disable SPI quad wire mode SPI_IO2 and SPI_IO3 pin output
     \param[in]  spi_periph: SPIx(only x=0)
     \param[out] none
     \retval     none
 */
-void qspi_io23_output_disable(uint32_t spi_periph)
+void spi_quad_io23_output_disable(uint32_t spi_periph)
 {
     SPI_QCTL(spi_periph) &= (uint32_t)(~SPI_QCTL_IO23_DRV);
 }
@@ -829,15 +852,4 @@ FlagStatus spi_i2s_flag_get(uint32_t spi_periph, uint32_t flag)
     }else{
         return RESET;
     }
-}
-
-/*!
-    \brief      clear SPI CRC error flag status
-    \param[in]  spi_periph: SPIx(x=0,1,2)
-    \param[out] none
-    \retval     none
-*/
-void spi_crc_error_clear(uint32_t spi_periph)
-{
-    SPI_STAT(spi_periph) &= (uint32_t)(~SPI_FLAG_CRCERR);
 }
