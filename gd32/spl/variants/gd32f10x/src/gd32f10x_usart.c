@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.1, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -36,6 +37,9 @@ OF SUCH DAMAGE.
 */
 
 #include "gd32f10x_usart.h"
+
+/* USART register bit offset */
+#define GP_GUAT_OFFSET            ((uint32_t)8U)       /* bit offset of GUAT in USART_GP */
 
 /*!
     \brief      reset USART/UART 
@@ -247,7 +251,7 @@ void usart_receive_config(uint32_t usart_periph, uint32_t rxconfig)
 */
 void usart_data_transmit(uint32_t usart_periph, uint16_t data)
 {
-    USART_DATA(usart_periph) = USART_DATA_DATA & data;
+    USART_DATA(usart_periph) = USART_DATA_DATA & (uint32_t)data;
 }
 
 /*!
@@ -271,7 +275,7 @@ uint16_t usart_data_receive(uint32_t usart_periph)
 void usart_address_config(uint32_t usart_periph, uint8_t addr)
 {
     USART_CTL1(usart_periph) &= ~(USART_CTL1_ADDR);
-    USART_CTL1(usart_periph) |= (USART_CTL1_ADDR & addr);
+    USART_CTL1(usart_periph) |= (USART_CTL1_ADDR & (uint32_t)addr);
 }
 
 /*!
@@ -425,28 +429,21 @@ void usart_synchronous_clock_disable(uint32_t usart_periph)
 */
 void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32_t cph, uint32_t cpl)
 {
-    uint32_t ctl = 0U;
-    
-    /* read USART_CTL1 register */
-    ctl = USART_CTL1(usart_periph);
-    ctl &= ~(USART_CTL1_CLEN | USART_CTL1_CPH | USART_CTL1_CPL);
-    /* set CK length, CK phase, CK polarity */
-    ctl |= (USART_CTL1_CLEN & clen) | (USART_CTL1_CPH & cph) | (USART_CTL1_CPL & cpl);
-
-    USART_CTL1(usart_periph) = ctl;
+    USART_CTL1(usart_periph) &= ~(USART_CTL1_CLEN | USART_CTL1_CPH | USART_CTL1_CPL);
+    USART_CTL1(usart_periph) |= (USART_CTL1_CLEN & clen) | (USART_CTL1_CPH & cph) | (USART_CTL1_CPL & cpl);
 }
 
 /*!
     \brief      configure guard time value in smartcard mode
     \param[in]  usart_periph: USARTx(x=0,1,2)
-    \param[in]  gaut: guard time value
+    \param[in]  guat: guard time value
     \param[out] none
     \retval     none
 */
-void usart_guard_time_config(uint32_t usart_periph,uint32_t gaut)
+void usart_guard_time_config(uint32_t usart_periph,uint8_t guat)
 {
     USART_GP(usart_periph) &= ~(USART_GP_GUAT);
-    USART_GP(usart_periph) |= (USART_GP_GUAT & ((gaut)<<8));
+    USART_GP(usart_periph) |= (USART_GP_GUAT & ((uint32_t)guat << GP_GUAT_OFFSET));
 }
 
 /*!
@@ -525,7 +522,7 @@ void usart_irda_mode_disable(uint32_t usart_periph)
 void usart_prescaler_config(uint32_t usart_periph, uint8_t psc)
 {
     USART_GP(usart_periph) &= ~(USART_GP_PSC);
-    USART_GP(usart_periph) |= psc;
+    USART_GP(usart_periph) |= (uint32_t)psc;
 }
 
 /*!
@@ -556,13 +553,8 @@ void usart_irda_lowpower_config(uint32_t usart_periph, uint32_t irlp)
 */
 void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
 {
-    uint32_t ctl = 0U;
-    
-    ctl = USART_CTL2(usart_periph);
-    ctl &= ~USART_CTL2_RTSEN;
-    ctl |= rtsconfig;
-    /* configure RTS */
-    USART_CTL2(usart_periph) = ctl;
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_RTSEN);
+    USART_CTL2(usart_periph) |= (USART_CTL2_RTSEN & rtsconfig);
 }
 
 /*!
@@ -577,13 +569,8 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig)
 */
 void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
 {
-    uint32_t ctl = 0U;
-    
-    ctl = USART_CTL2(usart_periph);
-    ctl &= ~USART_CTL2_CTSEN;
-    ctl |= ctsconfig;
-    /* configure CTS */
-    USART_CTL2(usart_periph) = ctl;
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_CTSEN);
+    USART_CTL2(usart_periph) |= (USART_CTL2_CTSEN & ctsconfig);
 }
 
 /*!
@@ -591,20 +578,15 @@ void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig)
     \param[in]  usart_periph: USARTx(x=0,1,2)/UARTx(x=3)
     \param[in]  dmacmd: enable or disable DMA for reception
                 only one parameter can be selected which is shown as below:
-      \arg        USART_DENR_ENABLE:  DMA enable for reception
-      \arg        USART_DENR_DISABLE: DMA disable for reception
+      \arg        USART_RECEIVE_DMA_ENABLE: enable USART DMA for reception
+      \arg        USART_RECEIVE_DMA_DISABLE: disable USART DMA for reception
     \param[out] none
     \retval     none
 */
-void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd)
+void usart_dma_receive_config(uint32_t usart_periph, uint8_t dmaconfig)
 {
-    uint32_t ctl = 0U;
-    
-    ctl = USART_CTL2(usart_periph);
-    ctl &= ~USART_CTL2_DENR;
-    ctl |= dmacmd;
-    /* configure DMA reception */
-    USART_CTL2(usart_periph) = ctl;
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_DENR);
+    USART_CTL2(usart_periph) |= (USART_CTL2_DENR & dmaconfig);
 }
 
 /*!
@@ -612,20 +594,15 @@ void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd)
     \param[in]  usart_periph: USARTx(x=0,1,2)/UARTx(x=3)
     \param[in]  dmacmd: enable or disable DMA for transmission
                 only one parameter can be selected which is shown as below:
-      \arg        USART_DENT_ENABLE:  DMA enable for transmission
-      \arg        USART_DENT_DISABLE: DMA disable for transmission
+      \arg        USART_TRANSMIT_DMA_ENABLE: enable USART DMA for transmission
+      \arg        USART_TRANSMIT_DMA_DISABLE: disable USART DMA for transmission
     \param[out] none
     \retval     none
 */
-void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd)
+void usart_dma_transmit_config(uint32_t usart_periph, uint8_t dmaconfig)
 {
-    uint32_t ctl = 0U;
-    
-    ctl = USART_CTL2(usart_periph);
-    ctl &= ~USART_CTL2_DENT;
-    ctl |= dmacmd;
-    /* configure DMA transmission */
-    USART_CTL2(usart_periph) = ctl;
+    USART_CTL2(usart_periph) &= ~(USART_CTL2_DENT);
+    USART_CTL2(usart_periph) |= (USART_CTL2_DENT & dmaconfig);
 }
 
 /*!
@@ -669,7 +646,7 @@ FlagStatus usart_flag_get(uint32_t usart_periph, usart_flag_enum flag)
 */
 void usart_flag_clear(uint32_t usart_periph, usart_flag_enum flag)
 {
-    USART_REG_VAL(usart_periph, flag) &= ~BIT(USART_BIT_POS(flag));
+    USART_REG_VAL(usart_periph, flag) = ~BIT(USART_BIT_POS(flag));
 }
 
 /*!
@@ -762,5 +739,5 @@ FlagStatus usart_interrupt_flag_get(uint32_t usart_periph, uint32_t int_flag)
 */
 void usart_interrupt_flag_clear(uint32_t usart_periph, uint32_t flag)
 {
-    USART_REG_VAL2(usart_periph, flag) &= ~BIT(USART_BIT_POS2(flag));
+    USART_REG_VAL2(usart_periph, flag) = ~BIT(USART_BIT_POS2(flag));
 }

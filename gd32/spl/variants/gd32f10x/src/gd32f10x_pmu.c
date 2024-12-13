@@ -7,10 +7,11 @@
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2019-11-26, V2.1.1, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -91,7 +92,7 @@ void pmu_lvd_disable(void)
 }
 
 /*!
-    \brief      PMU work at sleep mode
+    \brief      PMU work in sleep mode
     \param[in]  sleepmodecmd:
                 only one parameter can be selected which is shown as below:
       \arg        WFI_CMD: use WFI command
@@ -113,11 +114,11 @@ void pmu_to_sleepmode(uint8_t sleepmodecmd)
 }
 
 /*!
-    \brief      PMU work at deepsleep mode
+    \brief      PMU work in deepsleep mode
     \param[in]  ldo:
                 only one parameter can be selected which is shown as below:
-      \arg        PMU_LDO_NORMAL: LDO work at normal power mode when pmu enter deepsleep mode
-      \arg        PMU_LDO_LOWPOWER: LDO work at low power mode when pmu enter deepsleep mode
+      \arg        PMU_LDO_NORMAL: LDO work in normal power mode when pmu enter deepsleep mode
+      \arg        PMU_LDO_LOWPOWER: LDO work in low power mode when pmu enter deepsleep mode
     \param[in]  deepsleepmodecmd:
                 only one parameter can be selected which is shown as below: 
       \arg        WFI_CMD: use WFI command
@@ -142,10 +143,10 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
     reg_snap[2] = REG32(0xE000E104U);
     reg_snap[3] = REG32(0xE000E108U);
     
-    REG32( 0xE000E010U ) &= 0x00010004U;
-    REG32( 0xE000E180U )  = 0XFF7FF83DU;
-    REG32( 0xE000E184U )  = 0XBFFFF8FFU;
-    REG32( 0xE000E188U )  = 0xFFFFFFFFU;
+    REG32(0xE000E010U) &= 0x00010004U;
+    REG32(0xE000E180U)  = 0XFF7FF83DU;
+    REG32(0xE000E184U)  = 0XBFFFF8FFU;
+    REG32(0xE000E188U)  = 0xFFFFFFFFU;
     
     /* select WFI or WFE command to enter deepsleep mode */
     if(WFI_CMD == deepsleepmodecmd){
@@ -166,31 +167,29 @@ void pmu_to_deepsleepmode(uint32_t ldo,uint8_t deepsleepmodecmd)
 }
 
 /*!
-    \brief      pmu work at standby mode
-    \param[in]  standbymodecmd:
-                only one parameter can be selected which is shown as below:
-      \arg        WFI_CMD: use WFI command
-      \arg        WFE_CMD: use WFE command
+    \brief      pmu work in standby mode
+    \param[in]  none
     \param[out] none
     \retval     none
 */
-void pmu_to_standbymode(uint8_t standbymodecmd)
+void pmu_to_standbymode(void)
 {
+    /* set stbmod bit */
+    PMU_CTL |= PMU_CTL_STBMOD;
+
+    /* reset wakeup flag */
+    PMU_CTL |= PMU_CTL_WURST;
+
     /* set sleepdeep bit of Cortex-M3 system control register */
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-    /* set stbmod bit */
-    PMU_CTL |= PMU_CTL_STBMOD;
-        
-    /* reset wakeup flag */
-    PMU_CTL |= PMU_CTL_WURST;
-    
-    /* select WFI or WFE command to enter standby mode */
-    if(WFI_CMD == standbymodecmd){
-        __WFI();
-    }else{
-        __WFE();
-    }
+    REG32(0xE000E010U) &= 0x00010004U;
+    REG32(0xE000E180U)  = 0XFFFFFFF7U;
+    REG32(0xE000E184U)  = 0XFFFFFDFFU;
+    REG32(0xE000E188U)  = 0xFFFFFFFFU;
+
+    /* select WFI command to enter standby mode */
+    __WFI();
 }
 
 /*!
@@ -258,16 +257,16 @@ FlagStatus pmu_flag_get(uint32_t flag)
 
 /*!
     \brief      clear flag bit
-    \param[in]  flag_reset:
+    \param[in]  flag:
                 only one parameter can be selected which is shown as below:
       \arg        PMU_FLAG_RESET_WAKEUP: reset wakeup flag
       \arg        PMU_FLAG_RESET_STANDBY: reset standby flag
     \param[out] none
     \retval     none
 */
-void pmu_flag_clear(uint32_t flag_reset)
+void pmu_flag_clear(uint32_t flag)
 {
-    switch(flag_reset){
+    switch(flag){
     case PMU_FLAG_RESET_WAKEUP:
         /* reset wakeup flag */
         PMU_CTL |= PMU_CTL_WURST;

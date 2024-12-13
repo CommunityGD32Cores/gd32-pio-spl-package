@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -88,6 +89,9 @@ OF SUCH DAMAGE.
 #define FWDGT_FLAG_PUD              FWDGT_STAT_PUD                            /*!< FWDGT prescaler divider value update flag */
 #define FWDGT_FLAG_RUD              FWDGT_STAT_RUD                            /*!< FWDGT counter reload value update flag */
 
+/* write value to FWDGT_RLD_RLD bit field */
+#define RLD_RLD(regval)             (BITS(0,11) & ((uint32_t)(regval) << 0))
+
 /* function declarations */
 /* enable write access to FWDGT_PSC and FWDGT_RLD */
 void fwdgt_write_enable(void);
@@ -96,6 +100,10 @@ void fwdgt_write_disable(void);
 /* start the free watchdog timer counter */
 void fwdgt_enable(void);
 
+/* configure the free watchdog timer counter prescaler value */
+ErrStatus fwdgt_prescaler_value_config(uint16_t prescaler_value);
+/* configure the free watchdog timer counter reload value */
+ErrStatus fwdgt_reload_value_config(uint16_t reload_value);
 /* reload the counter of FWDGT */
 void fwdgt_counter_reload(void);
 /* configure counter reload value, and prescaler divider value */
