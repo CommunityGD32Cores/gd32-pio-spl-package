@@ -17,7 +17,7 @@ _Min_Stack_Size = 0x400;     /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-    RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = $ram
+    RAM (xrw)      : ORIGIN = $ramstart, LENGTH = $ram
     CCRAM (xrw)    : ORIGIN = 0x10000000, LENGTH = $ccram
     FLASH (rx)      : ORIGIN = $flash_start, LENGTH = $flash
 }
