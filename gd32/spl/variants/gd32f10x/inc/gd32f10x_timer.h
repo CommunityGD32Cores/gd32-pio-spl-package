@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -541,9 +542,9 @@ typedef struct
 /* slave mode control */
 #define SMCFG_SMC(regval)                   (BITS(0, 2) & ((uint32_t)(regval) << 0U)) 
 #define TIMER_SLAVE_MODE_DISABLE            SMCFG_SMC(0)                            /*!< slave mode disable */
-#define TIMER_ENCODER_MODE0                 SMCFG_SMC(1)                            /*!< encoder mode 0 */
-#define TIMER_ENCODER_MODE1                 SMCFG_SMC(2)                            /*!< encoder mode 1 */
-#define TIMER_ENCODER_MODE2                 SMCFG_SMC(3)                            /*!< encoder mode 2 */
+#define TIMER_QUAD_DECODER_MODE0            SMCFG_SMC(1)                            /*!< quadrature decoder mode 0 */
+#define TIMER_QUAD_DECODER_MODE1            SMCFG_SMC(2)                            /*!< quadrature decoder mode 1 */
+#define TIMER_QUAD_DECODER_MODE2            SMCFG_SMC(3)                            /*!< quadrature decoder mode 2 */
 #define TIMER_SLAVE_MODE_RESTART            SMCFG_SMC(4)                            /*!< restart mode */
 #define TIMER_SLAVE_MODE_PAUSE              SMCFG_SMC(5)                            /*!< pause mode */
 #define TIMER_SLAVE_MODE_EVENT              SMCFG_SMC(6)                            /*!< event mode */

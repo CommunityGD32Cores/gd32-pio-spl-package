@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.1, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -79,42 +80,42 @@ OF SUCH DAMAGE.
 /* USARTx_CTL0 */
 #define USART_CTL0_SBKCMD             BIT(0)       /*!< send break command */
 #define USART_CTL0_RWU                BIT(1)       /*!< receiver wakeup from mute mode */
-#define USART_CTL0_REN                BIT(2)       /*!< receiver enable */
-#define USART_CTL0_TEN                BIT(3)       /*!< transmitter enable */
-#define USART_CTL0_IDLEIE             BIT(4)       /*!< idle line detected interrupt enable */
-#define USART_CTL0_RBNEIE             BIT(5)       /*!< read data buffer not empty interrupt and overrun error interrupt enable */
-#define USART_CTL0_TCIE               BIT(6)       /*!< transmission complete interrupt enable */
-#define USART_CTL0_TBEIE              BIT(7)       /*!< transmitter buffer empty interrupt enable */
-#define USART_CTL0_PERRIE             BIT(8)       /*!< parity error interrupt enable */
+#define USART_CTL0_REN                BIT(2)       /*!< enable receiver */
+#define USART_CTL0_TEN                BIT(3)       /*!< enable transmitter */
+#define USART_CTL0_IDLEIE             BIT(4)       /*!< enable idle line detected interrupt  */
+#define USART_CTL0_RBNEIE             BIT(5)       /*!< enable read data buffer not empty interrupt and overrun error interrupt */
+#define USART_CTL0_TCIE               BIT(6)       /*!< enable transmission complete interrupt */
+#define USART_CTL0_TBEIE              BIT(7)       /*!< enable transmitter buffer empty interrupt */
+#define USART_CTL0_PERRIE             BIT(8)       /*!< enable parity error interrupt */
 #define USART_CTL0_PM                 BIT(9)       /*!< parity mode */
-#define USART_CTL0_PCEN               BIT(10)      /*!< parity check function enable */
+#define USART_CTL0_PCEN               BIT(10)      /*!< enable parity check function */
 #define USART_CTL0_WM                 BIT(11)      /*!< wakeup method in mute mode */
 #define USART_CTL0_WL                 BIT(12)      /*!< word length */
-#define USART_CTL0_UEN                BIT(13)      /*!< USART enable */
+#define USART_CTL0_UEN                BIT(13)      /*!< enable USART */
 
 /* USARTx_CTL1 */
 #define USART_CTL1_ADDR               BITS(0,3)    /*!< address of USART */
 #define USART_CTL1_LBLEN              BIT(5)       /*!< LIN break frame length */
-#define USART_CTL1_LBDIE              BIT(6)       /*!< LIN break detected interrupt eanble */
+#define USART_CTL1_LBDIE              BIT(6)       /*!< enable LIN break detected interrupt */
 #define USART_CTL1_CLEN               BIT(8)       /*!< CK length */
 #define USART_CTL1_CPH                BIT(9)       /*!< CK phase */
 #define USART_CTL1_CPL                BIT(10)      /*!< CK polarity */
 #define USART_CTL1_CKEN               BIT(11)      /*!< CK pin enable */
 #define USART_CTL1_STB                BITS(12,13)  /*!< STOP bits length */
-#define USART_CTL1_LMEN               BIT(14)      /*!< LIN mode enable */
+#define USART_CTL1_LMEN               BIT(14)      /*!< enable LIN mode */
 
 /* USARTx_CTL2 */
-#define USART_CTL2_ERRIE              BIT(0)       /*!< error interrupt enable */
-#define USART_CTL2_IREN               BIT(1)       /*!< IrDA mode enable */
+#define USART_CTL2_ERRIE              BIT(0)       /*!< enable error interrupt */
+#define USART_CTL2_IREN               BIT(1)       /*!< enable IrDA mode */
 #define USART_CTL2_IRLP               BIT(2)       /*!< IrDA low-power */
 #define USART_CTL2_HDEN               BIT(3)       /*!< half-duplex enable */
 #define USART_CTL2_NKEN               BIT(4)       /*!< NACK enable in smartcard mode */
-#define USART_CTL2_SCEN               BIT(5)       /*!< smartcard mode enable */
+#define USART_CTL2_SCEN               BIT(5)       /*!< enable smartcard mode */
 #define USART_CTL2_DENR               BIT(6)       /*!< DMA request enable for reception */
 #define USART_CTL2_DENT               BIT(7)       /*!< DMA request enable for transmission */
-#define USART_CTL2_RTSEN              BIT(8)       /*!< RTS enable */
-#define USART_CTL2_CTSEN              BIT(9)       /*!< CTS enable */
-#define USART_CTL2_CTSIE              BIT(10)      /*!< CTS interrupt enable */
+#define USART_CTL2_RTSEN              BIT(8)       /*!< enable RTS */
+#define USART_CTL2_CTSEN              BIT(9)       /*!< enable CTS */
+#define USART_CTL2_CTSIE              BIT(10)      /*!< enable CTS interrupt */
 
 /* USARTx_GP */
 #define USART_GP_PSC                  BITS(0,7)    /*!< prescaler value for dividing the system clock */
@@ -187,12 +188,12 @@ typedef enum
     USART_INT_ERR = USART_REGIDX_BIT(USART_CTL2_REG_OFFSET, 0U),         /*!< error interrupt */
 }usart_interrupt_enum;
 
-/* USART receiver configure */
+/* configure USART receiver */
 #define CTL0_REN(regval)              (BIT(2) & ((uint32_t)(regval) << 2))
 #define USART_RECEIVE_ENABLE          CTL0_REN(1)                      /*!< enable receiver */
 #define USART_RECEIVE_DISABLE         CTL0_REN(0)                      /*!< disable receiver */
 
-/* USART transmitter configure */
+/* configure USART transmitter */
 #define CTL0_TEN(regval)              (BIT(3) & ((uint32_t)(regval) << 3))
 #define USART_TRANSMIT_ENABLE         CTL0_TEN(1)                      /*!< enable transmitter */
 #define USART_TRANSMIT_DISABLE        CTL0_TEN(0)                      /*!< disable transmitter */
@@ -240,27 +241,25 @@ typedef enum
 #define USART_CPL_LOW                 CTL1_CPL(0)                      /*!< steady low value on CK pin */
 #define USART_CPL_HIGH                CTL1_CPL(1)                      /*!< steady high value on CK pin */
 
-/* USART DMA request for receive configure */
-#define CLT2_DENR(regval)             (BIT(6) & ((uint32_t)(regval) << 6))
-#define USART_DENR_ENABLE             CLT2_DENR(1)                     /*!< DMA request enable for reception */
-#define USART_DENR_DISABLE            CLT2_DENR(0)                     /*!< DMA request disable for reception */
+/* configure USART DMA */
+#define CLT2_RECEIVE_DMAEN(regval)    (BIT(6) & ((uint32_t)(regval) << 6))
+#define CTL2_TRANSMIT_DMAEN(regval)   (BIT(7) & ((uint32_t)(regval) << 7))
+#define USART_RECEIVE_DMA_ENABLE      CLT2_RECEIVE_DMAEN(1)              /* enable DMA request for reception */
+#define USART_RECEIVE_DMA_DISABLE     CLT2_RECEIVE_DMAEN(0)              /* disable DMA request for reception */
+#define USART_TRANSMIT_DMA_ENABLE     CTL2_TRANSMIT_DMAEN(1)             /* enable DMA request for transmission */
+#define USART_TRANSMIT_DMA_DISABLE    CTL2_TRANSMIT_DMAEN(0)             /* disable DMA request for transmission */
 
-/* USART DMA request for transmission configure */
-#define CLT2_DENT(regval)             (BIT(7) & ((uint32_t)(regval) << 7))
-#define USART_DENT_ENABLE             CLT2_DENT(1)                     /*!< DMA request enable for transmission */
-#define USART_DENT_DISABLE            CLT2_DENT(0)                     /*!< DMA request disable for transmission */
-
-/* USART RTS configure */
+/* configure USART RTS */
 #define CLT2_RTSEN(regval)            (BIT(8) & ((uint32_t)(regval) << 8))
-#define USART_RTS_ENABLE              CLT2_RTSEN(1)                    /*!< RTS enable */
-#define USART_RTS_DISABLE             CLT2_RTSEN(0)                    /*!< RTS disable */
+#define USART_RTS_ENABLE              CLT2_RTSEN(1)                    /*!< enable RTS */
+#define USART_RTS_DISABLE             CLT2_RTSEN(0)                    /*!< disable RTS */
 
-/* USART CTS configure */
+/* configure USART CTS */
 #define CLT2_CTSEN(regval)            (BIT(9) & ((uint32_t)(regval) << 9))
-#define USART_CTS_ENABLE              CLT2_CTSEN(1)                    /*!< CTS enable */
-#define USART_CTS_DISABLE             CLT2_CTSEN(0)                    /*!< CTS disable */
+#define USART_CTS_ENABLE              CLT2_CTSEN(1)                    /*!< enable CTS */
+#define USART_CTS_DISABLE             CLT2_CTSEN(0)                    /*!< disable CTS */
 
-/* USART IrDA low-power enable */
+/* enable USART IrDA low-power */
 #define CTL2_IRLP(regval)             (BIT(2) & ((uint32_t)(regval) << 2))
 #define USART_IRLP_LOW                CTL2_IRLP(1)                     /*!< low-power */
 #define USART_IRLP_NORMAL             CTL2_IRLP(0)                     /*!< normal */
@@ -328,7 +327,7 @@ void usart_synchronous_clock_config(uint32_t usart_periph, uint32_t clen, uint32
 
 /* smartcard communication */
 /* configure guard time value in smartcard mode */
-void usart_guard_time_config(uint32_t usart_periph,uint32_t gaut);
+void usart_guard_time_config(uint32_t usart_periph,uint8_t gaut);
 /* enable smartcard mode */
 void usart_smartcard_mode_enable(uint32_t usart_periph);
 /* disable smartcard mode */
@@ -354,10 +353,11 @@ void usart_hardware_flow_rts_config(uint32_t usart_periph, uint32_t rtsconfig);
 /* configure hardware flow control CTS */
 void usart_hardware_flow_cts_config(uint32_t usart_periph, uint32_t ctsconfig);
 
+/* DMA communication */
 /* configure USART DMA for reception */
-void usart_dma_receive_config(uint32_t usart_periph, uint32_t dmacmd);
+void usart_dma_receive_config(uint32_t usart_periph, uint8_t dmaconfig);
 /* configure USART DMA for transmission */
-void usart_dma_transmit_config(uint32_t usart_periph, uint32_t dmacmd);
+void usart_dma_transmit_config(uint32_t usart_periph, uint8_t dmaconfig);
 
 /* flag functions */
 /* get flag in STAT register */

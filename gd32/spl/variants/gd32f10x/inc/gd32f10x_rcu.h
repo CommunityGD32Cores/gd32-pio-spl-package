@@ -6,10 +6,11 @@
     \version 2017-06-20, V2.0.0, firmware for GD32F10x
     \version 2018-07-31, V2.1.0, firmware for GD32F10x
     \version 2020-09-30, V2.2.0, firmware for GD32F10x
+    \version 2024-01-05, V2.3.0, firmware for GD32F10x
 */
 
 /*
-    Copyright (c) 2020, GigaDevice Semiconductor Inc.
+    Copyright (c) 2024, GigaDevice Semiconductor Inc.
 
     Redistribution and use in source and binary forms, with or without modification, 
 are permitted provided that the following conditions are met:
@@ -882,20 +883,6 @@ void rcu_i2s1_clock_config(uint32_t i2s_clock_source);
 void rcu_i2s2_clock_config(uint32_t i2s_clock_source);
 #endif /* GD32F10X_CL */
 
-/* interrupt & flag functions */
-/* get the clock stabilization and periphral reset flags */
-FlagStatus rcu_flag_get(rcu_flag_enum flag);
-/* clear the reset flag */
-void rcu_all_reset_flag_clear(void);
-/* get the clock stabilization interrupt and ckm flags */
-FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag);
-/* clear the interrupt flags */
-void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag_clear);
-/* enable the stabilization interrupt */
-void rcu_interrupt_enable(rcu_int_enum stab_int);
-/* disable the stabilization interrupt */
-void rcu_interrupt_disable(rcu_int_enum stab_int);
-
 /* oscillator configuration functions */
 /* wait for oscillator stabilization flags is SET or oscillator startup is timeout */
 ErrStatus rcu_osci_stab_wait(rcu_osci_type_enum osci);
@@ -916,8 +903,21 @@ void rcu_hxtal_clock_monitor_disable(void);
 void rcu_irc8m_adjust_value_set(uint8_t irc8m_adjval);
 /* set the deep sleep mode voltage */
 void rcu_deepsleep_voltage_set(uint32_t dsvol);
-
 /* get the system clock, bus and peripheral clock frequency */
 uint32_t rcu_clock_freq_get(rcu_clock_freq_enum clock);
+
+/* interrupt & flag functions */
+/* get the clock stabilization and periphral reset flags */
+FlagStatus rcu_flag_get(rcu_flag_enum flag);
+/* clear the reset flag */
+void rcu_all_reset_flag_clear(void);
+/* get the clock stabilization interrupt and ckm flags */
+FlagStatus rcu_interrupt_flag_get(rcu_int_flag_enum int_flag);
+/* clear the interrupt flags */
+void rcu_interrupt_flag_clear(rcu_int_flag_clear_enum int_flag_clear);
+/* enable the stabilization interrupt */
+void rcu_interrupt_enable(rcu_int_enum stab_int);
+/* disable the stabilization interrupt */
+void rcu_interrupt_disable(rcu_int_enum stab_int);
 
 #endif /* GD32F10X_RCU_H */
